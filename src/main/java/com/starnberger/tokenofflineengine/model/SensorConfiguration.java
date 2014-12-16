@@ -12,11 +12,19 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * @author Roman Kaufmann
+ *
+ */
 @Entity
 @Inheritance
 @DiscriminatorColumn
 public abstract class SensorConfiguration implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5618490630270815352L;
 	@Id
 	@GeneratedValue(generator = "sc-uuid")
 	@GenericGenerator(name = "sc-uuid", strategy = "uuid2")

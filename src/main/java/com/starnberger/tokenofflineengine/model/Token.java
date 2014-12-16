@@ -11,9 +11,17 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * @author Roman Kaufmann
+ *
+ */
 @Entity
 public class Token implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3960142405489640753L;
 	@Id
 	@GeneratedValue(generator = "t-uuid")
 	@GenericGenerator(name = "t-uuid", strategy = "uuid2")

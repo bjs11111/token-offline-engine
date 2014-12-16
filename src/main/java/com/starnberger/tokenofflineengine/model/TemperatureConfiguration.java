@@ -4,109 +4,98 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+/**
+ * @author Roman Kaufmann
+ *
+ */
 @Entity
 @DiscriminatorValue(value = "TEM")
-public class TemperatureConfiguration extends SensorConfiguration
-{
+public class TemperatureConfiguration extends SensorConfiguration {
 
-   @Column
-   private int bleAdvertisingConditionTemperatureAlarm;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7067556060446576754L;
 
-   @Column
-   private int bleNotAdvertisingConditionTemperatureAlarm;
+	@Column
+	private int bleAdvertisingConditionTemperatureAlarm;
 
-   @Column
-   private double sensorTemperatureAlarmHigh;
+	@Column
+	private int bleNotAdvertisingConditionTemperatureAlarm;
 
-   @Column
-   private double sensorTemperatureAlarmLow;
+	@Column
+	private double sensorTemperatureAlarmHigh;
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (!(obj instanceof TemperatureConfiguration))
-      {
-         return false;
-      }
-      TemperatureConfiguration other = (TemperatureConfiguration) obj;
-      if (getId() != null)
-      {
-         if (!getId().equals(other.getId()))
-         {
-            return false;
-         }
-      }
-      return true;
-   }
+	@Column
+	private double sensorTemperatureAlarmLow;
 
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-      return result;
-   }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TemperatureConfiguration)) {
+			return false;
+		}
+		TemperatureConfiguration other = (TemperatureConfiguration) obj;
+		if (getId() != null) {
+			if (!getId().equals(other.getId())) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-   public int getBleAdvertisingConditionTemperatureAlarm()
-   {
-      return bleAdvertisingConditionTemperatureAlarm;
-   }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		return result;
+	}
 
-   public void setBleAdvertisingConditionTemperatureAlarm(
-         int bleAdvertisingConditionTemperatureAlarm)
-   {
-      this.bleAdvertisingConditionTemperatureAlarm = bleAdvertisingConditionTemperatureAlarm;
-   }
+	public int getBleAdvertisingConditionTemperatureAlarm() {
+		return bleAdvertisingConditionTemperatureAlarm;
+	}
 
-   public int getBleNotAdvertisingConditionTemperatureAlarm()
-   {
-      return bleNotAdvertisingConditionTemperatureAlarm;
-   }
+	public void setBleAdvertisingConditionTemperatureAlarm(int bleAdvertisingConditionTemperatureAlarm) {
+		this.bleAdvertisingConditionTemperatureAlarm = bleAdvertisingConditionTemperatureAlarm;
+	}
 
-   public void setBleNotAdvertisingConditionTemperatureAlarm(
-         int bleNotAdvertisingConditionTemperatureAlarm)
-   {
-      this.bleNotAdvertisingConditionTemperatureAlarm = bleNotAdvertisingConditionTemperatureAlarm;
-   }
+	public int getBleNotAdvertisingConditionTemperatureAlarm() {
+		return bleNotAdvertisingConditionTemperatureAlarm;
+	}
 
-   public double getSensorTemperatureAlarmHigh()
-   {
-      return sensorTemperatureAlarmHigh;
-   }
+	public void setBleNotAdvertisingConditionTemperatureAlarm(int bleNotAdvertisingConditionTemperatureAlarm) {
+		this.bleNotAdvertisingConditionTemperatureAlarm = bleNotAdvertisingConditionTemperatureAlarm;
+	}
 
-   public void setSensorTemperatureAlarmHigh(double sensorTemperatureAlarmHigh)
-   {
-      this.sensorTemperatureAlarmHigh = sensorTemperatureAlarmHigh;
-   }
+	public double getSensorTemperatureAlarmHigh() {
+		return sensorTemperatureAlarmHigh;
+	}
 
-   public double getSensorTemperatureAlarmLow()
-   {
-      return sensorTemperatureAlarmLow;
-   }
+	public void setSensorTemperatureAlarmHigh(double sensorTemperatureAlarmHigh) {
+		this.sensorTemperatureAlarmHigh = sensorTemperatureAlarmHigh;
+	}
 
-   public void setSensorTemperatureAlarmLow(double sensorTemperatureAlarmLow)
-   {
-      this.sensorTemperatureAlarmLow = sensorTemperatureAlarmLow;
-   }
+	public double getSensorTemperatureAlarmLow() {
+		return sensorTemperatureAlarmLow;
+	}
 
-   @Override
-   public String toString()
-   {
-      String result = getClass().getSimpleName() + " ";
-      if (getId() != null)
-         result += "id: " + getId();
-      result += ", version: " + getVersion();
-      result += ", bleAdvertisingConditionTemperatureAlarm: "
-            + bleAdvertisingConditionTemperatureAlarm;
-      result += ", bleNotAdvertisingConditionTemperatureAlarm: "
-            + bleNotAdvertisingConditionTemperatureAlarm;
-      result += ", sensorTemperatureAlarmHigh: " + sensorTemperatureAlarmHigh;
-      result += ", sensorTemperatureAlarmLow: " + sensorTemperatureAlarmLow;
-      return result;
-   }
+	public void setSensorTemperatureAlarmLow(double sensorTemperatureAlarmLow) {
+		this.sensorTemperatureAlarmLow = sensorTemperatureAlarmLow;
+	}
+
+	@Override
+	public String toString() {
+		String result = getClass().getSimpleName() + " ";
+		if (getId() != null)
+			result += "id: " + getId();
+		result += ", version: " + getVersion();
+		result += ", bleAdvertisingConditionTemperatureAlarm: " + bleAdvertisingConditionTemperatureAlarm;
+		result += ", bleNotAdvertisingConditionTemperatureAlarm: " + bleNotAdvertisingConditionTemperatureAlarm;
+		result += ", sensorTemperatureAlarmHigh: " + sensorTemperatureAlarmHigh;
+		result += ", sensorTemperatureAlarmLow: " + sensorTemperatureAlarmLow;
+		return result;
+	}
 }

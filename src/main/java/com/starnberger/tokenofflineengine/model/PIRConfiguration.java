@@ -4,9 +4,18 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+/**
+ * @author Roman Kaufmann
+ *
+ */
 @Entity
 @DiscriminatorValue(value = "PIR")
 public class PIRConfiguration extends SensorConfiguration {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7589218183720412934L;
 
 	@Column
 	private int bleAdvertisingConditionMotionDetection;
@@ -37,7 +46,7 @@ public class PIRConfiguration extends SensorConfiguration {
 	public void setBleNotAdvertisingConditionMotionDetection(int bleNotAdvertisingConditionMotionDetection) {
 		this.bleNotAdvertisingConditionMotionDetection = bleNotAdvertisingConditionMotionDetection;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

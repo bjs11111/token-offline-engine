@@ -11,9 +11,17 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * @author Roman Kaufmann
+ *
+ */
 @Entity
 public class Gateway implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7244940530167510973L;
 	@Id
 	@GeneratedValue(generator = "g-uuid")
 	@GenericGenerator(name = "g-uuid", strategy = "uuid2")

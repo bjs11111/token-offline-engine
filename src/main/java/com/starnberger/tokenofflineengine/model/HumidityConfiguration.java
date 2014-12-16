@@ -4,109 +4,98 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+/**
+ * @author Roman Kaufmann
+ *
+ */
 @Entity
 @DiscriminatorValue(value = "HUM")
-public class HumidityConfiguration extends SensorConfiguration
-{
+public class HumidityConfiguration extends SensorConfiguration {
 
-   @Column
-   private int bleNotAdvertisingConditionHumidityAlarm;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1743403325416095053L;
 
-   @Column
-   private int bleAdvertisingConditionHumidityAlarm;
+	@Column
+	private int bleNotAdvertisingConditionHumidityAlarm;
 
-   @Column
-   private double sensorHumidityAlarmHigh;
+	@Column
+	private int bleAdvertisingConditionHumidityAlarm;
 
-   @Column
-   private double sensorHumidityAlarmLow;
+	@Column
+	private double sensorHumidityAlarmHigh;
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (!(obj instanceof HumidityConfiguration))
-      {
-         return false;
-      }
-      HumidityConfiguration other = (HumidityConfiguration) obj;
-      if (getId() != null)
-      {
-         if (!getId().equals(other.getId()))
-         {
-            return false;
-         }
-      }
-      return true;
-   }
+	@Column
+	private double sensorHumidityAlarmLow;
 
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-      return result;
-   }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof HumidityConfiguration)) {
+			return false;
+		}
+		HumidityConfiguration other = (HumidityConfiguration) obj;
+		if (getId() != null) {
+			if (!getId().equals(other.getId())) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-   public int getBleNotAdvertisingConditionHumidityAlarm()
-   {
-      return bleNotAdvertisingConditionHumidityAlarm;
-   }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		return result;
+	}
 
-   public void setBleNotAdvertisingConditionHumidityAlarm(
-         int bleNotAdvertisingConditionHumidityAlarm)
-   {
-      this.bleNotAdvertisingConditionHumidityAlarm = bleNotAdvertisingConditionHumidityAlarm;
-   }
+	public int getBleNotAdvertisingConditionHumidityAlarm() {
+		return bleNotAdvertisingConditionHumidityAlarm;
+	}
 
-   public int getBleAdvertisingConditionHumidityAlarm()
-   {
-      return bleAdvertisingConditionHumidityAlarm;
-   }
+	public void setBleNotAdvertisingConditionHumidityAlarm(int bleNotAdvertisingConditionHumidityAlarm) {
+		this.bleNotAdvertisingConditionHumidityAlarm = bleNotAdvertisingConditionHumidityAlarm;
+	}
 
-   public void setBleAdvertisingConditionHumidityAlarm(
-         int bleAdvertisingConditionHumidityAlarm)
-   {
-      this.bleAdvertisingConditionHumidityAlarm = bleAdvertisingConditionHumidityAlarm;
-   }
+	public int getBleAdvertisingConditionHumidityAlarm() {
+		return bleAdvertisingConditionHumidityAlarm;
+	}
 
-   public double getSensorHumidityAlarmHigh()
-   {
-      return sensorHumidityAlarmHigh;
-   }
+	public void setBleAdvertisingConditionHumidityAlarm(int bleAdvertisingConditionHumidityAlarm) {
+		this.bleAdvertisingConditionHumidityAlarm = bleAdvertisingConditionHumidityAlarm;
+	}
 
-   public void setSensorHumidityAlarmHigh(double sensorHumidityAlarmHigh)
-   {
-      this.sensorHumidityAlarmHigh = sensorHumidityAlarmHigh;
-   }
+	public double getSensorHumidityAlarmHigh() {
+		return sensorHumidityAlarmHigh;
+	}
 
-   public double getSensorHumidityAlarmLow()
-   {
-      return sensorHumidityAlarmLow;
-   }
+	public void setSensorHumidityAlarmHigh(double sensorHumidityAlarmHigh) {
+		this.sensorHumidityAlarmHigh = sensorHumidityAlarmHigh;
+	}
 
-   public void setSensorHumidityAlarmLow(double sensorHumidityAlarmLow)
-   {
-      this.sensorHumidityAlarmLow = sensorHumidityAlarmLow;
-   }
+	public double getSensorHumidityAlarmLow() {
+		return sensorHumidityAlarmLow;
+	}
 
-   @Override
-   public String toString()
-   {
-      String result = getClass().getSimpleName() + " ";
-      if (getId() != null)
-         result += "id: " + getId();
-      result += ", version: " + getVersion();
-      result += ", bleNotAdvertisingConditionHumidityAlarm: "
-            + bleNotAdvertisingConditionHumidityAlarm;
-      result += ", bleAdvertisingConditionHumidityAlarm: "
-            + bleAdvertisingConditionHumidityAlarm;
-      result += ", sensorHumidityAlarmHigh: " + sensorHumidityAlarmHigh;
-      result += ", sensorHumidityAlarmLow: " + sensorHumidityAlarmLow;
-      return result;
-   }
+	public void setSensorHumidityAlarmLow(double sensorHumidityAlarmLow) {
+		this.sensorHumidityAlarmLow = sensorHumidityAlarmLow;
+	}
+
+	@Override
+	public String toString() {
+		String result = getClass().getSimpleName() + " ";
+		if (getId() != null)
+			result += "id: " + getId();
+		result += ", version: " + getVersion();
+		result += ", bleNotAdvertisingConditionHumidityAlarm: " + bleNotAdvertisingConditionHumidityAlarm;
+		result += ", bleAdvertisingConditionHumidityAlarm: " + bleAdvertisingConditionHumidityAlarm;
+		result += ", sensorHumidityAlarmHigh: " + sensorHumidityAlarmHigh;
+		result += ", sensorHumidityAlarmLow: " + sensorHumidityAlarmLow;
+		return result;
+	}
 }

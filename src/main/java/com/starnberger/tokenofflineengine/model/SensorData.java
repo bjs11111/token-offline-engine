@@ -13,9 +13,17 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * @author Roman Kaufmann
+ *
+ */
 @Entity
 public class SensorData implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7246445006764297806L;
 	@Id
 	@GeneratedValue(generator = "sd-uuid")
 	@GenericGenerator(name = "sd-uuid", strategy = "uuid2")

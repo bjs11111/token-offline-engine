@@ -15,12 +15,17 @@ import org.apache.logging.log4j.core.appender.db.jpa.BasicLogEventEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
- * @author protoss78
+ * @author Roman Kaufmann
  *
  */
 @Entity
 @Table(name = "LogEntry")
 public class JpaLogEntity extends BasicLogEventEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -350065410572663755L;
 
 	public JpaLogEntity() {
 		super();
