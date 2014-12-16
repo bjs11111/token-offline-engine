@@ -6,17 +6,18 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Version;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Token implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", updatable = false, nullable = false)
-	private Long id;
+	@GeneratedValue(generator = "t-uuid")
+	@GenericGenerator(name = "t-uuid", strategy = "uuid2")
+	private String id;
 	@Version
 	@Column(name = "version")
 	private int version;
@@ -45,11 +46,11 @@ public class Token implements Serializable {
 	@Column
 	private Date lastSyncDate;
 
-	public Long getId() {
+	public String getId() {
 		return this.id;
 	}
 
-	public void setId(final Long id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 

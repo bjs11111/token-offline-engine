@@ -6,17 +6,18 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class TokenModel implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", updatable = false, nullable = false)
+	@GeneratedValue(generator = "tm-uuid")
+	@GenericGenerator(name = "tm-uuid", strategy = "uuid2")
 	private String id;
 	@Version
 	@Column(name = "version")

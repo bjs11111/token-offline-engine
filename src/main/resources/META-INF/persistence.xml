@@ -18,10 +18,19 @@
 		<class>com.starnberger.tokenofflineengine.model.GatewayConfiguration</class>
 		<class>com.starnberger.tokenofflineengine.model.Gateway</class>
 		<class>com.starnberger.tokenofflineengine.model.AccelerationConfiguration</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextMapAttributeConverter</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextMapJsonAttributeConverter</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextStackAttributeConverter</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextStackJsonAttributeConverter</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.MarkerAttributeConverter</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.MessageAttributeConverter</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.StackTraceElementAttributeConverter</class>
+		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ThrowableAttributeConverter</class>
+		<class>com.starnberger.tokenofflineengine.model.JpaLogEntity</class>
 		
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.transaction.flush_before_completion" value="true" />
