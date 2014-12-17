@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.starnberger.tokenofflineengine.model;
+package com.starnberger.tokenofflineengine.dao;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

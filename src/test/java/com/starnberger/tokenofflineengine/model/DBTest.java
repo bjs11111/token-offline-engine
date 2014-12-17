@@ -16,6 +16,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.starnberger.tokenofflineengine.dao.EMF;
+
 /**
  * @author protoss78
  *
