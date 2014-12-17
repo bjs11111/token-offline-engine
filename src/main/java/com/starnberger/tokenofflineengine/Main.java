@@ -24,6 +24,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// TODO: Add CPU ID read logic here
 		Main main = new Main();
 		main.startUpChecks();
 		main.workerLoop();

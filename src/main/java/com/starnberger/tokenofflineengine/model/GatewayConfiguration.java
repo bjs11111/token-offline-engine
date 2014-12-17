@@ -31,21 +31,33 @@ public class GatewayConfiguration implements Serializable {
 
 	@Column
 	private String name;
-
+	@Column
 	private String partnerKey;
 
+	/**
+	 * @return
+	 */
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * @param id
+	 */
 	public void setId(final String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return
+	 */
 	public int getVersion() {
 		return this.version;
 	}
 
+	/**
+	 * @param version
+	 */
 	public void setVersion(final int version) {
 		this.version = version;
 	}
@@ -75,10 +87,16 @@ public class GatewayConfiguration implements Serializable {
 		return result;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -94,10 +112,16 @@ public class GatewayConfiguration implements Serializable {
 		return result;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getPartner() {
 		return this.partnerKey;
 	}
 
+	/**
+	 * @param partner
+	 */
 	public void setPartner(final String partner) {
 		this.partnerKey = partner;
 	}

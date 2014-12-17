@@ -1,21 +1,27 @@
 package com.starnberger.tokenofflineengine.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
+@NamedQueries({ @NamedQuery(name = "Gateway.findMe", query = "SELECT g FROM Gateway g") })
 public class Gateway implements Serializable {
 
 	/**
@@ -43,10 +49,18 @@ public class Gateway implements Serializable {
 	private boolean needsConfigUpgrade;
 
 	@Column
+	@JsonIgnore
 	private String firmwareVersionKey;
 
 	@ManyToOne
+	@JsonIgnore
 	private GatewayConfiguration gatewayConfig;
+	@Column
+	@JsonIgnore
+	private String gatewayToken;
+	@Column
+	@JsonIgnore
+	private Date lastSync;
 
 	public String getId() {
 		return this.id;
@@ -89,42 +103,72 @@ public class Gateway implements Serializable {
 		return result;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean isNeedsFirmwareUpgrade() {
 		return needsFirmwareUpgrade;
 	}
 
+	/**
+	 * @param needsFirmwareUpgrade
+	 */
 	public void setNeedsFirmwareUpgrade(boolean needsFirmwareUpgrade) {
 		this.needsFirmwareUpgrade = needsFirmwareUpgrade;
 	}
 
+	/**
+	 * @return
+	 */
 	public boolean isNeedsConfigUpgrade() {
 		return needsConfigUpgrade;
 	}
 
+	/**
+	 * @param needsConfigUpgrade
+	 */
 	public void setNeedsConfigUpgrade(boolean needsConfigUpgrade) {
 		this.needsConfigUpgrade = needsConfigUpgrade;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getFirmwareVersion() {
 		return firmwareVersionKey;
 	}
 
+	/**
+	 * @param firmwareVersion
+	 */
 	public void setFirmwareVersion(String firmwareVersion) {
 		this.firmwareVersionKey = firmwareVersion;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getUuid() {
 		return uuid;
 	}
 
+	/**
+	 * @param uuid
+	 */
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
@@ -145,11 +189,69 @@ public class Gateway implements Serializable {
 		return result;
 	}
 
+	/**
+	 * @return
+	 */
 	public GatewayConfiguration getGatewayConfig() {
 		return this.gatewayConfig;
 	}
 
+	/**
+	 * @param gatewayConfig
+	 */
 	public void setGatewayConfig(final GatewayConfiguration gatewayConfig) {
 		this.gatewayConfig = gatewayConfig;
+	}
+
+	/**
+	 * @return the firmwareVersionKey
+	 */
+	public String getFirmwareVersionKey() {
+		return firmwareVersionKey;
+	}
+
+	/**
+	 * @param firmwareVersionKey
+	 *            the firmwareVersionKey to set
+	 */
+	public void setFirmwareVersionKey(String firmwareVersionKey) {
+		this.firmwareVersionKey = firmwareVersionKey;
+	}
+
+	/**
+	 * @return the gatewayToken
+	 */
+	public String getGatewayToken() {
+		return gatewayToken;
+	}
+
+	/**
+	 * @param gatewayToken
+	 *            the gatewayToken to set
+	 */
+	public void setGatewayToken(String gatewayToken) {
+		this.gatewayToken = gatewayToken;
+	}
+
+	/**
+	 * @return the lastSync
+	 */
+	public Date getLastSync() {
+		return lastSync;
+	}
+
+	/**
+	 * @param lastSync
+	 *            the lastSync to set
+	 */
+	public void setLastSync(Date lastSync) {
+		this.lastSync = lastSync;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 }
