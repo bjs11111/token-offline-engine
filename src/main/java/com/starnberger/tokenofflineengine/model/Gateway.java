@@ -31,6 +31,7 @@ public class Gateway implements Serializable {
 	@Id
 	@GeneratedValue(generator = "g-uuid")
 	@GenericGenerator(name = "g-uuid", strategy = "uuid2")
+	@JsonIgnore
 	private String id;
 	@Version
 	@Column(name = "version")

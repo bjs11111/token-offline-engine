@@ -43,18 +43,30 @@ public class Task implements Serializable {
 	@Column
 	private Date completed;
 
+	/**
+	 * @return
+	 */
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * @param id
+	 */
 	public void setId(final String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return
+	 */
 	public int getVersion() {
 		return this.version;
 	}
 
+	/**
+	 * @param version
+	 */
 	public void setVersion(final int version) {
 		this.version = version;
 	}
@@ -92,54 +104,93 @@ public class Task implements Serializable {
 		return result;
 	}
 
+	/**
+	 * @return
+	 */
 	public TaskType getType() {
 		return type;
 	}
 
+	/**
+	 * @param type
+	 */
 	public void setType(TaskType type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getRelatedId() {
 		return relatedId;
 	}
 
+	/**
+	 * @param relatedId
+	 */
 	public void setRelatedId(String relatedId) {
 		this.relatedId = relatedId;
 	}
 
+	/**
+	 * @return
+	 */
 	public Status getStatus() {
 		return status;
 	}
 
+	/**
+	 * @param status
+	 */
 	public void setStatus(Status status) {
 		this.status = status;
 	}
 
+	/**
+	 * @return
+	 */
 	public Collection<String> getParameters() {
 		return parameters;
 	}
 
+	/**
+	 * @param parameters
+	 */
 	public void setParameters(Collection<String> parameters) {
 		this.parameters = parameters;
 	}
 
+	/**
+	 * @return
+	 */
 	public Date getCreated() {
 		return created;
 	}
 
+	/**
+	 * @param created
+	 */
 	public void setCreated(Date created) {
 		this.created = created;
 	}
 
+	/**
+	 * @return
+	 */
 	public Date getCompleted() {
 		return completed;
 	}
 
+	/**
+	 * @param completed
+	 */
 	public void setCompleted(Date completed) {
 		this.completed = completed;
 	}
 
+	/**
+	 * @return
+	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

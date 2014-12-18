@@ -8,7 +8,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.starnberger.tokenofflineengine.dao.AuthenticationManager;
 import com.starnberger.tokenofflineengine.model.Task;
+import com.starnberger.tokenofflineengine.model.TaskType;
 
 /**
  * @author Roman Kaufmann
@@ -43,6 +45,12 @@ public class Main {
 	 */
 	private void startUpChecks() {
 		logger.info("Performing startup checks");
+		if (!AuthenticationManager.getInstance().isAlreadyRegistered()) {
+			AuthenticationManager.getInstance().doRegister();
+		}
+		Task shutdownTask = new Task();
+		shutdownTask.setType(TaskType.SHUTDOWN);
+		tasks.add(shutdownTask);
 	}
 
 	/**
