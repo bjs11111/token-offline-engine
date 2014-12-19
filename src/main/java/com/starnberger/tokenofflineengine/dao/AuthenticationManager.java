@@ -77,11 +77,9 @@ public class AuthenticationManager {
 			return false;
 		Response response = client.target(AUTH_REGISTER_ME).request().post(Entity.entity(me, MediaType.APPLICATION_JSON));
 		String token = response.getHeaderString(AuthHttpHeader.AUTH_TOKEN);
-		System.out.println(response.readEntity(String.class));
-		System.out.println(token);
-		// TODO: Handle Unauthorized status		
-		/*if (result == null || "".equals(result))
-			return false;*/
+		GatewayInfo.MY_TOKEN = token;
+		if (token == null || "".equals(token))
+			return false;
 		return true;
 	}
 

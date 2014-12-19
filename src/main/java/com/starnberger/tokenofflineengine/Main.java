@@ -46,7 +46,11 @@ public class Main {
 	private void startUpChecks() {
 		logger.info("Performing startup checks");
 		if (!AuthenticationManager.getInstance().isAlreadyRegistered()) {
-			AuthenticationManager.getInstance().doRegister();
+			if (AuthenticationManager.getInstance().doRegister()) {
+				Task shutdownTask = new Task();
+				shutdownTask.setType(TaskType.DOWNLOAD);
+				tasks.add(shutdownTask);
+			}
 		}
 		Task shutdownTask = new Task();
 		shutdownTask.setType(TaskType.SHUTDOWN);
@@ -192,9 +196,14 @@ public class Main {
 		logger.info("Starting OS update");
 	}
 
+	/**
+	 * @param task
+	 */
 	private void doDownload(Task task) {
-		// TODO Auto-generated method stub
 		logger.info("Starting synchronization");
+		DownloadTask downloadTask = new DownloadTask(task);
+		boolean result = downloadTask.execute();
+		logger.info("Download task execution returned: " + result);
 	}
 
 	private void shutdownTasks() {
