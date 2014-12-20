@@ -62,6 +62,9 @@ public class Gateway implements Serializable {
 	@Column
 	@JsonIgnore
 	private Date lastSync;
+	@Column
+	@JsonIgnore
+	private String password;
 
 	public String getId() {
 		return this.id;
@@ -247,6 +250,21 @@ public class Gateway implements Serializable {
 	 */
 	public void setLastSync(Date lastSync) {
 		this.lastSync = lastSync;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password
+	 *            the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**

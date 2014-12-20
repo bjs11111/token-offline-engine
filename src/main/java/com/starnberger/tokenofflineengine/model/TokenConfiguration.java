@@ -37,6 +37,9 @@ public class TokenConfiguration implements Serializable {
 	private int version;
 
 	@Column
+	private String webKey;
+
+	@Column
 	private TokenModel model;
 
 	@Column
@@ -164,10 +167,38 @@ public class TokenConfiguration implements Serializable {
 		return result;
 	}
 
+	/**
+	 * @return
+	 */
 	public Set<SensorConfiguration> getSensorConfigs() {
 		return this.sensorConfigs;
 	}
 
+	/**
+	 * @return the webKey
+	 */
+	public String getWebKey() {
+		return webKey;
+	}
+
+	/**
+	 * @param webKey
+	 *            the webKey to set
+	 */
+	public void setWebKey(String webKey) {
+		this.webKey = webKey;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * @param sensorConfigs
+	 */
 	public void setSensorConfigs(final Set<SensorConfiguration> sensorConfigs) {
 		this.sensorConfigs = sensorConfigs;
 	}

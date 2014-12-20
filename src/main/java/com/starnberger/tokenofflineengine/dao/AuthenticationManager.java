@@ -3,6 +3,8 @@
  */
 package com.starnberger.tokenofflineengine.dao;
 
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -58,6 +60,7 @@ public class AuthenticationManager {
 			em.getTransaction().begin();
 			me = new Gateway();
 			me.setUuid(GatewayInfo.CPUID);
+			me.setPassword(UUID.randomUUID().toString());
 			em.persist(me);
 			em.getTransaction().commit();
 			reportForWork(me);
@@ -75,12 +78,17 @@ public class AuthenticationManager {
 		Gateway me = GatewayManager.getInstance().findMe();
 		if (me == null)
 			return false;
-		Response response = client.target(AUTH_REGISTER_ME).request().post(Entity.entity(me, MediaType.APPLICATION_JSON));
-		String token = response.getHeaderString(AuthHttpHeader.AUTH_TOKEN);
-		GatewayInfo.MY_TOKEN = token;
-		if (token == null || "".equals(token))
-			return false;
-		return true;
+		Response response = client.target(AUTH_REGISTER_ME).path("/{id}").resolveTemplate("id", me.getUuid()).request()
+				.post(Entity.entity(me.getPassword(), MediaType.APPLICATION_JSON));
+
+		if (response.getStatus() == 200){
+			String newServiceToken = response.getHeaderString(AuthHttpHeader.SERVICE_KEY);
+			me.setGatewayToken(newServiceToken);
+			GatewayInfo.SERVICE_TOKEN = newServiceToken;
+			return true;
+		}
+		GatewayInfo.SERVICE_TOKEN = null;
+		return false;
 	}
 
 	/**
@@ -89,7 +97,8 @@ public class AuthenticationManager {
 	public void reportForWork(Gateway me) {
 		Response response = client.target(AUTH_ASSIGN_ME).request().post(Entity.entity(me, MediaType.APPLICATION_JSON));
 		// TODO: Handle Unauthorized status
-		// Close is only necessary, because we do not read the returned entity from the response
+		// Close is only necessary, because we do not read the returned entity
+		// from the response
 		response.close();
 	}
 }
