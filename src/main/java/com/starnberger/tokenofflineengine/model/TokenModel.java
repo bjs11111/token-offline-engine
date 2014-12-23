@@ -1,64 +1,52 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.starnberger.tokenofflineengine.common.ITokenModel;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-public class TokenModel implements Serializable {
+@NamedQueries({
+	@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
+	@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.isDeleted = :isDeleted")
+})
+public class TokenModel extends SyncEntity implements ITokenModel {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3240379565956367267L;
-	@Id
-	@GeneratedValue(generator = "tm-uuid")
-	@GenericGenerator(name = "tm-uuid", strategy = "uuid2")
-	private String id;
-	@Version
-	@Column(name = "version")
-	private int version;
+	private static final long serialVersionUID = 8268012678953045721L;
 
 	@Column
 	private String name;
 
-	@OneToMany
-	private List<SensorType> sensors;
+	@ElementCollection
+	// SensorType.webKey
+	private List<String> sensorKeys;
 
-	public String getId() {
-		return this.id;
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#getSensorKeys()
+	 */
+	@Override
+	public List<String> getSensorKeys() {
+		return sensorKeys;
 	}
 
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	public int getVersion() {
-		return this.version;
-	}
-
-	public void setVersion(final int version) {
-		this.version = version;
-	}
-
-	public List<SensorType> getSensors() {
-		return sensors;
-	}
-
-	public void setSensors(List<SensorType> sensors) {
-		this.sensors = sensors;
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#setSensorKeys(java.util.List)
+	 */
+	@Override
+	public void setSensorKeys(List<String> sensors) {
+		this.sensorKeys = sensors;
 	}
 
 	@Override
@@ -86,10 +74,18 @@ public class TokenModel implements Serializable {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#getName()
+	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#setName(java.lang.String)
+	 */
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}

@@ -1,53 +1,42 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.Version;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.starnberger.tokenofflineengine.common.ISensorConfiguration;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-@Inheritance
-@DiscriminatorColumn
-public abstract class SensorConfiguration implements Serializable {
+@NamedQueries({
+		@NamedQuery(name = "SensorConfiguration.lastModified", query = "SELECT g from SensorConfiguration g WHERE g.lastModified > :lastSyncDate"),
+		@NamedQuery(name = "SensorConfiguration.deleted", query = "SELECT g from SensorConfiguration g WHERE g.isDeleted = :isDeleted") })
+public class SensorConfiguration extends SyncEntity implements ISensorConfiguration {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5618490630270815352L;
-	@Id
-	@GeneratedValue(generator = "sc-uuid")
-	@GenericGenerator(name = "sc-uuid", strategy = "uuid2")
-	private String id;
-	@Version
-	@Column(name = "version")
-	private int version;
+	private static final long serialVersionUID = -6382431230433111245L;
 
-	public String getId() {
-		return this.id;
-	}
+	@Column
+	// TokenConfiguration.webKey
+	private String ownerKey;
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+	@Column
+	// SensorType.webKey
+	private String sensorTypeKey;
 
-	public int getVersion() {
-		return this.version;
-	}
-
-	public void setVersion(final int version) {
-		this.version = version;
-	}
+	@ElementCollection
+	// SensorConfigValue
+	private List<String> configValueKeys = new ArrayList<String>();
 
 	@Override
 	public String toString() {
@@ -81,4 +70,60 @@ public abstract class SensorConfiguration implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#getOwnerKey()
+	 */
+	@Override
+	public String getOwnerKey() {
+		return ownerKey;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#setOwnerKey(java.lang.String)
+	 */
+	@Override
+	public void setOwnerKey(String owner) {
+		this.ownerKey = owner;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#getSensorTypeKey()
+	 */
+	@Override
+	public String getSensorTypeKey() {
+		return sensorTypeKey;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#setSensorTypeKey(java.lang.String)
+	 */
+	@Override
+	public void setSensorTypeKey(String sensorType) {
+		this.sensorTypeKey = sensorType;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#getConfigValueKeys()
+	 */
+	@Override
+	public List<String> getConfigValueKeys() {
+		return configValueKeys;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#setConfigValueKeys(java.util.List)
+	 */
+	@Override
+	public void setConfigValueKeys(List<String> configValue) {
+		this.configValueKeys = configValue;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 }

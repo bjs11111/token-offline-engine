@@ -1,66 +1,42 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.starnberger.tokenofflineengine.common.DebugLevel;
+import com.starnberger.tokenofflineengine.common.IGatewayConfiguration;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-public class GatewayConfiguration implements Serializable {
+@NamedQueries({
+		@NamedQuery(name = "GatewayConfiguration.lastModified", query = "SELECT g from GatewayConfiguration g WHERE g.lastModified > :lastSyncDate"),
+		@NamedQuery(name = "GatewayConfiguration.deleted", query = "SELECT g from GatewayConfiguration g WHERE g.isDeleted = :isDeleted") })
+public class GatewayConfiguration extends SyncEntity implements IGatewayConfiguration {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5359774291512793003L;
-	@Id
-	@GeneratedValue(generator = "gc-uuid")
-	@GenericGenerator(name = "gc-uuid", strategy = "uuid2")
-	private String id;
-	@Version
-	@Column(name = "version")
-	private int version;
+	private static final long serialVersionUID = 3017416369270290673L;
 
 	@Column
 	private String name;
 	@Column
+	private DebugLevel debugLevel;
+	@Column
+	private int syncInterval;
+	@Column
+	private int statusUpdateInterval;
+	@Column
+	private int logUpdateInterval;
+
+	@Column
+	// Partner.webKey
 	private String partnerKey;
-
-	/**
-	 * @return
-	 */
-	public String getId() {
-		return this.id;
-	}
-
-	/**
-	 * @param id
-	 */
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getVersion() {
-		return this.version;
-	}
-
-	/**
-	 * @param version
-	 */
-	public void setVersion(final int version) {
-		this.version = version;
-	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -87,16 +63,18 @@ public class GatewayConfiguration implements Serializable {
 		return result;
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getName()
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param name
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setName(java.lang.String)
 	 */
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -112,17 +90,84 @@ public class GatewayConfiguration implements Serializable {
 		return result;
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getPartnerKey()
 	 */
-	public String getPartner() {
+	@Override
+	public String getPartnerKey() {
 		return this.partnerKey;
 	}
 
-	/**
-	 * @param partner
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setPartnerKey(java.lang.String)
 	 */
-	public void setPartner(final String partner) {
+	@Override
+	public void setPartnerKey(final String partner) {
 		this.partnerKey = partner;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getDebugLevel()
+	 */
+	@Override
+	public DebugLevel getDebugLevel() {
+		return debugLevel;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setDebugLevel(com.starnberger.tokenengine.server.dao.DebugLevel)
+	 */
+	@Override
+	public void setDebugLevel(DebugLevel debugLevel) {
+		this.debugLevel = debugLevel;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getSyncInterval()
+	 */
+	@Override
+	public int getSyncInterval() {
+		return syncInterval;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setSyncInterval(int)
+	 */
+	@Override
+	public void setSyncInterval(int syncInterval) {
+		this.syncInterval = syncInterval;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getStatusUpdateInterval()
+	 */
+	@Override
+	public int getStatusUpdateInterval() {
+		return statusUpdateInterval;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setStatusUpdateInterval(int)
+	 */
+	@Override
+	public void setStatusUpdateInterval(int statusUpdateInterval) {
+		this.statusUpdateInterval = statusUpdateInterval;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getLogUpdateInterval()
+	 */
+	@Override
+	public int getLogUpdateInterval() {
+		return logUpdateInterval;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setLogUpdateInterval(int)
+	 */
+	@Override
+	public void setLogUpdateInterval(int logUpdateInterval) {
+		this.logUpdateInterval = logUpdateInterval;
+	}
+
 }

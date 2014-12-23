@@ -1,41 +1,32 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Version;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.IGateway;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-@NamedQueries({ @NamedQuery(name = "Gateway.findMe", query = "SELECT g FROM Gateway g") })
-public class Gateway implements Serializable {
+@NamedQueries({
+		@NamedQuery(name = "Gateway.findCpuId", query = "SELECT g from Gateway g WHERE g.uuid = :cpuid and g.isDeleted = FALSE"),
+		@NamedQuery(name = "Gateway.findToken", query = "SELECT g from Gateway g WHERE g.gatewayToken = :gatewayToken and g.isDeleted = FALSE"),
+		@NamedQuery(name = "Gateway.lastModified", query = "SELECT g from Gateway g WHERE g.lastModified > :lastSyncDate"),
+		@NamedQuery(name = "Gateway.deleted", query = "SELECT g from Gateway g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "Gateway.findMe", query = "SELECT g FROM Gateway g") })
+public class Gateway extends SyncEntity implements IGateway {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7244940530167510973L;
-	@Id
-	@GeneratedValue(generator = "g-uuid")
-	@GenericGenerator(name = "g-uuid", strategy = "uuid2")
-	@JsonIgnore
-	private String id;
-	@Version
-	@Column(name = "version")
-	private int version;
+	private static final long serialVersionUID = -3226217939937580439L;
 
 	@Column
 	private String name;
@@ -50,37 +41,27 @@ public class Gateway implements Serializable {
 	private boolean needsConfigUpgrade;
 
 	@Column
-	@JsonIgnore
+	// GatewayVersion.webKey
 	private String firmwareVersionKey;
 
-	@ManyToOne
-	@JsonIgnore
-	private GatewayConfiguration gatewayConfig;
+	@Column
+	// GatewayConfig.webKey
+	private String gatewayConfigKey;
+
 	@Column
 	@JsonIgnore
 	private String gatewayToken;
+
 	@Column
-	@JsonIgnore
-	private Date lastSync;
+	// User.webKey
+	private String associatedUserKey;
+
 	@Column
 	@JsonIgnore
 	private String password;
 
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	public int getVersion() {
-		return this.version;
-	}
-
-	public void setVersion(final int version) {
-		this.version = version;
-	}
+	@Column
+	private Date lastSync;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -107,72 +88,113 @@ public class Gateway implements Serializable {
 		return result;
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.starnberger.tokenengine.server.dao.IGateway#getName()
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param name
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setName(java.lang.String)
 	 */
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#isNeedsFirmwareUpgrade()
 	 */
+	@Override
 	public boolean isNeedsFirmwareUpgrade() {
 		return needsFirmwareUpgrade;
 	}
 
-	/**
-	 * @param needsFirmwareUpgrade
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setNeedsFirmwareUpgrade
+	 * (boolean)
 	 */
+	@Override
 	public void setNeedsFirmwareUpgrade(boolean needsFirmwareUpgrade) {
 		this.needsFirmwareUpgrade = needsFirmwareUpgrade;
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#isNeedsConfigUpgrade()
 	 */
+	@Override
 	public boolean isNeedsConfigUpgrade() {
 		return needsConfigUpgrade;
 	}
 
-	/**
-	 * @param needsConfigUpgrade
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setNeedsConfigUpgrade
+	 * (boolean)
 	 */
+	@Override
 	public void setNeedsConfigUpgrade(boolean needsConfigUpgrade) {
 		this.needsConfigUpgrade = needsConfigUpgrade;
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#getFirmwareVersionKey()
 	 */
-	public String getFirmwareVersion() {
+	@Override
+	public String getFirmwareVersionKey() {
 		return firmwareVersionKey;
 	}
 
-	/**
-	 * @param firmwareVersion
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setFirmwareVersionKey
+	 * (java.lang.String)
 	 */
-	public void setFirmwareVersion(String firmwareVersion) {
+	@Override
+	public void setFirmwareVersionKey(String firmwareVersion) {
 		this.firmwareVersionKey = firmwareVersion;
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.starnberger.tokenengine.server.dao.IGateway#getUuid()
 	 */
+	@Override
 	public String getUuid() {
 		return uuid;
 	}
 
-	/**
-	 * @param uuid
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setUuid(java.lang.String)
 	 */
+	@Override
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
@@ -193,53 +215,107 @@ public class Gateway implements Serializable {
 		return result;
 	}
 
-	/**
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#getGatewayConfigKey()
 	 */
-	public GatewayConfiguration getGatewayConfig() {
-		return this.gatewayConfig;
+	@Override
+	public String getGatewayConfigKey() {
+		return this.gatewayConfigKey;
 	}
 
-	/**
-	 * @param gatewayConfig
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setGatewayConfigKey(java
+	 * .lang.String)
 	 */
-	public void setGatewayConfig(final GatewayConfiguration gatewayConfig) {
-		this.gatewayConfig = gatewayConfig;
+	@Override
+	public void setGatewayConfigKey(final String gatewayConfig) {
+		this.gatewayConfigKey = gatewayConfig;
 	}
 
-	/**
-	 * @return the firmwareVersionKey
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.starnberger.tokenengine.server.dao.IGateway#getGatewayToken()
 	 */
-	public String getFirmwareVersionKey() {
-		return firmwareVersionKey;
-	}
-
-	/**
-	 * @param firmwareVersionKey
-	 *            the firmwareVersionKey to set
-	 */
-	public void setFirmwareVersionKey(String firmwareVersionKey) {
-		this.firmwareVersionKey = firmwareVersionKey;
-	}
-
-	/**
-	 * @return the gatewayToken
-	 */
+	@Override
 	public String getGatewayToken() {
 		return gatewayToken;
 	}
 
-	/**
-	 * @param gatewayToken
-	 *            the gatewayToken to set
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setGatewayToken(java.
+	 * lang.String)
 	 */
+	@Override
 	public void setGatewayToken(String gatewayToken) {
 		this.gatewayToken = gatewayToken;
 	}
 
 	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#getAssociatedUserKey()
+	 */
+	@Override
+	public String getAssociatedUserKey() {
+		return associatedUserKey;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setAssociatedUserKey(
+	 * java.lang.String)
+	 */
+	@Override
+	public void setAssociatedUserKey(String associatedUser) {
+		this.associatedUserKey = associatedUser;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.starnberger.tokenengine.server.dao.IGateway#getPassword()
+	 */
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.IGateway#setPassword(java.lang
+	 * .String)
+	 */
+	@Override
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
 	 * @return the lastSync
 	 */
+	@Override
 	public Date getLastSync() {
 		return lastSync;
 	}
@@ -248,29 +324,8 @@ public class Gateway implements Serializable {
 	 * @param lastSync
 	 *            the lastSync to set
 	 */
+	@Override
 	public void setLastSync(Date lastSync) {
 		this.lastSync = lastSync;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password
-	 *            the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 }

@@ -1,46 +1,34 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.starnberger.tokenofflineengine.common.ITokenConfiguration;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-public class TokenConfiguration implements Serializable {
+@NamedQueries({
+		@NamedQuery(name = "TokenConfiguration.lastModified", query = "SELECT g from TokenConfiguration g WHERE g.lastModified > :lastSyncDate"),
+		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.isDeleted = :isDeleted") })
+public class TokenConfiguration extends SyncEntity implements ITokenConfiguration {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2405928684566736499L;
-	@Id
-	@GeneratedValue(generator = "tc-uuid")
-	@GenericGenerator(name = "tc-uuid", strategy = "uuid2")
-	@Column(name = "ID")
-	private String id;
-	@Version
-	@Column(name = "version")
-	private int version;
+	private static final long serialVersionUID = 6398372617991253443L;
 
 	@Column
-	private String webKey;
-
-	@Column
-	private TokenModel model;
+	// TokenModel.webKey
+	private String modelKey;
 
 	@Column
 	private int bleAdvertisingInterval;
@@ -54,28 +42,9 @@ public class TokenConfiguration implements Serializable {
 	@Column
 	private int bleTxPower;
 
-	@Column
-	@Temporal(TemporalType.DATE)
-	private Date lastModified;
-
-	@OneToMany
-	private Set<SensorConfiguration> sensorConfigs = new HashSet<SensorConfiguration>();
-
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(final String id) {
-		this.id = id;
-	}
-
-	public int getVersion() {
-		return this.version;
-	}
-
-	public void setVersion(final int version) {
-		this.version = version;
-	}
+	@ElementCollection
+	// SensorConfiguration
+	private Set<String> sensorConfigKeys = new HashSet<String>();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -102,52 +71,84 @@ public class TokenConfiguration implements Serializable {
 		return result;
 	}
 
-	public TokenModel getModel() {
-		return model;
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#getModelKey()
+	 */
+	@Override
+	public String getModelKey() {
+		return modelKey;
 	}
 
-	public void setModel(TokenModel model) {
-		this.model = model;
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#setModelKey(java.lang.String)
+	 */
+	@Override
+	public void setModelKey(String model) {
+		this.modelKey = model;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#getBleAdvertisingInterval()
+	 */
+	@Override
 	public int getBleAdvertisingInterval() {
 		return bleAdvertisingInterval;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#setBleAdvertisingInterval(int)
+	 */
+	@Override
 	public void setBleAdvertisingInterval(int bleAdvertisingInterval) {
 		this.bleAdvertisingInterval = bleAdvertisingInterval;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#getBleBondableInterval()
+	 */
+	@Override
 	public int getBleBondableInterval() {
 		return bleBondableInterval;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#setBleBondableInterval(int)
+	 */
+	@Override
 	public void setBleBondableInterval(int bleBondableInterval) {
 		this.bleBondableInterval = bleBondableInterval;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#isBleAdvertisingConditionAlways()
+	 */
+	@Override
 	public boolean isBleAdvertisingConditionAlways() {
 		return bleAdvertisingConditionAlways;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#setBleAdvertisingConditionAlways(boolean)
+	 */
+	@Override
 	public void setBleAdvertisingConditionAlways(boolean bleAdvertisingConditionAlways) {
 		this.bleAdvertisingConditionAlways = bleAdvertisingConditionAlways;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#getBleTxPower()
+	 */
+	@Override
 	public int getBleTxPower() {
 		return bleTxPower;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#setBleTxPower(int)
+	 */
+	@Override
 	public void setBleTxPower(int bleTxPower) {
 		this.bleTxPower = bleTxPower;
-	}
-
-	public Date getLastModified() {
-		return lastModified;
-	}
-
-	public void setLastModified(Date lastModified) {
-		this.lastModified = lastModified;
 	}
 
 	@Override
@@ -156,8 +157,8 @@ public class TokenConfiguration implements Serializable {
 		if (id != null)
 			result += "id: " + id;
 		result += ", version: " + version;
-		if (model != null)
-			result += ", model: " + model;
+		if (modelKey != null)
+			result += ", model: " + modelKey;
 		result += ", bleAdvertisingInterval: " + bleAdvertisingInterval;
 		result += ", bleBondableInterval: " + bleBondableInterval;
 		result += ", bleAdvertisingConditionAlways: " + bleAdvertisingConditionAlways;
@@ -167,39 +168,20 @@ public class TokenConfiguration implements Serializable {
 		return result;
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#getSensorConfigKeys()
 	 */
-	public Set<SensorConfiguration> getSensorConfigs() {
-		return this.sensorConfigs;
+	@Override
+	public Set<String> getSensorConfigKeys() {
+		return sensorConfigKeys;
 	}
 
-	/**
-	 * @return the webKey
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenengine.server.dao.ITokenConfiguration#setSensorConfigKeys(java.util.Set)
 	 */
-	public String getWebKey() {
-		return webKey;
+	@Override
+	public void setSensorConfigKeys(Set<String> sensorConfigs) {
+		this.sensorConfigKeys = sensorConfigs;
 	}
 
-	/**
-	 * @param webKey
-	 *            the webKey to set
-	 */
-	public void setWebKey(String webKey) {
-		this.webKey = webKey;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	/**
-	 * @param sensorConfigs
-	 */
-	public void setSensorConfigs(final Set<SensorConfiguration> sensorConfigs) {
-		this.sensorConfigs = sensorConfigs;
-	}
 }

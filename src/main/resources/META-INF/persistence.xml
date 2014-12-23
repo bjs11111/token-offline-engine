@@ -9,15 +9,14 @@
 		<class>com.starnberger.tokenofflineengine.model.TokenModel</class>
 		<class>com.starnberger.tokenofflineengine.model.Token</class>
 		<class>com.starnberger.tokenofflineengine.model.TokenConfiguration</class>
-		<class>com.starnberger.tokenofflineengine.model.TemperatureConfiguration</class>
 		<class>com.starnberger.tokenofflineengine.model.SensorType</class>
 		<class>com.starnberger.tokenofflineengine.model.SensorData</class>
-		<class>com.starnberger.tokenofflineengine.model.PIRConfiguration</class>
-		<class>com.starnberger.tokenofflineengine.model.HumidityConfiguration</class>
-		<class>com.starnberger.tokenofflineengine.model.GenericSensorConfiguration</class>
 		<class>com.starnberger.tokenofflineengine.model.GatewayConfiguration</class>
 		<class>com.starnberger.tokenofflineengine.model.Gateway</class>
-		<class>com.starnberger.tokenofflineengine.model.AccelerationConfiguration</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorConfiguration</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorConfigParameter</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorConfigValue</class>
+		<class>com.starnberger.tokenofflineengine.model.Task</class>
 		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextMapAttributeConverter</class>
 		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextMapJsonAttributeConverter</class>
 		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextStackAttributeConverter</class>

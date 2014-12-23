@@ -69,14 +69,6 @@ public class DBTest {
 	}
 
 	@Test
-	public void testAC() {
-		EntityManager em = DBTest.emf.createEntityManager();
-		AccelerationConfiguration accelerationConfiguration = new AccelerationConfiguration();
-		em.persist(accelerationConfiguration);
-		em.close();
-	}
-
-	@Test
 	public void testGC() {
 		EntityManager em = DBTest.emf.createEntityManager();
 		GatewayConfiguration gatewayConfiguration = new GatewayConfiguration();
@@ -87,24 +79,8 @@ public class DBTest {
 	@Test
 	public void testGSC() {
 		EntityManager em = DBTest.emf.createEntityManager();
-		GenericSensorConfiguration genericSensorConfiguration = new GenericSensorConfiguration();
+		SensorConfiguration genericSensorConfiguration = new SensorConfiguration();
 		em.persist(genericSensorConfiguration);
-		em.close();
-	}
-
-	@Test
-	public void testHSC() {
-		EntityManager em = DBTest.emf.createEntityManager();
-		HumidityConfiguration humidityConfiguration = new HumidityConfiguration();
-		em.persist(humidityConfiguration);
-		em.close();
-	}
-
-	@Test
-	public void testPIR() {
-		EntityManager em = DBTest.emf.createEntityManager();
-		PIRConfiguration pirConfiguration = new PIRConfiguration();
-		em.persist(pirConfiguration);
 		em.close();
 	}
 
@@ -121,14 +97,6 @@ public class DBTest {
 		EntityManager em = DBTest.emf.createEntityManager();
 		SensorType sensorType = new SensorType();
 		em.persist(sensorType);
-		em.close();
-	}
-
-	@Test
-	public void testTC() {
-		EntityManager em = DBTest.emf.createEntityManager();
-		TemperatureConfiguration temperatureConfiguration = new TemperatureConfiguration();
-		em.persist(temperatureConfiguration);
 		em.close();
 	}
 
@@ -155,12 +123,17 @@ public class DBTest {
 		EntityManager em = DBTest.emf.createEntityManager();
 		em.getTransaction().begin();
 		TokenConfiguration tokenConfiguration = new TokenConfiguration();
-		tokenConfiguration.setSensorConfigs(new HashSet<SensorConfiguration>());
+		SensorConfiguration sensorConfiguration = new SensorConfiguration();
+		em.persist(sensorConfiguration);
+		em.flush();
+		HashSet<String> sensorConfigKeys = new HashSet<String>();
+		sensorConfigKeys.add(sensorConfiguration.getWebKey());
+		tokenConfiguration.setSensorConfigKeys(sensorConfigKeys);
 		em.persist(tokenConfiguration);
 		em.getTransaction().commit();
 
-		TypedQuery<TokenConfiguration> findAllQuery = em.createQuery(
-				"SELECT s FROM TokenConfiguration s", TokenConfiguration.class);
+		TypedQuery<TokenConfiguration> findAllQuery = em.createQuery("SELECT s FROM TokenConfiguration s",
+				TokenConfiguration.class);
 		final List<TokenConfiguration> results = findAllQuery.getResultList();
 		String message = "Count: " + results.size();
 		System.out.println(message);

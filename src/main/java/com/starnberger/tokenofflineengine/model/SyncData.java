@@ -25,6 +25,20 @@ public class SyncData implements Serializable {
 	private List<GatewayConfiguration> updatedGatewayConfigurations = new ArrayList<GatewayConfiguration>();
 	private List<Task> updatedTasks = new ArrayList<Task>();
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SyncData [updatedTokens=" + updatedTokens + ", updatedTokenConfigurations="
+				+ updatedTokenConfigurations + ", updatedTokenModels=" + updatedTokenModels
+				+ ", updatedSensorConfigurations=" + updatedSensorConfigurations + ", updatedSensorTypes="
+				+ updatedSensorTypes + ", updatedGatewayConfigurations=" + updatedGatewayConfigurations
+				+ ", updatedTasks=" + updatedTasks + "]";
+	}
+
 	/**
 	 * @return the updatedTokens
 	 */
@@ -130,16 +144,11 @@ public class SyncData implements Serializable {
 		this.updatedTasks = updatedTasks;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @return the serialversionuid
 	 */
-	@Override
-	public String toString() {
-		return "SyncData [updatedTokens=" + updatedTokens + ", updatedTokenConfigurations="
-				+ updatedTokenConfigurations + ", updatedTokenModels=" + updatedTokenModels
-				+ ", updatedSensorConfigurations=" + updatedSensorConfigurations + ", updatedSensorTypes="
-				+ updatedSensorTypes + ", updatedGatewayConfigurations=" + updatedGatewayConfigurations
-				+ ", updatedTasks=" + updatedTasks + "]";
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

@@ -8,9 +8,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.starnberger.tokenofflineengine.common.TaskType;
 import com.starnberger.tokenofflineengine.dao.AuthenticationManager;
 import com.starnberger.tokenofflineengine.model.Task;
-import com.starnberger.tokenofflineengine.model.TaskType;
 
 /**
  * @author Roman Kaufmann
