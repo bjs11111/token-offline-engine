@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.ITokenConfiguration;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
@@ -19,7 +20,8 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "TokenConfiguration.lastModified", query = "SELECT g from TokenConfiguration g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.isDeleted = :isDeleted") })
+		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "TokenConfiguration.findMyWebKey", query = "select s from TokenConfiguration s where s.webKey = :webKey") })
 public class TokenConfiguration extends SyncEntity implements ITokenConfiguration {
 
 	/**
@@ -183,6 +185,23 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	@Override
 	public void setSensorConfigKeys(Set<String> sensorConfigs) {
 		this.sensorConfigKeys = sensorConfigs;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof TokenConfiguration)
+		{
+			TokenConfiguration token = (TokenConfiguration) source;
+			setBleAdvertisingConditionAlways(token.isBleAdvertisingConditionAlways());
+			setBleAdvertisingInterval(token.getBleAdvertisingInterval());
+			setBleBondableInterval(token.getBleBondableInterval());
+			setBleTxPower(token.getBleTxPower());
+			setModelKey(token.getModelKey());
+			setSensorConfigKeys(token.getSensorConfigKeys());
+			setWebKey(token.getWebKey());
+		}
 	}
 
 }

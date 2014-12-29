@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.IToken;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
@@ -19,7 +20,8 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 		@NamedQuery(name = "Token.ownedBy", query = "SELECT t from Token t WHERE t.owner = :owner and t.isDeleted = FALSE"),
 		@NamedQuery(name = "Token.lastModifiedByOwner", query = "SELECT t from Token t WHERE t.owner = :owner and t.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Token.lastModified", query = "SELECT t from Token t WHERE t.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "Token.deleted", query = "SELECT t from Token t WHERE t.isDeleted = :isDeleted") })
+		@NamedQuery(name = "Token.deleted", query = "SELECT t from Token t WHERE t.isDeleted = :isDeleted"),
+		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.webKey = :webKey") })
 public class Token extends SyncEntity implements IToken  {
 
 	/**
@@ -251,5 +253,25 @@ public class Token extends SyncEntity implements IToken  {
 		if (lastSyncDate != null)
 			result += ", lastSyncDate: " + lastSyncDate;
 		return result;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof Token)
+		{
+			Token token = (Token) source;
+			setWebKey(token.getWebKey());
+			setName(token.getName());
+			setLastSyncDate(token.getLastSyncDate());
+			setMac(token.getMac());
+			setMajor(token.getMajor());
+			setMinor(token.getMinor());
+			setModel(token.getModel());
+			setNeedsConfigUpdate(token.isNeedsConfigUpdate());
+			setOwner(token.getOwner());
+			setUuid(token.getUuid());
+		}
 	}
 }

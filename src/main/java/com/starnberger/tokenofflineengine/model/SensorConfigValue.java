@@ -7,8 +7,11 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfigValue;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
@@ -16,19 +19,25 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
  *
  */
 @Entity
+@NamedQueries({
+		@NamedQuery(name = "SensorConfigValue.lastModified", query = "SELECT g from SensorConfigValue g WHERE g.lastModified > :lastSyncDate"),
+		@NamedQuery(name = "SensorConfigValue.deleted", query = "SELECT g from SensorConfigValue g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "SensorConfigValue.findMyWebKey", query = "select s from SensorConfigValue s where s.webKey = :webKey") })
 public class SensorConfigValue extends SyncEntity implements ISensorConfigValue {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2454959884417555325L;
-	
+
 	@Column
 	private String key;
 	@Column
 	private Serializable value;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigValue#getKey()
 	 */
 	@Override
@@ -36,15 +45,21 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 		return key;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigValue#setKey(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigValue#setKey(java
+	 * .lang.String)
 	 */
 	@Override
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigValue#getValue()
 	 */
 	@Override
@@ -52,8 +67,12 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigValue#setValue(java.io.Serializable)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigValue#setValue(java
+	 * .io.Serializable)
 	 */
 	@Override
 	public void setValue(Serializable value) {
@@ -118,6 +137,19 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 	@Override
 	public String toString() {
 		return "SensorConfigValue [id=" + id + ", version=" + version + ", key=" + key + ", value=" + value + "]";
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorConfigValue)
+		{
+			SensorConfigValue token = (SensorConfigValue) source;
+			setWebKey(token.getWebKey());
+			setKey(token.getKey());
+			setValue(token.getValue());
+		}
 	}
 
 }

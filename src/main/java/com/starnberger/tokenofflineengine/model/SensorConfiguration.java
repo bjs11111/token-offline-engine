@@ -10,6 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfiguration;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
@@ -19,7 +20,8 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "SensorConfiguration.lastModified", query = "SELECT g from SensorConfiguration g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "SensorConfiguration.deleted", query = "SELECT g from SensorConfiguration g WHERE g.isDeleted = :isDeleted") })
+		@NamedQuery(name = "SensorConfiguration.deleted", query = "SELECT g from SensorConfiguration g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "SensorConfiguration.findMyWebKey", query = "select s from SensorConfiguration s where s.webKey = :webKey") })
 public class SensorConfiguration extends SyncEntity implements ISensorConfiguration {
 
 	/**
@@ -72,48 +74,69 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#getOwnerKey()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#getOwnerKey()
 	 */
 	@Override
 	public String getOwnerKey() {
 		return ownerKey;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#setOwnerKey(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#setOwnerKey
+	 * (java.lang.String)
 	 */
 	@Override
 	public void setOwnerKey(String owner) {
 		this.ownerKey = owner;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#getSensorTypeKey()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#getSensorTypeKey
+	 * ()
 	 */
 	@Override
 	public String getSensorTypeKey() {
 		return sensorTypeKey;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#setSensorTypeKey(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#setSensorTypeKey
+	 * (java.lang.String)
 	 */
 	@Override
 	public void setSensorTypeKey(String sensorType) {
 		this.sensorTypeKey = sensorType;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#getConfigValueKeys()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#
+	 * getConfigValueKeys()
 	 */
 	@Override
 	public List<String> getConfigValueKeys() {
 		return configValueKeys;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#setConfigValueKeys(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#
+	 * setConfigValueKeys(java.util.List)
 	 */
 	@Override
 	public void setConfigValueKeys(List<String> configValue) {
@@ -125,6 +148,20 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorConfiguration)
+		{
+			SensorConfiguration token = (SensorConfiguration) source;
+			setWebKey(token.getWebKey());
+			setConfigValueKeys(token.getConfigValueKeys());
+			setOwnerKey(token.getOwnerKey());
+			setSensorTypeKey(token.getSensorTypeKey());
+		}
 	}
 
 }

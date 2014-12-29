@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.starnberger.tokenofflineengine.common.IGatewayVersion;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
@@ -95,5 +96,19 @@ public class GatewayVersion extends SyncEntity implements IGatewayVersion {
 		if (file != null && !file.trim().isEmpty())
 			result += ", file: " + file;
 		return result;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof GatewayVersion)
+		{
+			GatewayVersion token = (GatewayVersion) source;
+			setWebKey(token.getWebKey());
+			setDescription(token.getDescription());
+			setFile(token.getFile());
+			setName(token.getName());
+		}
 	}
 }

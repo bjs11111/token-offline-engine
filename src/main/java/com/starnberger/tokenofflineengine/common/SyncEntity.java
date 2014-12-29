@@ -83,7 +83,8 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 	 */
 	@Override
 	public void setDeleted(boolean isDeleted) {
-		this.state = EntityState.DELETED;
+		if (isDeleted)
+			this.state = EntityState.DELETED;
 		this.isDeleted = isDeleted;
 	}
 

@@ -5,8 +5,11 @@ package com.starnberger.tokenofflineengine.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfigParameter;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
@@ -14,6 +17,10 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
  *
  */
 @Entity
+@NamedQueries({
+		@NamedQuery(name = "SensorConfigParameter.lastModified", query = "SELECT g from SensorConfigParameter g WHERE g.lastModified > :lastSyncDate"),
+		@NamedQuery(name = "SensorConfigParameter.deleted", query = "SELECT g from SensorConfigParameter g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "SensorConfigParameter.findMyWebKey", query = "select s from SensorConfigParameter s where s.webKey = :webKey") })
 public class SensorConfigParameter extends SyncEntity implements ISensorConfigParameter {
 
 	/**
@@ -30,64 +37,94 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 	@Column
 	private int sequence;
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getKey()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getKey()
 	 */
 	@Override
 	public String getKey() {
 		return key;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setKey(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setKey(
+	 * java.lang.String)
 	 */
 	@Override
 	public void setKey(String key) {
 		this.key = key;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getDescription()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getDescription
+	 * ()
 	 */
 	@Override
 	public String getDescription() {
 		return description;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setDescription(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setDescription
+	 * (java.lang.String)
 	 */
 	@Override
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getType()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getType()
 	 */
 	@Override
 	public Class<?> getType() {
 		return type;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setType(java.lang.Class)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setType
+	 * (java.lang.Class)
 	 */
 	@Override
 	public void setType(Class<?> type) {
 		this.type = type;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getSequence()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#getSequence
+	 * ()
 	 */
 	@Override
 	public int getSequence() {
 		return sequence;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setSequence(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#setSequence
+	 * (int)
 	 */
 	@Override
 	public void setSequence(int sequence) {
@@ -116,8 +153,12 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfigParameter#equals(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISensorConfigParameter#equals(
+	 * java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -159,6 +200,21 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 	public String toString() {
 		return "SensorConfigParameter [id=" + id + ", version=" + version + ", key=" + key + ", description="
 				+ description + ", type=" + type + ", sequence=" + sequence + "]";
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorConfigParameter)
+		{
+			SensorConfigParameter token = (SensorConfigParameter) source;
+			setWebKey(token.getWebKey());
+			setDescription(token.getDescription());
+			setKey(token.getKey());
+			setSequence(token.getSequence());
+			setType(token.getType());
+		}
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.persistence.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starnberger.tokenofflineengine.common.IGateway;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
@@ -21,7 +22,8 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 		@NamedQuery(name = "Gateway.findToken", query = "SELECT g from Gateway g WHERE g.gatewayToken = :gatewayToken and g.isDeleted = FALSE"),
 		@NamedQuery(name = "Gateway.lastModified", query = "SELECT g from Gateway g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Gateway.deleted", query = "SELECT g from Gateway g WHERE g.isDeleted = :isDeleted"),
-		@NamedQuery(name = "Gateway.findMe", query = "SELECT g FROM Gateway g") })
+		@NamedQuery(name = "Gateway.findMe", query = "SELECT g FROM Gateway g"),
+		@NamedQuery(name = "Gateway.findMyWebKey", query = "select s from Gateway s where s.webKey = :webKey") })
 public class Gateway extends SyncEntity implements IGateway {
 
 	/**
@@ -328,5 +330,23 @@ public class Gateway extends SyncEntity implements IGateway {
 	@Override
 	public void setLastSync(Date lastSync) {
 		this.lastSync = lastSync;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof Gateway)
+		{
+			Gateway sourceGate = (Gateway) source;
+			setAssociatedUserKey(sourceGate.getAssociatedUserKey());
+			setFirmwareVersionKey(sourceGate.getFirmwareVersionKey());
+			setGatewayConfigKey(sourceGate.getGatewayConfigKey());
+			setName(sourceGate.getName());
+			setUuid(sourceGate.getUuid());
+			setWebKey(sourceGate.getWebKey());
+			setNeedsConfigUpgrade(sourceGate.isNeedsConfigUpgrade());
+			setNeedsFirmwareUpgrade(sourceGate.isNeedsFirmwareUpgrade());
+		}
 	}
 }

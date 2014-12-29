@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.ITask;
 import com.starnberger.tokenofflineengine.common.Status;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
@@ -21,7 +22,8 @@ import com.starnberger.tokenofflineengine.common.TaskType;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "Task.lastModified", query = "SELECT g from Task g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "Task.deleted", query = "SELECT g from Task g WHERE g.isDeleted = :isDeleted") })
+		@NamedQuery(name = "Task.deleted", query = "SELECT g from Task g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "Task.findMyWebKey", query = "select s from Task s where s.webKey = :webKey") })
 public class Task extends SyncEntity implements ITask {
 
 	/**
@@ -173,6 +175,23 @@ public class Task extends SyncEntity implements ITask {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof Task)
+		{
+			Task token = (Task) source;
+			setWebKey(token.getWebKey());
+			setCompleted(token.getCompleted());
+			setCreated(token.getCreated());
+			setParameters(token.getParameters());
+			setRelatedId(token.getRelatedId());
+			setStatus(token.getStatus());
+			setType(token.getType());
+		}
 	}
 
 }

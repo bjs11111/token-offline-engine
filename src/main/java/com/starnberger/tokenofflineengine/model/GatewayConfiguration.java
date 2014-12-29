@@ -7,6 +7,7 @@ import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.DebugLevel;
 import com.starnberger.tokenofflineengine.common.IGatewayConfiguration;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
@@ -16,7 +17,8 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "GatewayConfiguration.lastModified", query = "SELECT g from GatewayConfiguration g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "GatewayConfiguration.deleted", query = "SELECT g from GatewayConfiguration g WHERE g.isDeleted = :isDeleted") })
+		@NamedQuery(name = "GatewayConfiguration.deleted", query = "SELECT g from GatewayConfiguration g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "GatewayConfiguration.findMyWebKey", query = "select s from GatewayConfiguration s where s.webKey = :webKey") })
 public class GatewayConfiguration extends SyncEntity implements IGatewayConfiguration {
 
 	/**
@@ -169,6 +171,23 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	@Override
 	public void setLogUpdateInterval(int logUpdateInterval) {
 		this.logUpdateInterval = logUpdateInterval;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof GatewayConfiguration)
+		{
+			GatewayConfiguration token = (GatewayConfiguration) source;
+			setWebKey(token.getWebKey());
+			setName(token.getName());
+			setDebugLevel(token.getDebugLevel());
+			setLogUpdateInterval(token.getLogUpdateInterval());
+			setPartnerKey(token.getPartnerKey());
+			setStatusUpdateInterval(token.getStatusUpdateInterval());
+			setSyncInterval(token.getSyncInterval());
+		}
 	}
 
 }

@@ -4,9 +4,12 @@
 package com.starnberger.tokenofflineengine;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -18,6 +21,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
+import com.starnberger.tokenofflineengine.common.EntityState;
+import com.starnberger.tokenofflineengine.common.SyncEntity;
 import com.starnberger.tokenofflineengine.dao.AuthRequestFilter;
 import com.starnberger.tokenofflineengine.dao.EMF;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
@@ -103,12 +108,81 @@ public class DownloadTask {
 		System.out.println(response.getHeaders());
 		if (response.bufferEntity())
 		{
-			// TODO: GAE id of type Key causes problems during JSON serialization -> solve this issue
 			SyncData entity = response.readEntity(SyncData.class);
 			System.out.println(entity.toString());
+			// Store all entities
+			em.getTransaction().begin();
+			updateEntities(entity.getUpdatedTasks());
+			updateEntities(entity.getUpdatedSensorTypes());
+			updateEntities(entity.getUpdatedTokenModels());
+			updateEntities(entity.getUpdatedTokens());
+			updateEntities(entity.getUpdatedTokenConfigurations());
+			updateEntities(entity.getUpdatedSensorConfigurations());
+			updateEntities(entity.getUpdatedGatewayConfigurations());
+			em.getTransaction().commit();
 		}
 		logout();
 		return true;
+	}
+	
+	
+	/**
+	 * @param list
+	 * @return
+	 */
+	private boolean updateEntities(List<? extends SyncEntity> list) {
+		if (list == null)
+			return false;
+		Iterator<? extends SyncEntity> iterator = list.iterator();
+		while (iterator.hasNext()) {
+			SyncEntity syncEntity = (SyncEntity) iterator.next();
+			storeEntity(syncEntity);
+		}
+		return true;
+	}
+	
+	/**
+	 * @param entity
+	 * @return
+	 */
+	private boolean storeEntity(SyncEntity entity) {
+		if (entity == null)
+			return false;
+		if (entity.getState() == null)
+			entity.setState(EntityState.CREATED);
+		System.out.println("Entity type: " + entity.getClass().getName());
+		switch (entity.getState()) {
+		case CREATED:
+			em.persist(entity);
+			break;
+		case UPDATED:
+			SyncEntity foundEntity = findWebKey(entity);
+			if (foundEntity == null)
+				em.persist(entity);
+			else
+				foundEntity.copyValues(entity);
+			break;
+		case DELETED:
+			em.remove(entity);
+			break;			
+
+		default:
+			break;
+		}
+		return true;
+	}
+	
+	/**
+	 * @param search
+	 * @return
+	 */
+	private SyncEntity findWebKey(SyncEntity search) {
+		TypedQuery<? extends SyncEntity> query = em.createNamedQuery(search.getClass().getSimpleName() + ".findMyWebKey", search.getClass());
+		query.setParameter("webKey", search.getWebKey());
+		List<? extends SyncEntity> resultList = query.getResultList();
+		if (resultList == null || resultList.isEmpty())
+			return null;
+		return resultList.get(0);
 	}
 
 	/**

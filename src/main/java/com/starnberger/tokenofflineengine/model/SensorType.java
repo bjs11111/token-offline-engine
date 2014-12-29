@@ -10,6 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorType;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
@@ -19,7 +20,8 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "SensorType.lastModified", query = "SELECT g from SensorType g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "SensorType.deleted", query = "SELECT g from SensorType g WHERE g.isDeleted = :isDeleted") })
+		@NamedQuery(name = "SensorType.deleted", query = "SELECT g from SensorType g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "SensorType.findMyWebKey", query = "select s from SensorType s where s.webKey = :webKey") })
 public class SensorType extends SyncEntity implements ISensorType {
 
 	/**
@@ -199,6 +201,21 @@ public class SensorType extends SyncEntity implements ISensorType {
 	public String toString() {
 		return "SensorType [id=" + id + ", version=" + version + ", description=" + description + ", unit=" + unit
 				+ ", numberOfValues=" + numberOfValues + ", configValues=" + configValues + "]";
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorType)
+		{
+			SensorType token = (SensorType) source;
+			setWebKey(token.getWebKey());
+			setConfigValues(token.getConfigValues());
+			setDescription(token.getDescription());
+			setNumberOfValues(token.getNumberOfValues());
+			setUnit(token.getUnit());
+		}
 	}
 
 }

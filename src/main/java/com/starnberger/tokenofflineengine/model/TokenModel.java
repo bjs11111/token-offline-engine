@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.ITokenModel;
 import com.starnberger.tokenofflineengine.common.SyncEntity;
 
@@ -17,9 +18,9 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
-	@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.isDeleted = :isDeleted")
-})
+		@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
+		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.webKey = :webKey") })
 public class TokenModel extends SyncEntity implements ITokenModel {
 
 	/**
@@ -34,7 +35,9 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 	// SensorType.webKey
 	private List<String> sensorKeys;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#getSensorKeys()
 	 */
 	@Override
@@ -42,8 +45,12 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 		return sensorKeys;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#setSensorKeys(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ITokenModel#setSensorKeys(java
+	 * .util.List)
 	 */
 	@Override
 	public void setSensorKeys(List<String> sensors) {
@@ -75,7 +82,9 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#getName()
 	 */
 	@Override
@@ -83,8 +92,12 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#setName(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ITokenModel#setName(java.lang.
+	 * String)
 	 */
 	@Override
 	public void setName(String name) {
@@ -100,5 +113,18 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 		if (name != null && !name.trim().isEmpty())
 			result += ", name: " + name;
 		return result;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof TokenModel)
+		{
+			TokenModel token = (TokenModel) source;
+			setWebKey(token.getWebKey());
+			setName(token.getName());
+			setSensorKeys(token.getSensorKeys());
+		}
 	}
 }
