@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfigValue;
+import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
  * @author Roman Kaufmann

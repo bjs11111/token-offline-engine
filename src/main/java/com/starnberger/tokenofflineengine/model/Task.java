@@ -11,6 +11,7 @@ import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ITask;
 import com.starnberger.tokenofflineengine.common.Status;
+import com.starnberger.tokenofflineengine.common.SyncEntity;
 import com.starnberger.tokenofflineengine.common.TaskType;
 
 /**

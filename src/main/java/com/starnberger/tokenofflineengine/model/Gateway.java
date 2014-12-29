@@ -9,6 +9,7 @@ import javax.persistence.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starnberger.tokenofflineengine.common.IGateway;
+import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
  * @author Roman Kaufmann

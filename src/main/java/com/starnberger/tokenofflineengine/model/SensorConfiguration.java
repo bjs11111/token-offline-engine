@@ -10,6 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfiguration;
+import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
  * @author Roman Kaufmann

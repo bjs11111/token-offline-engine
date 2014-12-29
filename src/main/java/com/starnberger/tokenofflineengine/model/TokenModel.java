@@ -9,6 +9,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ITokenModel;
+import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
  * @author Roman Kaufmann

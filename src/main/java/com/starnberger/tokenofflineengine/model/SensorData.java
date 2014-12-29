@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.starnberger.tokenofflineengine.common.ISensorData;
+import com.starnberger.tokenofflineengine.common.TokenEntity;
 
 /**
  * @author Roman Kaufmann

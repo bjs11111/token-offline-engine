@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.starnberger.tokenofflineengine.model;
+package com.starnberger.tokenofflineengine.common;
 
 import java.util.Date;
 
@@ -10,6 +10,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+import com.starnberger.tokenofflineengine.common.EntityState;
 import com.starnberger.tokenofflineengine.common.ISyncEntity;
 
 /**
@@ -22,19 +23,29 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = -3652993616169435806L;
-	
+
 	@Column
 	protected Date lastModified = new Date();
 	@Column
 	protected boolean isDeleted = false;
+	@Column
+	protected EntityState state = EntityState.CREATED;
 
 	@PreUpdate
-	@PrePersist
 	public void beforeUpdate() {
+		state = EntityState.UPDATED;
 		lastModified = new Date();
 	}
 
-	/* (non-Javadoc)
+	@PrePersist
+	public void beforeInsert() {
+		state = EntityState.CREATED;
+		lastModified = new Date();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenengine.server.dao.ISyncEntity#getLastModified()
 	 */
 	@Override
@@ -42,15 +53,21 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 		return lastModified;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISyncEntity#setLastModified(java.util.Date)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISyncEntity#setLastModified(java
+	 * .util.Date)
 	 */
 	@Override
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenengine.server.dao.ISyncEntity#isDeleted()
 	 */
 	@Override
@@ -58,20 +75,48 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 		return isDeleted;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISyncEntity#setDeleted(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.starnberger.tokenengine.server.dao.ISyncEntity#setDeleted(boolean)
 	 */
 	@Override
 	public void setDeleted(boolean isDeleted) {
+		this.state = EntityState.DELETED;
 		this.isDeleted = isDeleted;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "SyncEntity [lastModified=" + lastModified + ", isDeleted=" + isDeleted + "]";
+		return "SyncEntity [lastModified=" + lastModified + ", isDeleted=" + isDeleted + ", state=" + state + "]";
 	}
-	
+
+	/**
+	 * @return the state
+	 */
+	public EntityState getState() {
+		return state;
+	}
+
+	/**
+	 * @param state
+	 *            the state to set
+	 */
+	public void setState(EntityState state) {
+		this.state = state;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 }

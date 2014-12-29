@@ -7,6 +7,7 @@ import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.DebugLevel;
 import com.starnberger.tokenofflineengine.common.IGatewayConfiguration;
+import com.starnberger.tokenofflineengine.common.SyncEntity;
 
 /**
  * @author Roman Kaufmann

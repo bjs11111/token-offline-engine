@@ -1,4 +1,4 @@
-package com.starnberger.tokenofflineengine.model;
+package com.starnberger.tokenofflineengine.common;
 
 import java.io.Serializable;
 
