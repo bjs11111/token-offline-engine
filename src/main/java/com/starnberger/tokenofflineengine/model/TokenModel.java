@@ -1,16 +1,14 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
-import com.starnberger.tokenofflineengine.common.ITokenModel;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.AbstractTokenModel;
 
 /**
  * @author Roman Kaufmann
@@ -21,41 +19,16 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 		@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.webKey = :webKey") })
-public class TokenModel extends SyncEntity implements ITokenModel {
+public class TokenModel extends AbstractTokenModel {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8268012678953045721L;
-
-	@Column
-	private String name;
-
-	@ElementCollection
-	// SensorType.webKey
-	private List<String> sensorKeys;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#getSensorKeys()
-	 */
-	@Override
-	public List<String> getSensorKeys() {
-		return sensorKeys;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.starnberger.tokenengine.server.dao.ITokenModel#setSensorKeys(java
-	 * .util.List)
-	 */
-	@Override
-	public void setSensorKeys(List<String> sensors) {
-		this.sensorKeys = sensors;
-	}
+	private static final long serialVersionUID = 2006668345961642825L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
+	protected Long id;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -82,28 +55,6 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.starnberger.tokenengine.server.dao.ITokenModel#getName()
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.starnberger.tokenengine.server.dao.ITokenModel#setName(java.lang.
-	 * String)
-	 */
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	@Override
 	public String toString() {
 		String result = getClass().getSimpleName() + " ";
@@ -115,16 +66,18 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 		return result;
 	}
 
-	@Override
-	public void copyValues(ISyncEntity source) {
-		if (source == null)
-			return;
-		if (source instanceof TokenModel)
-		{
-			TokenModel token = (TokenModel) source;
-			setWebKey(token.getWebKey());
-			setName(token.getName());
-			setSensorKeys(token.getSensorKeys());
-		}
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

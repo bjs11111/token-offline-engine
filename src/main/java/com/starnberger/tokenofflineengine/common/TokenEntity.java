@@ -3,13 +3,9 @@ package com.starnberger.tokenofflineengine.common;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 @MappedSuperclass
@@ -19,10 +15,6 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 5249132126930352893L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
 	@Version
 	@Column(name = "version")
 	protected int version;
@@ -34,21 +26,6 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	 */
 	public TokenEntity() {
 		super();
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	/*
@@ -109,7 +86,7 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		//result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + version;
 		result = prime * result + ((webKey == null) ? 0 : webKey.hashCode());
 		return result;
@@ -129,11 +106,11 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		TokenEntity other = (TokenEntity) obj;
-		if (id == null) {
+		/*if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;
+			return false;*/
 		if (version != other.version)
 			return false;
 		if (webKey == null) {
@@ -151,7 +128,8 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	 */
 	@Override
 	public String toString() {
-		return "TokenEntity [id=" + id + ", version=" + version + ", webKey=" + webKey + "]";
+		//return "TokenEntity [id=" + id + ", version=" + version + ", webKey=" + webKey + "]";
+		return "TokenEntity [version=" + version + ", webKey=" + webKey + "]";
 	}
 
 }

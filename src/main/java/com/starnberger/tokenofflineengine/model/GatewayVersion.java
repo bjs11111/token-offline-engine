@@ -1,32 +1,28 @@
 package com.starnberger.tokenofflineengine.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-import com.starnberger.tokenofflineengine.common.IGatewayVersion;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.AbstractGatewayVersion;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-public class GatewayVersion extends SyncEntity implements IGatewayVersion {
+public class GatewayVersion extends AbstractGatewayVersion {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -693090586746867736L;
-
-	@Column
-	private String name;
-
-	@Column
-	private String description;
-
-	@Column
-	private String file;
+	private static final long serialVersionUID = -4091038276045627744L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
+	protected Long id;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -54,36 +50,6 @@ public class GatewayVersion extends SyncEntity implements IGatewayVersion {
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	@Override
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	@Override
-	public String getFile() {
-		return file;
-	}
-
-	@Override
-	public void setFile(String file) {
-		this.file = file;
-	}
-
-	@Override
 	public String toString() {
 		String result = getClass().getSimpleName() + " ";
 		if (id != null)
@@ -98,17 +64,18 @@ public class GatewayVersion extends SyncEntity implements IGatewayVersion {
 		return result;
 	}
 
-	@Override
-	public void copyValues(ISyncEntity source) {
-		if (source == null)
-			return;
-		if (source instanceof GatewayVersion)
-		{
-			GatewayVersion token = (GatewayVersion) source;
-			setWebKey(token.getWebKey());
-			setDescription(token.getDescription());
-			setFile(token.getFile());
-			setName(token.getName());
-		}
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

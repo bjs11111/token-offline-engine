@@ -1,15 +1,14 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.util.Date;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
-import com.starnberger.tokenofflineengine.common.IToken;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.AbstractToken;
 
 /**
  * @author Roman Kaufmann
@@ -22,41 +21,16 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 		@NamedQuery(name = "Token.lastModified", query = "SELECT t from Token t WHERE t.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Token.deleted", query = "SELECT t from Token t WHERE t.isDeleted = :isDeleted"),
 		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.webKey = :webKey") })
-public class Token extends SyncEntity implements IToken  {
+public class Token extends AbstractToken {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7760988891447305334L;
-	
-	@Column
-	private long mac;
-
-	@Column
-	private String name;
-
-	@Column
-	private String uuid;
-
-	@Column
-	private long minor;
-
-	@Column
-	private long major;
-
-	@Column
-	private boolean needsConfigUpdate;
-
-	@Column
-	// TokenModel.webKey
-	private String model;
-
-	@Column
-	private Date lastSyncDate;
-
-	@Column
-	// User.webKey
-	private String owner;
+	private static final long serialVersionUID = -7298223670658279856L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
+	protected Long id;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -83,157 +57,6 @@ public class Token extends SyncEntity implements IToken  {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getMac()
-	 */
-	@Override
-	public long getMac() {
-		return mac;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setMac(long)
-	 */
-	@Override
-	public void setMac(long mac) {
-		this.mac = mac;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getName()
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setName(java.lang.String)
-	 */
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getUuid()
-	 */
-	@Override
-	public String getUuid() {
-		return uuid;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setUuid(java.lang.String)
-	 */
-	@Override
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getMinor()
-	 */
-	@Override
-	public long getMinor() {
-		return minor;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setMinor(long)
-	 */
-	@Override
-	public void setMinor(long minor) {
-		this.minor = minor;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getMajor()
-	 */
-	@Override
-	public long getMajor() {
-		return major;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setMajor(long)
-	 */
-	@Override
-	public void setMajor(long major) {
-		this.major = major;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#isNeedsConfigUpdate()
-	 */
-	@Override
-	public boolean isNeedsConfigUpdate() {
-		return needsConfigUpdate;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setNeedsConfigUpdate(boolean)
-	 */
-	@Override
-	public void setNeedsConfigUpdate(boolean needsConfigUpdate) {
-		this.needsConfigUpdate = needsConfigUpdate;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getModel()
-	 */
-	@Override
-	public String getModel() {
-		return model;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setModel(java.lang.String)
-	 */
-	@Override
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getLastSyncDate()
-	 */
-	@Override
-	public Date getLastSyncDate() {
-		return lastSyncDate;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setLastSyncDate(java.util.Date)
-	 */
-	@Override
-	public void setLastSyncDate(Date lastSyncDate) {
-		this.lastSyncDate = lastSyncDate;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#getOwner()
-	 */
-	@Override
-	public String getOwner() {
-		return owner;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IToken#setOwner(java.lang.String)
-	 */
-	@Override
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public String toString() {
 		String result = getClass().getSimpleName() + " ";
@@ -255,23 +78,18 @@ public class Token extends SyncEntity implements IToken  {
 		return result;
 	}
 
-	@Override
-	public void copyValues(ISyncEntity source) {
-		if (source == null)
-			return;
-		if (source instanceof Token)
-		{
-			Token token = (Token) source;
-			setWebKey(token.getWebKey());
-			setName(token.getName());
-			setLastSyncDate(token.getLastSyncDate());
-			setMac(token.getMac());
-			setMajor(token.getMajor());
-			setMinor(token.getMinor());
-			setModel(token.getModel());
-			setNeedsConfigUpdate(token.isNeedsConfigUpdate());
-			setOwner(token.getOwner());
-			setUuid(token.getUuid());
-		}
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

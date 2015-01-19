@@ -1,17 +1,14 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.starnberger.tokenofflineengine.common.ISensorType;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.AbstractSensorType;
 
 /**
  * @author Roman Kaufmann
@@ -22,22 +19,16 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 		@NamedQuery(name = "SensorType.lastModified", query = "SELECT g from SensorType g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorType.deleted", query = "SELECT g from SensorType g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "SensorType.findMyWebKey", query = "select s from SensorType s where s.webKey = :webKey") })
-public class SensorType extends SyncEntity implements ISensorType {
+public class SensorType extends AbstractSensorType {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3532010611671709056L;
-
-	@Column
-	private String description;
-	@Column
-	private String unit;
-	@Column
-	private int numberOfValues;
-	@ElementCollection
-	// SensorConfigParameter.webKey
-	private List<String> configValues = new ArrayList<String>();
+	private static final long serialVersionUID = -5529277605413179550L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
+	protected Long id;
 
 	/**
 	 * Default constructor.
@@ -60,77 +51,6 @@ public class SensorType extends SyncEntity implements ISensorType {
 		configValues.add(readInterval.getWebKey());
 		configValues.add(loggingInterval.getWebKey());
 		configValues.add(loggingIntervalAlarm.getWebKey());
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#getDescription()
-	 */
-	@Override
-	public String getDescription() {
-		return description;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#setDescription(java.lang.String)
-	 */
-	@Override
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#getUnit()
-	 */
-	@Override
-	public String getUnit() {
-		return unit;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#setUnit(java.lang.String)
-	 */
-	@Override
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#getNumberOfValues()
-	 */
-	@Override
-	public int getNumberOfValues() {
-		return numberOfValues;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#setNumberOfValues(int)
-	 */
-	@Override
-	public void setNumberOfValues(int numberOfValues) {
-		this.numberOfValues = numberOfValues;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#getConfigValues()
-	 */
-	@Override
-	public List<String> getConfigValues() {
-		return configValues;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ISensorType#setConfigValues(java.util.List)
-	 */
-	@Override
-	public void setConfigValues(List<String> configValues) {
-		this.configValues = configValues;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	/*
@@ -203,19 +123,19 @@ public class SensorType extends SyncEntity implements ISensorType {
 				+ ", numberOfValues=" + numberOfValues + ", configValues=" + configValues + "]";
 	}
 
-	@Override
-	public void copyValues(ISyncEntity source) {
-		if (source == null)
-			return;
-		if (source instanceof SensorType)
-		{
-			SensorType token = (SensorType) source;
-			setWebKey(token.getWebKey());
-			setConfigValues(token.getConfigValues());
-			setDescription(token.getDescription());
-			setNumberOfValues(token.getNumberOfValues());
-			setUnit(token.getUnit());
-		}
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

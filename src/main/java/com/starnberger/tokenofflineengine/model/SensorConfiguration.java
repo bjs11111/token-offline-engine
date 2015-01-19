@@ -1,17 +1,14 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.starnberger.tokenofflineengine.common.ISensorConfiguration;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.AbstractSensorConfiguration;
 
 /**
  * @author Roman Kaufmann
@@ -22,24 +19,16 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 		@NamedQuery(name = "SensorConfiguration.lastModified", query = "SELECT g from SensorConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorConfiguration.deleted", query = "SELECT g from SensorConfiguration g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "SensorConfiguration.findMyWebKey", query = "select s from SensorConfiguration s where s.webKey = :webKey") })
-public class SensorConfiguration extends SyncEntity implements ISensorConfiguration {
+public class SensorConfiguration extends AbstractSensorConfiguration {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6382431230433111245L;
-
-	@Column
-	// TokenConfiguration.webKey
-	private String ownerKey;
-
-	@Column
-	// SensorType.webKey
-	private String sensorTypeKey;
-
-	@ElementCollection
-	// SensorConfigValue
-	private List<String> configValueKeys = new ArrayList<String>();
+	private static final long serialVersionUID = -7079529239682539322L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
+	protected Long id;
 
 	@Override
 	public String toString() {
@@ -74,94 +63,19 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#getOwnerKey()
+	/**
+	 * @return the id
 	 */
-	@Override
-	public String getOwnerKey() {
-		return ownerKey;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#setOwnerKey
-	 * (java.lang.String)
-	 */
-	@Override
-	public void setOwnerKey(String owner) {
-		this.ownerKey = owner;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#getSensorTypeKey
-	 * ()
-	 */
-	@Override
-	public String getSensorTypeKey() {
-		return sensorTypeKey;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.starnberger.tokenengine.server.dao.ISensorConfiguration#setSensorTypeKey
-	 * (java.lang.String)
-	 */
-	@Override
-	public void setSensorTypeKey(String sensorType) {
-		this.sensorTypeKey = sensorType;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#
-	 * getConfigValueKeys()
-	 */
-	@Override
-	public List<String> getConfigValueKeys() {
-		return configValueKeys;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.starnberger.tokenengine.server.dao.ISensorConfiguration#
-	 * setConfigValueKeys(java.util.List)
-	 */
-	@Override
-	public void setConfigValueKeys(List<String> configValue) {
-		this.configValueKeys = configValue;
+	public Long getId() {
+		return id;
 	}
 
 	/**
-	 * @return the serialversionuid
+	 * @param id
+	 *            the id to set
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	@Override
-	public void copyValues(ISyncEntity source) {
-		if (source == null)
-			return;
-		if (source instanceof SensorConfiguration)
-		{
-			SensorConfiguration token = (SensorConfiguration) source;
-			setWebKey(token.getWebKey());
-			setConfigValueKeys(token.getConfigValueKeys());
-			setOwnerKey(token.getOwnerKey());
-			setSensorTypeKey(token.getSensorTypeKey());
-		}
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

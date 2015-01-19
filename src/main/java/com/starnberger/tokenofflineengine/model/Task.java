@@ -1,19 +1,14 @@
 package com.starnberger.tokenofflineengine.model;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
-import com.starnberger.tokenofflineengine.common.ITask;
-import com.starnberger.tokenofflineengine.common.Status;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
-import com.starnberger.tokenofflineengine.common.TaskType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.AbstractTask;
 
 /**
  * @author Roman Kaufmann
@@ -24,25 +19,16 @@ import com.starnberger.tokenofflineengine.common.TaskType;
 		@NamedQuery(name = "Task.lastModified", query = "SELECT g from Task g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Task.deleted", query = "SELECT g from Task g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "Task.findMyWebKey", query = "select s from Task s where s.webKey = :webKey") })
-public class Task extends SyncEntity implements ITask {
+public class Task extends AbstractTask {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -9221701354705230970L;
-
-	@Column
-	private TaskType type;
-	@Column
-	private String relatedId;
-	@Column
-	private Status status;
-	@ElementCollection
-	private List<String> parameters;
-	@Column
-	private Date created;
-	@Column
-	private Date completed;
+	private static final long serialVersionUID = 710400088815734767L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
+	protected Long id;
 
 	@Override
 	public String toString() {
@@ -77,121 +63,19 @@ public class Task extends SyncEntity implements ITask {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#getType()
+	/**
+	 * @return the id
 	 */
-	@Override
-	public TaskType getType() {
-		return type;
+	public Long getId() {
+		return id;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#setType(com.starnberger.tokenengine.server.dao.TaskType)
+	/**
+	 * @param id
+	 *            the id to set
 	 */
-	@Override
-	public void setType(TaskType type) {
-		this.type = type;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#getRelatedId()
-	 */
-	@Override
-	public String getRelatedId() {
-		return relatedId;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#setRelatedId(java.lang.String)
-	 */
-	@Override
-	public void setRelatedId(String relatedId) {
-		this.relatedId = relatedId;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#getStatus()
-	 */
-	@Override
-	public Status getStatus() {
-		return status;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#setStatus(com.starnberger.tokenengine.server.dao.Status)
-	 */
-	@Override
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#getParameters()
-	 */
-	@Override
-	public List<String> getParameters() {
-		return parameters;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#setParameters(java.util.List)
-	 */
-	@Override
-	public void setParameters(List<String> parameters) {
-		this.parameters = parameters;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#getCreated()
-	 */
-	@Override
-	public Date getCreated() {
-		return created;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#setCreated(java.util.Date)
-	 */
-	@Override
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#getCompleted()
-	 */
-	@Override
-	public Date getCompleted() {
-		return completed;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.ITask#setCompleted(java.util.Date)
-	 */
-	@Override
-	public void setCompleted(Date completed) {
-		this.completed = completed;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	@Override
-	public void copyValues(ISyncEntity source) {
-		if (source == null)
-			return;
-		if (source instanceof Task)
-		{
-			Task token = (Task) source;
-			setWebKey(token.getWebKey());
-			setCompleted(token.getCompleted());
-			setCreated(token.getCreated());
-			setParameters(token.getParameters());
-			setRelatedId(token.getRelatedId());
-			setStatus(token.getStatus());
-			setType(token.getType());
-		}
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

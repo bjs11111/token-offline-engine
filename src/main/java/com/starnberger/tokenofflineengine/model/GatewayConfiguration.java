@@ -1,14 +1,14 @@
 package com.starnberger.tokenofflineengine.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.starnberger.tokenofflineengine.common.DebugLevel;
-import com.starnberger.tokenofflineengine.common.IGatewayConfiguration;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.starnberger.tokenofflineengine.common.AbstractGatewayConfiguration;
 
 /**
  * @author Roman Kaufmann
@@ -19,27 +19,16 @@ import com.starnberger.tokenofflineengine.common.SyncEntity;
 		@NamedQuery(name = "GatewayConfiguration.lastModified", query = "SELECT g from GatewayConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "GatewayConfiguration.deleted", query = "SELECT g from GatewayConfiguration g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "GatewayConfiguration.findMyWebKey", query = "select s from GatewayConfiguration s where s.webKey = :webKey") })
-public class GatewayConfiguration extends SyncEntity implements IGatewayConfiguration {
+public class GatewayConfiguration extends AbstractGatewayConfiguration {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3017416369270290673L;
-
-	@Column
-	private String name;
-	@Column
-	private DebugLevel debugLevel;
-	@Column
-	private int syncInterval;
-	@Column
-	private int statusUpdateInterval;
-	@Column
-	private int logUpdateInterval;
-
-	@Column
-	// Partner.webKey
-	private String partnerKey;
+	private static final long serialVersionUID = -5393538827784408703L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
+	protected Long id;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -66,22 +55,6 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getName()
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setName(java.lang.String)
-	 */
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	@Override
 	public String toString() {
 		String result = getClass().getSimpleName() + " ";
@@ -93,101 +66,19 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getPartnerKey()
+	/**
+	 * @return the id
 	 */
-	@Override
-	public String getPartnerKey() {
-		return this.partnerKey;
+	public Long getId() {
+		return id;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setPartnerKey(java.lang.String)
+	/**
+	 * @param id
+	 *            the id to set
 	 */
-	@Override
-	public void setPartnerKey(final String partner) {
-		this.partnerKey = partner;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getDebugLevel()
-	 */
-	@Override
-	public DebugLevel getDebugLevel() {
-		return debugLevel;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setDebugLevel(com.starnberger.tokenengine.server.dao.DebugLevel)
-	 */
-	@Override
-	public void setDebugLevel(DebugLevel debugLevel) {
-		this.debugLevel = debugLevel;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getSyncInterval()
-	 */
-	@Override
-	public int getSyncInterval() {
-		return syncInterval;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setSyncInterval(int)
-	 */
-	@Override
-	public void setSyncInterval(int syncInterval) {
-		this.syncInterval = syncInterval;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getStatusUpdateInterval()
-	 */
-	@Override
-	public int getStatusUpdateInterval() {
-		return statusUpdateInterval;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setStatusUpdateInterval(int)
-	 */
-	@Override
-	public void setStatusUpdateInterval(int statusUpdateInterval) {
-		this.statusUpdateInterval = statusUpdateInterval;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#getLogUpdateInterval()
-	 */
-	@Override
-	public int getLogUpdateInterval() {
-		return logUpdateInterval;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.starnberger.tokenengine.server.dao.IGatewayConfiguration#setLogUpdateInterval(int)
-	 */
-	@Override
-	public void setLogUpdateInterval(int logUpdateInterval) {
-		this.logUpdateInterval = logUpdateInterval;
-	}
-
-	@Override
-	public void copyValues(ISyncEntity source) {
-		if (source == null)
-			return;
-		if (source instanceof GatewayConfiguration)
-		{
-			GatewayConfiguration token = (GatewayConfiguration) source;
-			setWebKey(token.getWebKey());
-			setName(token.getName());
-			setDebugLevel(token.getDebugLevel());
-			setLogUpdateInterval(token.getLogUpdateInterval());
-			setPartnerKey(token.getPartnerKey());
-			setStatusUpdateInterval(token.getStatusUpdateInterval());
-			setSyncInterval(token.getSyncInterval());
-		}
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }
