@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.starnberger.tokenofflineengine.common;
+package com.starnberger.tokenofflineengine.model;
 
 import java.util.Date;
 

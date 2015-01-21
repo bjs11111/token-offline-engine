@@ -1,14 +1,15 @@
 package com.starnberger.tokenofflineengine.model;
 
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractTokenModel;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenModel;
 
 /**
  * @author Roman Kaufmann
@@ -19,17 +20,16 @@ import com.starnberger.tokenofflineengine.common.AbstractTokenModel;
 		@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.webKey = :webKey") })
-public class TokenModel extends AbstractTokenModel {
+public class TokenModel extends SyncEntity implements ITokenModel  {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2006668345961642825L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected String name;
+	@Basic
+	private List<String> sensorKeys;
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -79,5 +79,38 @@ public class TokenModel extends AbstractTokenModel {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public List<String> getSensorKeys() {
+		return sensorKeys;
+	}
+
+	@Override
+	public void setSensorKeys(List<String> sensors) {
+		this.sensorKeys = sensors;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof TokenModel)
+		{
+			TokenModel token = (TokenModel) source;
+			setWebKey(token.getWebKey());
+			setName(token.getName());
+			setSensorKeys(token.getSensorKeys());
+		}
 	}
 }

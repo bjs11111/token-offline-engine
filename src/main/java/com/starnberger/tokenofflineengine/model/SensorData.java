@@ -1,29 +1,37 @@
 package com.starnberger.tokenofflineengine.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractSensorData;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import com.starnberger.tokenofflineengine.common.ISensorData;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-public class SensorData extends AbstractSensorData {
+public class SensorData extends TokenEntity implements ISensorData {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5751327066679701819L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected Date timestamp;
+	@Column
+	protected String sensorType;
+	@Column
+	protected String gateway;
+	@Column
+	protected double value1;
+	@Column
+	protected double value2;
+	@Column
+	protected double value3;
+	@Column
+	protected String token;
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -82,5 +90,75 @@ public class SensorData extends AbstractSensorData {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	@Override
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	@Override
+	public String getString() {
+		return sensorType;
+	}
+
+	@Override
+	public void setString(String sensorType) {
+		this.sensorType = sensorType;
+	}
+
+	@Override
+	public String getGateway() {
+		return gateway;
+	}
+
+	@Override
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+
+	@Override
+	public double getValue1() {
+		return value1;
+	}
+
+	@Override
+	public void setValue1(double value1) {
+		this.value1 = value1;
+	}
+
+	@Override
+	public double getValue2() {
+		return value2;
+	}
+
+	@Override
+	public void setValue2(double value2) {
+		this.value2 = value2;
+	}
+
+	@Override
+	public double getValue3() {
+		return value3;
+	}
+
+	@Override
+	public void setValue3(double value3) {
+		this.value3 = value3;
+	}
+
+	@Override
+	public String getToken() {
+		return token;
+	}
+
+	@Override
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

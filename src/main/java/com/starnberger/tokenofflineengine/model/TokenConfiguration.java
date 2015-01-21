@@ -1,14 +1,16 @@
 package com.starnberger.tokenofflineengine.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractTokenConfiguration;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenConfiguration;
 
 /**
  * @author Roman Kaufmann
@@ -19,17 +21,24 @@ import com.starnberger.tokenofflineengine.common.AbstractTokenConfiguration;
 		@NamedQuery(name = "TokenConfiguration.lastModified", query = "SELECT g from TokenConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "TokenConfiguration.findMyWebKey", query = "select s from TokenConfiguration s where s.webKey = :webKey") })
-public class TokenConfiguration extends AbstractTokenConfiguration {
+public class TokenConfiguration extends SyncEntity implements ITokenConfiguration  {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7773718071451539938L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected String modelKey;
+	@Column
+	protected int bleAdvertisingInterval;
+	@Column
+	protected int bleBondableInterval;
+	@Column
+	protected boolean bleAdvertisingConditionAlways;
+	@Column
+	protected int bleTxPower;
+	@Basic
+	private Set<String> sensorConfigKeys = new HashSet<String>();
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -85,6 +94,83 @@ public class TokenConfiguration extends AbstractTokenConfiguration {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String getModelKey() {
+		return modelKey;
+	}
+
+	@Override
+	public void setModelKey(String model) {
+		this.modelKey = model;
+	}
+
+	@Override
+	public int getBleAdvertisingInterval() {
+		return bleAdvertisingInterval;
+	}
+
+	@Override
+	public void setBleAdvertisingInterval(int bleAdvertisingInterval) {
+		this.bleAdvertisingInterval = bleAdvertisingInterval;
+	}
+
+	@Override
+	public int getBleBondableInterval() {
+		return bleBondableInterval;
+	}
+
+	@Override
+	public void setBleBondableInterval(int bleBondableInterval) {
+		this.bleBondableInterval = bleBondableInterval;
+	}
+
+	@Override
+	public boolean isBleAdvertisingConditionAlways() {
+		return bleAdvertisingConditionAlways;
+	}
+
+	@Override
+	public void setBleAdvertisingConditionAlways(boolean bleAdvertisingConditionAlways) {
+		this.bleAdvertisingConditionAlways = bleAdvertisingConditionAlways;
+	}
+
+	@Override
+	public int getBleTxPower() {
+		return bleTxPower;
+	}
+
+	@Override
+	public void setBleTxPower(int bleTxPower) {
+		this.bleTxPower = bleTxPower;
+	}
+
+	@Override
+	public Set<String> getSensorConfigKeys() {
+		return sensorConfigKeys;
+	}
+
+	@Override
+	public void setSensorConfigKeys(Set<String> sensorConfigs) {
+		this.sensorConfigKeys = sensorConfigs;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof TokenConfiguration)
+		{
+			TokenConfiguration token = (TokenConfiguration) source;
+			setBleAdvertisingConditionAlways(token.isBleAdvertisingConditionAlways());
+			setBleAdvertisingInterval(token.getBleAdvertisingInterval());
+			setBleBondableInterval(token.getBleBondableInterval());
+			setBleTxPower(token.getBleTxPower());
+			setModelKey(token.getModelKey());
+			setSensorConfigKeys(token.getSensorConfigKeys());
+			setWebKey(token.getWebKey());
+		}
 	}
 
 }

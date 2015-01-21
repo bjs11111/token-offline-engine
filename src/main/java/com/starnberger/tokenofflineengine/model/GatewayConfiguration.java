@@ -1,14 +1,13 @@
 package com.starnberger.tokenofflineengine.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractGatewayConfiguration;
+import com.starnberger.tokenofflineengine.common.DebugLevel;
+import com.starnberger.tokenofflineengine.common.IGatewayConfiguration;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 
 /**
  * @author Roman Kaufmann
@@ -19,17 +18,24 @@ import com.starnberger.tokenofflineengine.common.AbstractGatewayConfiguration;
 		@NamedQuery(name = "GatewayConfiguration.lastModified", query = "SELECT g from GatewayConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "GatewayConfiguration.deleted", query = "SELECT g from GatewayConfiguration g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "GatewayConfiguration.findMyWebKey", query = "select s from GatewayConfiguration s where s.webKey = :webKey") })
-public class GatewayConfiguration extends AbstractGatewayConfiguration {
+public class GatewayConfiguration extends SyncEntity implements IGatewayConfiguration {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5393538827784408703L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected String name;
+	@Column
+	private DebugLevel debugLevel;
+	@Column
+	private int syncInterval;
+	@Column
+	private int statusUpdateInterval;
+	@Column
+	private int logUpdateInterval;
+	@Column
+	private String partnerKey;
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -79,6 +85,82 @@ public class GatewayConfiguration extends AbstractGatewayConfiguration {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getPartnerKey() {
+		return this.partnerKey;
+	}
+
+	@Override
+	public void setPartnerKey(final String partner) {
+		this.partnerKey = partner;
+	}
+
+	@Override
+	public DebugLevel getDebugLevel() {
+		return debugLevel;
+	}
+
+	@Override
+	public void setDebugLevel(DebugLevel debugLevel) {
+		this.debugLevel = debugLevel;
+	}
+
+	@Override
+	public int getSyncInterval() {
+		return syncInterval;
+	}
+
+	@Override
+	public void setSyncInterval(int syncInterval) {
+		this.syncInterval = syncInterval;
+	}
+
+	@Override
+	public int getStatusUpdateInterval() {
+		return statusUpdateInterval;
+	}
+
+	@Override
+	public void setStatusUpdateInterval(int statusUpdateInterval) {
+		this.statusUpdateInterval = statusUpdateInterval;
+	}
+
+	@Override
+	public int getLogUpdateInterval() {
+		return logUpdateInterval;
+	}
+
+	@Override
+	public void setLogUpdateInterval(int logUpdateInterval) {
+		this.logUpdateInterval = logUpdateInterval;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof GatewayConfiguration) {
+			GatewayConfiguration token = (GatewayConfiguration) source;
+			setWebKey(token.getWebKey());
+			setName(token.getName());
+			setDebugLevel(token.getDebugLevel());
+			setLogUpdateInterval(token.getLogUpdateInterval());
+			setPartnerKey(token.getPartnerKey());
+			setStatusUpdateInterval(token.getStatusUpdateInterval());
+			setSyncInterval(token.getSyncInterval());
+		}
 	}
 
 }

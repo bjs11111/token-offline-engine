@@ -3,15 +3,15 @@
  */
 package com.starnberger.tokenofflineengine.model;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractSensorConfigValue;
+import com.starnberger.tokenofflineengine.common.ISensorConfigValue;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 
 /**
  * @author Roman Kaufmann
@@ -22,17 +22,16 @@ import com.starnberger.tokenofflineengine.common.AbstractSensorConfigValue;
 		@NamedQuery(name = "SensorConfigValue.lastModified", query = "SELECT g from SensorConfigValue g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorConfigValue.deleted", query = "SELECT g from SensorConfigValue g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "SensorConfigValue.findMyWebKey", query = "select s from SensorConfigValue s where s.webKey = :webKey") })
-public class SensorConfigValue extends AbstractSensorConfigValue {
+public class SensorConfigValue extends SyncEntity implements ISensorConfigValue {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8579889330329040246L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected String configKey;
+	@Column
+	protected Serializable value;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,7 +42,7 @@ public class SensorConfigValue extends AbstractSensorConfigValue {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((configKey == null) ? 0 : configKey.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		result = prime * result + version;
 		return result;
@@ -68,10 +67,10 @@ public class SensorConfigValue extends AbstractSensorConfigValue {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (key == null) {
-			if (other.key != null)
+		if (configKey == null) {
+			if (other.configKey != null)
 				return false;
-		} else if (!key.equals(other.key))
+		} else if (!configKey.equals(other.configKey))
 			return false;
 		if (value == null) {
 			if (other.value != null)
@@ -90,7 +89,7 @@ public class SensorConfigValue extends AbstractSensorConfigValue {
 	 */
 	@Override
 	public String toString() {
-		return "SensorConfigValue [id=" + id + ", version=" + version + ", key=" + key + ", value=" + value + "]";
+		return "SensorConfigValue [id=" + id + ", version=" + version + ", key=" + configKey + ", value=" + value + "]";
 	}
 
 	/**
@@ -106,6 +105,38 @@ public class SensorConfigValue extends AbstractSensorConfigValue {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String getConfigKey() {
+		return configKey;
+	}
+
+	@Override
+	public void setConfigKey(String key) {
+		this.configKey = key;
+	}
+
+	@Override
+	public Serializable getValue() {
+		return value;
+	}
+
+	@Override
+	public void setValue(Serializable value) {
+		this.value = value;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorConfigValue) {
+			SensorConfigValue token = (SensorConfigValue) source;
+			setWebKey(token.getWebKey());
+			setConfigKey(token.getConfigKey());
+			setValue(token.getValue());
+		}
 	}
 
 }

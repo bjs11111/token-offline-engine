@@ -1,11 +1,16 @@
-package com.starnberger.tokenofflineengine.common;
+package com.starnberger.tokenofflineengine.model;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PostPersist;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 @MappedSuperclass
@@ -20,6 +25,10 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	protected int version;
 	@Column
 	protected String webKey;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@JsonIgnore
+	protected Long id;
 
 	/**
 	 * 
@@ -55,6 +64,9 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	 */
 	@Override
 	public String getWebKey() {
+		if (webKey == null) {
+			calculateWebKey();
+		}
 		return webKey;
 	}
 
@@ -130,6 +142,35 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	public String toString() {
 		//return "TokenEntity [id=" + id + ", version=" + version + ", webKey=" + webKey + "]";
 		return "TokenEntity [version=" + version + ", webKey=" + webKey + "]";
+	}
+	
+	@PostPersist
+	public void beforePersist() {
+		calculateWebKey();
+	}
+	
+	
+	/**
+	 * Default implementation does not calculate a webkey. Can be overriden in child classes. 
+	 */
+	public void calculateWebKey() {
+		if (id != null)
+			setWebKey(String.valueOf(getId()));
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

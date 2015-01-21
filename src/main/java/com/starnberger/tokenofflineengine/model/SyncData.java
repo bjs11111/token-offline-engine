@@ -24,6 +24,8 @@ public class SyncData implements Serializable {
 	private List<SensorType> updatedSensorTypes = new ArrayList<SensorType>();
 	private List<GatewayConfiguration> updatedGatewayConfigurations = new ArrayList<GatewayConfiguration>();
 	private List<Task> updatedTasks = new ArrayList<Task>();
+	private List<SensorConfigParameter> sensorConfigParameters = new ArrayList<SensorConfigParameter>();
+	private List<SensorConfigValue> sensorConfigValues = new ArrayList<SensorConfigValue>();
 
 	/*
 	 * (non-Javadoc)
@@ -36,7 +38,8 @@ public class SyncData implements Serializable {
 				+ updatedTokenConfigurations + ", updatedTokenModels=" + updatedTokenModels
 				+ ", updatedSensorConfigurations=" + updatedSensorConfigurations + ", updatedSensorTypes="
 				+ updatedSensorTypes + ", updatedGatewayConfigurations=" + updatedGatewayConfigurations
-				+ ", updatedTasks=" + updatedTasks + "]";
+				+ ", updatedTasks=" + updatedTasks + ", sensorConfigParameters=" + sensorConfigParameters
+				+ ", sensorConfigValues=" + sensorConfigValues + "]";
 	}
 
 	/**
@@ -142,6 +145,36 @@ public class SyncData implements Serializable {
 	 */
 	public void setUpdatedTasks(List<Task> updatedTasks) {
 		this.updatedTasks = updatedTasks;
+	}
+
+	/**
+	 * @return the sensorConfigParameters
+	 */
+	public List<SensorConfigParameter> getSensorConfigParameters() {
+		return sensorConfigParameters;
+	}
+
+	/**
+	 * @param sensorConfigParameters
+	 *            the sensorConfigParameters to set
+	 */
+	public void setSensorConfigParameters(List<SensorConfigParameter> sensorConfigParameters) {
+		this.sensorConfigParameters = sensorConfigParameters;
+	}
+
+	/**
+	 * @return the sensorConfigValues
+	 */
+	public List<SensorConfigValue> getSensorConfigValues() {
+		return sensorConfigValues;
+	}
+
+	/**
+	 * @param sensorConfigValues
+	 *            the sensorConfigValues to set
+	 */
+	public void setSensorConfigValues(List<SensorConfigValue> sensorConfigValues) {
+		this.sensorConfigValues = sensorConfigValues;
 	}
 
 	/**

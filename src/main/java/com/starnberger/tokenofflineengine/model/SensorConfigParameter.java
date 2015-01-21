@@ -3,15 +3,13 @@
  */
 package com.starnberger.tokenofflineengine.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractSensorConfigParameter;
+import com.starnberger.tokenofflineengine.common.ISensorConfigParameter;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 
 /**
  * @author Roman Kaufmann
@@ -22,17 +20,20 @@ import com.starnberger.tokenofflineengine.common.AbstractSensorConfigParameter;
 		@NamedQuery(name = "SensorConfigParameter.lastModified", query = "SELECT g from SensorConfigParameter g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorConfigParameter.deleted", query = "SELECT g from SensorConfigParameter g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "SensorConfigParameter.findMyWebKey", query = "select s from SensorConfigParameter s where s.webKey = :webKey") })
-public class SensorConfigParameter extends AbstractSensorConfigParameter {
+public class SensorConfigParameter extends SyncEntity implements ISensorConfigParameter  {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7551471925190574334L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected String configKey;
+	@Column
+	protected String description;
+	@Column
+	protected Class<?> type;
+	@Column
+	protected int sequence;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,7 +45,7 @@ public class SensorConfigParameter extends AbstractSensorConfigParameter {
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + ((configKey == null) ? 0 : configKey.hashCode());
 		result = prime * result + sequence;
 		result = prime * result + version;
 		return result;
@@ -81,10 +82,10 @@ public class SensorConfigParameter extends AbstractSensorConfigParameter {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (key == null) {
-			if (other.key != null)
+		if (configKey == null) {
+			if (other.configKey != null)
 				return false;
-		} else if (!key.equals(other.key))
+		} else if (!configKey.equals(other.configKey))
 			return false;
 		if (sequence != other.sequence)
 			return false;
@@ -100,7 +101,7 @@ public class SensorConfigParameter extends AbstractSensorConfigParameter {
 	 */
 	@Override
 	public String toString() {
-		return "SensorConfigParameter [id=" + id + ", version=" + version + ", key=" + key + ", description="
+		return "SensorConfigParameter [id=" + id + ", version=" + version + ", key=" + configKey + ", description="
 				+ description + ", type=" + type + ", sequence=" + sequence + "]";
 	}
 
@@ -117,6 +118,61 @@ public class SensorConfigParameter extends AbstractSensorConfigParameter {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String getConfigKey() {
+		return configKey;
+	}
+
+	@Override
+	public void setConfigKey(String key) {
+		this.configKey = key;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public Class<?> getType() {
+		return type;
+	}
+
+	@Override
+	public void setType(Class<?> type) {
+		this.type = type;
+	}
+
+	@Override
+	public int getSequence() {
+		return sequence;
+	}
+
+	@Override
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorConfigParameter)
+		{
+			SensorConfigParameter token = (SensorConfigParameter) source;
+			setWebKey(token.getWebKey());
+			setDescription(token.getDescription());
+			setConfigKey(token.getConfigKey());
+			setSequence(token.getSequence());
+			setType(token.getType());
+		}
 	}
 
 }

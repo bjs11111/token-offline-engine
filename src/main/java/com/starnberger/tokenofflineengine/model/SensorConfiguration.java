@@ -1,14 +1,16 @@
 package com.starnberger.tokenofflineengine.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractSensorConfiguration;
+import com.starnberger.tokenofflineengine.common.ISensorConfiguration;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 
 /**
  * @author Roman Kaufmann
@@ -19,16 +21,18 @@ import com.starnberger.tokenofflineengine.common.AbstractSensorConfiguration;
 		@NamedQuery(name = "SensorConfiguration.lastModified", query = "SELECT g from SensorConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorConfiguration.deleted", query = "SELECT g from SensorConfiguration g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "SensorConfiguration.findMyWebKey", query = "select s from SensorConfiguration s where s.webKey = :webKey") })
-public class SensorConfiguration extends AbstractSensorConfiguration {
+public class SensorConfiguration extends SyncEntity implements ISensorConfiguration {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7079529239682539322L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
+	@Column
+	private String ownerKey;
+	@Column
+	private String sensorTypeKey;
+	@Basic
+	private List<String> configValueKeys = new ArrayList<String>();
 
 	@Override
 	public String toString() {
@@ -76,6 +80,49 @@ public class SensorConfiguration extends AbstractSensorConfiguration {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String getOwnerKey() {
+		return ownerKey;
+	}
+
+	@Override
+	public void setOwnerKey(String owner) {
+		this.ownerKey = owner;
+	}
+
+	@Override
+	public String getSensorTypeKey() {
+		return sensorTypeKey;
+	}
+
+	@Override
+	public void setSensorTypeKey(String sensorType) {
+		this.sensorTypeKey = sensorType;
+	}
+
+	@Override
+	public List<String> getConfigValueKeys() {
+		return configValueKeys;
+	}
+
+	@Override
+	public void setConfigValueKeys(List<String> configValue) {
+		this.configValueKeys = configValue;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorConfiguration) {
+			SensorConfiguration token = (SensorConfiguration) source;
+			setWebKey(token.getWebKey());
+			setConfigValueKeys(token.getConfigValueKeys());
+			setOwnerKey(token.getOwnerKey());
+			setSensorTypeKey(token.getSensorTypeKey());
+		}
 	}
 
 }

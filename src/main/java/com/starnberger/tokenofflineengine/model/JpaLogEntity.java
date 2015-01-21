@@ -6,13 +6,12 @@ package com.starnberger.tokenofflineengine.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.appender.db.jpa.BasicLogEventEntity;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * @author Roman Kaufmann
@@ -20,7 +19,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "LogEntry")
-public class JpaLogEntity extends BasicLogEventEntity {
+public class JpaLogEntity {
 
 	/**
 	 * 
@@ -33,13 +32,12 @@ public class JpaLogEntity extends BasicLogEventEntity {
 	}
 
 	public JpaLogEntity(LogEvent wrappedEvent) {
-		super(wrappedEvent);
+		//super(wrappedEvent);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Id
-	@GeneratedValue(generator = "le-uuid")
-	@GenericGenerator(name = "le-uuid", strategy = "uuid2")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id;
 	@Version
 	@Column(name = "version")

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="error">
 	<Appenders>
-		<JPA name="databaseAppender" persistenceUnitName="token-offline-engine-persistence-unit"
-			entityClassName="com.starnberger.tokenofflineengine.model.JpaLogEntity" />
+		<!-- JPA name="databaseAppender" persistenceUnitName="token-offline-engine-persistence-unit"
+			entityClassName="com.starnberger.tokenofflineengine.model.JpaLogEntity" /-->
 	</Appenders>
 	<Loggers>
 		<Root level="debug">
-			<AppenderRef ref="databaseAppender" />
+			<!-- AppenderRef ref="databaseAppender" /-->
 		</Root>
 	</Loggers>
 </Configuration>

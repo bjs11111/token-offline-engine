@@ -108,7 +108,7 @@ public class DBTest {
 		em.close();
 	}
 
-	@Test
+	/*@Test
 	public void testJpaLog() {
 		EntityManager em = DBTest.emf.createEntityManager();
 		em.getTransaction().begin();
@@ -116,7 +116,7 @@ public class DBTest {
 		em.persist(jpaLogEntity);
 		em.getTransaction().commit();
 		em.close();
-	}
+	}*/
 
 	@Test
 	public void testList() {

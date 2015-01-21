@@ -64,6 +64,9 @@ public class AuthenticationManager {
 			em.persist(me);
 			em.getTransaction().commit();
 			reportForWork(me);
+		} else if (me.getUuid() == null || "".equals(me.getUuid()))
+		{
+			me.setUuid(GatewayInfo.CPUID);
 		}
 		if (me.getGatewayToken() == null || "".equals(me.getGatewayToken()))
 			return false;

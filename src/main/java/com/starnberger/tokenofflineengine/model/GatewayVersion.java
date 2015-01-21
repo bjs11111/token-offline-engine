@@ -1,29 +1,28 @@
 package com.starnberger.tokenofflineengine.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractGatewayVersion;
+import com.starnberger.tokenofflineengine.common.IGatewayVersion;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 
 /**
  * @author Roman Kaufmann
  *
  */
 @Entity
-public class GatewayVersion extends AbstractGatewayVersion {
+public class GatewayVersion extends SyncEntity implements IGatewayVersion {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4091038276045627744L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected String name;
+	@Column
+	protected String description;
+	@Column
+	protected String file;
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -77,5 +76,49 @@ public class GatewayVersion extends AbstractGatewayVersion {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public String getFile() {
+		return file;
+	}
+
+	@Override
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof GatewayVersion)
+		{
+			GatewayVersion token = (GatewayVersion) source;
+			setWebKey(token.getWebKey());
+			setDescription(token.getDescription());
+			setFile(token.getFile());
+			setName(token.getName());
+		}
 	}
 }

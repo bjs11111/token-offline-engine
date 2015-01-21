@@ -22,12 +22,12 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
 import com.starnberger.tokenofflineengine.common.EntityState;
-import com.starnberger.tokenofflineengine.common.SyncEntity;
 import com.starnberger.tokenofflineengine.dao.AuthRequestFilter;
 import com.starnberger.tokenofflineengine.dao.EMF;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
 import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.SyncData;
+import com.starnberger.tokenofflineengine.model.SyncEntity;
 import com.starnberger.tokenofflineengine.model.Task;
 
 /**

@@ -9,13 +9,13 @@ public interface ISensorConfigParameter extends ISyncEntity {
 	/**
 	 * @return the key
 	 */
-	public abstract String getKey();
+	public abstract String getConfigKey();
 
 	/**
 	 * @param key
 	 *            the key to set
 	 */
-	public abstract void setKey(String key);
+	public abstract void setConfigKey(String key);
 
 	/**
 	 * @return the description

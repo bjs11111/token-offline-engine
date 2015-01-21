@@ -1,14 +1,16 @@
 package com.starnberger.tokenofflineengine.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.starnberger.tokenofflineengine.common.AbstractSensorType;
+import com.starnberger.tokenofflineengine.common.ISensorType;
+import com.starnberger.tokenofflineengine.common.ISyncEntity;
 
 /**
  * @author Roman Kaufmann
@@ -19,33 +21,36 @@ import com.starnberger.tokenofflineengine.common.AbstractSensorType;
 		@NamedQuery(name = "SensorType.lastModified", query = "SELECT g from SensorType g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorType.deleted", query = "SELECT g from SensorType g WHERE g.isDeleted = :isDeleted"),
 		@NamedQuery(name = "SensorType.findMyWebKey", query = "select s from SensorType s where s.webKey = :webKey") })
-public class SensorType extends AbstractSensorType {
+public class SensorType extends SyncEntity implements ISensorType {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5529277605413179550L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
-	protected Long id;
-
+	@Column
+	protected String description;
+	@Column
+	protected String unit;
+	@Column
+	protected int numberOfValues;
+	@Basic
+	protected List<String> configValues = new ArrayList<String>();
 	/**
 	 * Default constructor.
 	 */
 	public SensorType() {
 		// Add default sensor config parameter values
 		SensorConfigParameter broadCastEnabled = new SensorConfigParameter();
-		broadCastEnabled.setKey("broadCastEnabled");
+		broadCastEnabled.setConfigKey("broadCastEnabled");
 		broadCastEnabled.setType(Boolean.class);
 		SensorConfigParameter readInterval = new SensorConfigParameter();
-		readInterval.setKey("readInterval");
+		readInterval.setConfigKey("readInterval");
 		readInterval.setType(Integer.class);
 		SensorConfigParameter loggingInterval = new SensorConfigParameter();
-		loggingInterval.setKey("loggingInterval");
+		loggingInterval.setConfigKey("loggingInterval");
 		loggingInterval.setType(Integer.class);
 		SensorConfigParameter loggingIntervalAlarm = new SensorConfigParameter();
-		loggingIntervalAlarm.setKey("loggingIntervalAlarm");
+		loggingIntervalAlarm.setConfigKey("loggingIntervalAlarm");
 		loggingIntervalAlarm.setType(Integer.class);
 		configValues.add(broadCastEnabled.getWebKey());
 		configValues.add(readInterval.getWebKey());
@@ -136,6 +141,61 @@ public class SensorType extends AbstractSensorType {
 	 */
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Override
+	public String getUnit() {
+		return unit;
+	}
+
+	@Override
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	@Override
+	public int getNumberOfValues() {
+		return numberOfValues;
+	}
+
+	@Override
+	public void setNumberOfValues(int numberOfValues) {
+		this.numberOfValues = numberOfValues;
+	}
+
+	@Override
+	public List<String> getConfigValues() {
+		return configValues;
+	}
+
+	@Override
+	public void setConfigValues(List<String> configValues) {
+		this.configValues = configValues;
+	}
+
+	@Override
+	public void copyValues(ISyncEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorType)
+		{
+			SensorType token = (SensorType) source;
+			setWebKey(token.getWebKey());
+			setConfigValues(token.getConfigValues());
+			setDescription(token.getDescription());
+			setNumberOfValues(token.getNumberOfValues());
+			setUnit(token.getUnit());
+		}
 	}
 
 }

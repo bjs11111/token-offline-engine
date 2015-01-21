@@ -5,7 +5,8 @@
         http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 	version="1.0">
 	<persistence-unit name="token-offline-engine-persistence-unit">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<!--provider>org.hibernate.ejb.HibernatePersistence</provider-->
+		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
 		<class>com.starnberger.tokenofflineengine.model.TokenModel</class>
 		<class>com.starnberger.tokenofflineengine.model.Token</class>
 		<class>com.starnberger.tokenofflineengine.model.TokenConfiguration</class>
@@ -17,24 +18,25 @@
 		<class>com.starnberger.tokenofflineengine.model.SensorConfigParameter</class>
 		<class>com.starnberger.tokenofflineengine.model.SensorConfigValue</class>
 		<class>com.starnberger.tokenofflineengine.model.Task</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextMapAttributeConverter</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextMapJsonAttributeConverter</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextStackAttributeConverter</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ContextStackJsonAttributeConverter</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.MarkerAttributeConverter</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.MessageAttributeConverter</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.StackTraceElementAttributeConverter</class>
-		<class>org.apache.logging.log4j.core.appender.db.jpa.converter.ThrowableAttributeConverter</class>
-		<class>com.starnberger.tokenofflineengine.model.JpaLogEntity</class>
-		
-		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+		<class>com.starnberger.tokenofflineengine.model.TokenEntity</class>
+		<class>com.starnberger.tokenofflineengine.model.SyncEntity</class>		
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<!--property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.transaction.flush_before_completion" value="true" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-			<property name="hibernate.connection.url" value="jdbc:h2:~/tokenengine"/>
+			<property name="hibernate.connection.url" value="jdbc:h2:~/tokenengine"/-->
+			<property name="datanucleus.NontransactionalRead" value="true" />
+			<property name="datanucleus.NontransactionalWrite" value="true" />
+			<property name="datanucleus.singletonEMFForName" value="true" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:~/tokenofflineengine"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.user" value=""/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="datanucleus.autoCreateTables" value="true"/>
+            <property name="datanucleus.generateSchema.database.mode" value="drop-and-create" />
 		</properties>
 	</persistence-unit>
 </persistence>
