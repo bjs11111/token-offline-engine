@@ -1,0 +1,8 @@
+<module>
+	<inherits name='com.google.gwt.user.User' />
+	<source path="model">
+      <exclude name="**/JpaLogEntity.*" />
+      <exclude name="**/DBTest.*" />	    
+	</source>
+	<source path="common"></source>
+</module> 

@@ -10,6 +10,7 @@ import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfigParameter;
 import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.SensorConfigType;
 
 /**
  * @author Roman Kaufmann
@@ -31,7 +32,7 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 	@Column
 	protected String description;
 	@Column
-	protected Class<?> type;
+	protected SensorConfigType type;
 	@Column
 	protected int sequence;
 	/*
@@ -141,12 +142,12 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 	}
 
 	@Override
-	public Class<?> getType() {
+	public SensorConfigType getType() {
 		return type;
 	}
 
 	@Override
-	public void setType(Class<?> type) {
+	public void setType(SensorConfigType type) {
 		this.type = type;
 	}
 

@@ -1,6 +1,5 @@
 package com.starnberger.tokenofflineengine.common;
 
-import java.io.Serializable;
 
 /**
  * @author Roman Kaufmann
@@ -22,12 +21,12 @@ public interface ISensorConfigValue extends ISyncEntity {
 	/**
 	 * @return the value
 	 */
-	public abstract Serializable getValue();
+	public abstract String getValue();
 
 	/**
 	 * @param value
 	 *            the value to set
 	 */
-	public abstract void setValue(Serializable value);
+	public abstract void setValue(String value);
 
 }

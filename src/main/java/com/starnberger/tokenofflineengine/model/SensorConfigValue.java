@@ -3,8 +3,6 @@
  */
 package com.starnberger.tokenofflineengine.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -31,7 +29,7 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 	@Column
 	protected String configKey;
 	@Column
-	protected Serializable value;
+	protected String value;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -118,12 +116,12 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 	}
 
 	@Override
-	public Serializable getValue() {
+	public String getValue() {
 		return value;
 	}
 
 	@Override
-	public void setValue(Serializable value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 

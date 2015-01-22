@@ -31,13 +31,13 @@ public interface ISensorConfigParameter extends ISyncEntity {
 	/**
 	 * @return the type
 	 */
-	public abstract Class<?> getType();
+	public abstract SensorConfigType getType();
 
 	/**
 	 * @param type
 	 *            the type to set
 	 */
-	public abstract void setType(Class<?> type);
+	public abstract void setType(SensorConfigType type);
 
 	/**
 	 * @return the sequence

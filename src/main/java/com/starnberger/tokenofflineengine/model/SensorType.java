@@ -11,6 +11,7 @@ import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorType;
 import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.SensorConfigType;
 
 /**
  * @author Roman Kaufmann
@@ -42,16 +43,16 @@ public class SensorType extends SyncEntity implements ISensorType {
 		// Add default sensor config parameter values
 		SensorConfigParameter broadCastEnabled = new SensorConfigParameter();
 		broadCastEnabled.setConfigKey("broadCastEnabled");
-		broadCastEnabled.setType(Boolean.class);
+		broadCastEnabled.setType(SensorConfigType.BOOLEAN);
 		SensorConfigParameter readInterval = new SensorConfigParameter();
 		readInterval.setConfigKey("readInterval");
-		readInterval.setType(Integer.class);
+		readInterval.setType(SensorConfigType.INT);
 		SensorConfigParameter loggingInterval = new SensorConfigParameter();
 		loggingInterval.setConfigKey("loggingInterval");
-		loggingInterval.setType(Integer.class);
+		loggingInterval.setType(SensorConfigType.INT);
 		SensorConfigParameter loggingIntervalAlarm = new SensorConfigParameter();
 		loggingIntervalAlarm.setConfigKey("loggingIntervalAlarm");
-		loggingIntervalAlarm.setType(Integer.class);
+		loggingIntervalAlarm.setType(SensorConfigType.INT);
 		configValues.add(broadCastEnabled.getWebKey());
 		configValues.add(readInterval.getWebKey());
 		configValues.add(loggingInterval.getWebKey());
