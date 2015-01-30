@@ -520,3 +520,19 @@ org.datanucleus.exceptions.ClassNotResolvedException: Class "org.apache.logging.
 15:13:57,810 (main) INFO  [DataNucleus.Enhancer] - Class "com.starnberger.tokenofflineengine.model.GatewayConfiguration" is already enhanced.
 15:13:57,811 (main) INFO  [DataNucleus.Enhancer] - Class "com.starnberger.tokenofflineengine.model.Task" is already enhanced.
 15:13:57,811 (main) INFO  [DataNucleus.Enhancer] - DataNucleus Enhancer completed with success for 13 classes. Timings : input=152 ms, enhance=33 ms, total=185 ms. Consult the log for full details
+23:41:11,514 (main) INFO  [DataNucleus.Enhancer] - DataNucleus Enhancer for API "JPA"
+23:41:11,655 (main) INFO  [DataNucleus.Enhancer] - DataNucleus Enhancer (version 3.1.1) : Enhancement of classes
+23:41:11,889 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\GatewayConfiguration.class" with enhanced definition
+23:41:11,904 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\Gateway.class" with enhanced definition
+23:41:11,904 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\SensorType.class" with enhanced definition
+23:41:11,904 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\SensorConfigParameter.class" with enhanced definition
+23:41:11,920 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\SensorConfigValue.class" with enhanced definition
+23:41:11,920 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\SyncEntity.class" with enhanced definition
+23:41:11,935 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\SensorData.class" with enhanced definition
+23:41:11,935 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\Task.class" with enhanced definition
+23:41:11,935 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\TokenModel.class" with enhanced definition
+23:41:11,951 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\SensorConfiguration.class" with enhanced definition
+23:41:11,951 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\TokenConfiguration.class" with enhanced definition
+23:41:11,967 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\Token.class" with enhanced definition
+23:41:11,982 (main) INFO  [DataNucleus.Enhancer] - Writing class file "C:\Users\Protoss78\git\token-offline-engine\target\classes\com\starnberger\tokenofflineengine\model\TokenEntity.class" with enhanced definition
+23:41:11,982 (main) INFO  [DataNucleus.Enhancer] - DataNucleus Enhancer completed with success for 13 classes. Timings : input=202 ms, enhance=125 ms, total=327 ms. Consult the log for full details
