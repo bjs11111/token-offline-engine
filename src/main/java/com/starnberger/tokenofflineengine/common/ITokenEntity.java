@@ -1,10 +1,14 @@
 package com.starnberger.tokenofflineengine.common;
 
+import com.google.gwt.core.client.js.JsType;
+import com.workingflows.js.jscore.client.api.JsObject;
+
 /**
  * @author Roman Kaufmann
  *
  */
-public interface ITokenEntity {
+@JsType
+public interface ITokenEntity extends JsObject {
 
 	/**
 	 * @return the version
