@@ -26,8 +26,8 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 
 	@Column
 	protected Date lastModified = new Date();
-	@Column
-	protected boolean isDeleted = false;
+	@Column( name ="deleted")
+	protected boolean deleted = false;
 	@Column
 	protected EntityState state = EntityState.CREATED;
 
@@ -72,7 +72,7 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 	 */
 	@Override
 	public boolean isDeleted() {
-		return isDeleted;
+		return deleted;
 	}
 
 	/*
@@ -85,7 +85,7 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 	public void setDeleted(boolean isDeleted) {
 		if (isDeleted)
 			this.state = EntityState.DELETED;
-		this.isDeleted = isDeleted;
+		this.deleted = isDeleted;
 	}
 
 	/*
@@ -95,7 +95,7 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 	 */
 	@Override
 	public String toString() {
-		return "SyncEntity [lastModified=" + lastModified + ", isDeleted=" + isDeleted + ", state=" + state + "]";
+		return "SyncEntity [lastModified=" + lastModified + ", isDeleted=" + deleted + ", state=" + state + "]";
 	}
 
 	/**

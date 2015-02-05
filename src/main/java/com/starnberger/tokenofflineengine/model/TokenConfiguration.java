@@ -19,7 +19,7 @@ import com.starnberger.tokenofflineengine.common.ITokenConfiguration;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "TokenConfiguration.lastModified", query = "SELECT g from TokenConfiguration g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.deleted = :isDeleted"),
 		@NamedQuery(name = "TokenConfiguration.findMyWebKey", query = "select s from TokenConfiguration s where s.webKey = :webKey") })
 public class TokenConfiguration extends SyncEntity implements ITokenConfiguration  {
 

@@ -18,7 +18,7 @@ import com.starnberger.tokenofflineengine.common.ISyncEntity;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "SensorConfigValue.lastModified", query = "SELECT g from SensorConfigValue g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "SensorConfigValue.deleted", query = "SELECT g from SensorConfigValue g WHERE g.isDeleted = :isDeleted"),
+		@NamedQuery(name = "SensorConfigValue.deleted", query = "SELECT g from SensorConfigValue g WHERE g.deleted = :isDeleted"),
 		@NamedQuery(name = "SensorConfigValue.findMyWebKey", query = "select s from SensorConfigValue s where s.webKey = :webKey") })
 public class SensorConfigValue extends SyncEntity implements ISensorConfigValue {
 
