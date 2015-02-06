@@ -69,4 +69,8 @@ public interface ITokenConfiguration extends ISyncEntity {
 	 */
 	public abstract void setSensorConfigKeys(Set<String> sensorConfigs);
 
+	public abstract void setName(String name);
+
+	public abstract String getName();
+
 }

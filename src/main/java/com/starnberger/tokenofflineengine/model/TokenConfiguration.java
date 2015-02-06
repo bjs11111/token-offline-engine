@@ -21,12 +21,14 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "TokenConfiguration.lastModified", query = "SELECT g from TokenConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.deleted = :isDeleted"),
 		@NamedQuery(name = "TokenConfiguration.findMyWebKey", query = "select s from TokenConfiguration s where s.webKey = :webKey") })
-public class TokenConfiguration extends SyncEntity implements ITokenConfiguration  {
+public class TokenConfiguration extends SyncEntity implements ITokenConfiguration {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7773718071451539938L;
+	@Column
+	protected String name;
 	@Column
 	protected String modelKey;
 	@Column
@@ -39,6 +41,7 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	protected int bleTxPower;
 	@Basic
 	private Set<String> sensorConfigKeys = new HashSet<String>();
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -64,21 +67,17 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (id != null)
-			result += "id: " + id;
-		result += ", version: " + version;
-		if (modelKey != null)
-			result += ", model: " + modelKey;
-		result += ", bleAdvertisingInterval: " + bleAdvertisingInterval;
-		result += ", bleBondableInterval: " + bleBondableInterval;
-		result += ", bleAdvertisingConditionAlways: " + bleAdvertisingConditionAlways;
-		result += ", bleTxPower: " + bleTxPower;
-		if (lastModified != null)
-			result += ", lastModified: " + lastModified;
-		return result;
+		return "TokenConfiguration [name=" + name + ", modelKey=" + modelKey + ", bleAdvertisingInterval="
+				+ bleAdvertisingInterval + ", bleBondableInterval=" + bleBondableInterval
+				+ ", bleAdvertisingConditionAlways=" + bleAdvertisingConditionAlways + ", bleTxPower=" + bleTxPower
+				+ ", sensorConfigKeys=" + sensorConfigKeys + "]";
 	}
 
 	/**
@@ -160,9 +159,8 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
-		if (source instanceof TokenConfiguration)
-		{
-			TokenConfiguration token = (TokenConfiguration) source;
+		if (source instanceof TokenConfiguration) {
+			ITokenConfiguration token = (ITokenConfiguration) source;
 			setBleAdvertisingConditionAlways(token.isBleAdvertisingConditionAlways());
 			setBleAdvertisingInterval(token.getBleAdvertisingInterval());
 			setBleBondableInterval(token.getBleBondableInterval());
@@ -171,6 +169,23 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 			setSensorConfigKeys(token.getSensorConfigKeys());
 			setWebKey(token.getWebKey());
 		}
+	}
+
+	/**
+	 * @return the name
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

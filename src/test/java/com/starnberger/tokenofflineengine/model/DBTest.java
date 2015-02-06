@@ -16,6 +16,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.starnberger.tokenofflineengine.common.ITokenConfiguration;
 import com.starnberger.tokenofflineengine.dao.EMF;
 
 /**
@@ -103,7 +104,7 @@ public class DBTest {
 	@Test
 	public void testTokenConfiguration() {
 		EntityManager em = DBTest.emf.createEntityManager();
-		TokenConfiguration tokenConfiguration = new TokenConfiguration();
+		ITokenConfiguration tokenConfiguration = new TokenConfiguration();
 		em.persist(tokenConfiguration);
 		em.close();
 	}
@@ -122,7 +123,7 @@ public class DBTest {
 	public void testList() {
 		EntityManager em = DBTest.emf.createEntityManager();
 		em.getTransaction().begin();
-		TokenConfiguration tokenConfiguration = new TokenConfiguration();
+		ITokenConfiguration tokenConfiguration = new TokenConfiguration();
 		SensorConfiguration sensorConfiguration = new SensorConfiguration();
 		em.persist(sensorConfiguration);
 		em.flush();
