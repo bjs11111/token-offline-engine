@@ -12,9 +12,9 @@ public interface ISensorData extends ITokenEntity {
 
 	public abstract void setTimestamp(Date timestamp);
 
-	public abstract String getString();
+	public abstract String getSensorType();
 
-	public abstract void setString(String sensorType);
+	public abstract void setSensorType(String sensorType);
 
 	public abstract String getGateway();
 

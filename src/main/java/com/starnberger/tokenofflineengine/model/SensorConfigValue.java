@@ -9,7 +9,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfigValue;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 /**
  * @author Roman Kaufmann
@@ -30,6 +30,7 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 	protected String configKey;
 	@Column
 	protected String value;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -126,7 +127,7 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 	}
 
 	@Override
-	public void copyValues(ISyncEntity source) {
+	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
 		if (source instanceof SensorConfigValue) {

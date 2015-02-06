@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.starnberger.tokenofflineengine.common.ISensorData;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 /**
  * @author Roman Kaufmann
@@ -32,6 +33,7 @@ public class SensorData extends TokenEntity implements ISensorData {
 	protected double value3;
 	@Column
 	protected String token;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -103,12 +105,12 @@ public class SensorData extends TokenEntity implements ISensorData {
 	}
 
 	@Override
-	public String getString() {
+	public String getSensorType() {
 		return sensorType;
 	}
 
 	@Override
-	public void setString(String sensorType) {
+	public void setSensorType(String sensorType) {
 		this.sensorType = sensorType;
 	}
 
@@ -160,5 +162,22 @@ public class SensorData extends TokenEntity implements ISensorData {
 	@Override
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	@Override
+	public void copyValues(ITokenEntity source) {
+		if (source == null)
+			return;
+		if (source instanceof SensorData) {
+			SensorData sourceSensorData = (SensorData) source;
+			setGateway(sourceSensorData.getGateway());
+			setSensorType(sourceSensorData.getSensorType());
+			setTimestamp(sourceSensorData.getTimestamp());
+			setToken(sourceSensorData.getToken());
+			setValue1(sourceSensorData.getValue1());
+			setValue2(sourceSensorData.getValue2());
+			setValue3(sourceSensorData.getValue3());
+			setWebKey(sourceSensorData.getWebKey());
+		}
 	}
 }

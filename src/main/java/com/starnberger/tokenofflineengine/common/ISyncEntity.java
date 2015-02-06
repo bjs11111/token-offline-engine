@@ -27,11 +27,5 @@ public interface ISyncEntity extends ITokenEntity {
 	 * @param isDeleted the isDeleted to set
 	 */
 	public abstract void setDeleted(boolean isDeleted);
-	
-	/**
-	 * Copy values from the passed source to this instance.
-	 * @param source
-	 */
-	public abstract void copyValues(ISyncEntity source);
 
 }

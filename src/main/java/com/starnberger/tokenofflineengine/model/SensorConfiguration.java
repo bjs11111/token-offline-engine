@@ -10,7 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfiguration;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 /**
  * @author Roman Kaufmann
@@ -113,7 +113,7 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 	}
 
 	@Override
-	public void copyValues(ISyncEntity source) {
+	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
 		if (source instanceof SensorConfiguration) {

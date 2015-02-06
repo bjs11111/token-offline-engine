@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.starnberger.tokenofflineengine.common.IGatewayVersion;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 /**
  * @author Roman Kaufmann
@@ -109,7 +109,7 @@ public class GatewayVersion extends SyncEntity implements IGatewayVersion {
 	}
 
 	@Override
-	public void copyValues(ISyncEntity source) {
+	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
 		if (source instanceof GatewayVersion)

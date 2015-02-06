@@ -9,7 +9,7 @@ import javax.persistence.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starnberger.tokenofflineengine.common.IGateway;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 /**
  * @author Roman Kaufmann
@@ -201,7 +201,7 @@ public class Gateway extends SyncEntity implements IGateway {
 	}
 
 	@Override
-	public void copyValues(ISyncEntity source) {
+	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
 		if (source instanceof Gateway)

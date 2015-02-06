@@ -9,7 +9,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorConfigParameter;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 import com.starnberger.tokenofflineengine.common.SensorConfigType;
 
 /**
@@ -21,7 +21,7 @@ import com.starnberger.tokenofflineengine.common.SensorConfigType;
 		@NamedQuery(name = "SensorConfigParameter.lastModified", query = "SELECT g from SensorConfigParameter g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorConfigParameter.deleted", query = "SELECT g from SensorConfigParameter g WHERE g.deleted = :isDeleted"),
 		@NamedQuery(name = "SensorConfigParameter.findMyWebKey", query = "select s from SensorConfigParameter s where s.webKey = :webKey") })
-public class SensorConfigParameter extends SyncEntity implements ISensorConfigParameter  {
+public class SensorConfigParameter extends SyncEntity implements ISensorConfigParameter {
 
 	/**
 	 * 
@@ -35,6 +35,7 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 	protected SensorConfigType type;
 	@Column
 	protected int sequence;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -162,11 +163,10 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 	}
 
 	@Override
-	public void copyValues(ISyncEntity source) {
+	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
-		if (source instanceof SensorConfigParameter)
-		{
+		if (source instanceof SensorConfigParameter) {
 			SensorConfigParameter token = (SensorConfigParameter) source;
 			setWebKey(token.getWebKey());
 			setDescription(token.getDescription());

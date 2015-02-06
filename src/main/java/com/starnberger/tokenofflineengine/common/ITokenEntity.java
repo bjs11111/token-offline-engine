@@ -31,5 +31,11 @@ public interface ITokenEntity extends JsObject {
 	 *            the webKey to set
 	 */
 	public abstract void setWebKey(String webKey);
+	
+	/**
+	 * Copy values from the passed source to this instance.
+	 * @param source
+	 */
+	public abstract void copyValues(ITokenEntity source);
 
 }

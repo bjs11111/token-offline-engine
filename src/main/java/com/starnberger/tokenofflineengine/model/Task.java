@@ -9,8 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
 import com.starnberger.tokenofflineengine.common.ITask;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 import com.starnberger.tokenofflineengine.common.Status;
 import com.starnberger.tokenofflineengine.common.TaskType;
 
@@ -150,7 +150,7 @@ public class Task extends SyncEntity implements ITask  {
 	}
 
 	@Override
-	public void copyValues(ISyncEntity source) {
+	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
 		if (source instanceof Task)

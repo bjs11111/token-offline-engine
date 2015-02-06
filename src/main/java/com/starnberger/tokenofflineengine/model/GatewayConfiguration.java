@@ -7,7 +7,7 @@ import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.DebugLevel;
 import com.starnberger.tokenofflineengine.common.IGatewayConfiguration;
-import com.starnberger.tokenofflineengine.common.ISyncEntity;
+import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 /**
  * @author Roman Kaufmann
@@ -148,7 +148,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	}
 
 	@Override
-	public void copyValues(ISyncEntity source) {
+	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
 		if (source instanceof GatewayConfiguration) {
