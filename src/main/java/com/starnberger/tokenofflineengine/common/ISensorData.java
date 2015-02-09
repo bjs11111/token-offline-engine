@@ -12,13 +12,13 @@ public interface ISensorData extends ITokenEntity {
 
 	public abstract void setTimestamp(Date timestamp);
 
-	public abstract String getSensorType();
+	public abstract Long getSensorType();
 
-	public abstract void setSensorType(String sensorType);
+	public abstract void setSensorType(Long sensorType);
 
-	public abstract String getGateway();
+	public abstract Long getGateway();
 
-	public abstract void setGateway(String gateway);
+	public abstract void setGateway(Long gateway);
 
 	public abstract double getValue1();
 
@@ -32,8 +32,8 @@ public interface ISensorData extends ITokenEntity {
 
 	public abstract void setValue3(double value3);
 
-	public abstract String getToken();
+	public abstract Long getToken();
 
-	public abstract void setToken(String token);
+	public abstract void setToken(Long token);
 
 }

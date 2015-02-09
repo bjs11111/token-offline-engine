@@ -41,12 +41,12 @@ public interface IGateway extends ISyncEntity {
 	/**
 	 * @return
 	 */
-	public abstract String getFirmwareVersionKey();
+	public abstract Long getFirmwareVersionKey();
 
 	/**
 	 * @param firmwareVersion
 	 */
-	public abstract void setFirmwareVersionKey(String firmwareVersion);
+	public abstract void setFirmwareVersionKey(Long firmwareVersion);
 
 	/**
 	 * @return
@@ -61,12 +61,12 @@ public interface IGateway extends ISyncEntity {
 	/**
 	 * @return
 	 */
-	public abstract String getGatewayConfigKey();
+	public abstract Long getGatewayConfigKey();
 
 	/**
 	 * @param gatewayConfig
 	 */
-	public abstract void setGatewayConfigKey(String gatewayConfig);
+	public abstract void setGatewayConfigKey(Long gatewayConfig);
 
 	/**
 	 * @return the gatewayToken

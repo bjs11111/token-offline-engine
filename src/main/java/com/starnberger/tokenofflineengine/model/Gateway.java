@@ -38,9 +38,9 @@ public class Gateway extends SyncEntity implements IGateway {
 	@Column
 	protected boolean needsConfigUpgrade;
 	@Column
-	protected String firmwareVersionKey;
+	protected Long firmwareVersionKey;
 	@Column
-	private String gatewayConfigKey;
+	private Long gatewayConfigKey;
 	@Column
 	@JsonIgnore
 	private String gatewayToken;
@@ -124,12 +124,12 @@ public class Gateway extends SyncEntity implements IGateway {
 	}
 
 	@Override
-	public String getFirmwareVersionKey() {
+	public Long getFirmwareVersionKey() {
 		return firmwareVersionKey;
 	}
 
 	@Override
-	public void setFirmwareVersionKey(String firmwareVersion) {
+	public void setFirmwareVersionKey(Long firmwareVersion) {
 		this.firmwareVersionKey = firmwareVersion;
 	}
 
@@ -144,12 +144,12 @@ public class Gateway extends SyncEntity implements IGateway {
 	}
 
 	@Override
-	public String getGatewayConfigKey() {
+	public Long getGatewayConfigKey() {
 		return this.gatewayConfigKey;
 	}
 
 	@Override
-	public void setGatewayConfigKey(final String gatewayConfig) {
+	public void setGatewayConfigKey(final Long gatewayConfig) {
 		this.gatewayConfigKey = gatewayConfig;
 	}
 

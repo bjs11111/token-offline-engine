@@ -22,9 +22,9 @@ public class SensorData extends TokenEntity implements ISensorData {
 	@Column
 	protected Date timestamp;
 	@Column
-	protected String sensorType;
+	protected Long sensorType;
 	@Column
-	protected String gateway;
+	protected Long gateway;
 	@Column
 	protected double value1;
 	@Column
@@ -32,7 +32,7 @@ public class SensorData extends TokenEntity implements ISensorData {
 	@Column
 	protected double value3;
 	@Column
-	protected String token;
+	protected Long token;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -105,22 +105,22 @@ public class SensorData extends TokenEntity implements ISensorData {
 	}
 
 	@Override
-	public String getSensorType() {
+	public Long getSensorType() {
 		return sensorType;
 	}
 
 	@Override
-	public void setSensorType(String sensorType) {
+	public void setSensorType(Long sensorType) {
 		this.sensorType = sensorType;
 	}
 
 	@Override
-	public String getGateway() {
+	public Long getGateway() {
 		return gateway;
 	}
 
 	@Override
-	public void setGateway(String gateway) {
+	public void setGateway(Long gateway) {
 		this.gateway = gateway;
 	}
 
@@ -155,12 +155,12 @@ public class SensorData extends TokenEntity implements ISensorData {
 	}
 
 	@Override
-	public String getToken() {
+	public Long getToken() {
 		return token;
 	}
 
 	@Override
-	public void setToken(String token) {
+	public void setToken(Long token) {
 		this.token = token;
 	}
 

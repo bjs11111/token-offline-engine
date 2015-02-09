@@ -44,12 +44,12 @@ public interface ISensorType extends ISyncEntity {
 	/**
 	 * @return the configValues
 	 */
-	public abstract List<String> getConfigValues();
+	public abstract List<Long> getConfigValues();
 
 	/**
 	 * @param configValues
 	 *            the configValues to set
 	 */
-	public abstract void setConfigValues(List<String> configValues);
+	public abstract void setConfigValues(List<Long> configValues);
 
 }

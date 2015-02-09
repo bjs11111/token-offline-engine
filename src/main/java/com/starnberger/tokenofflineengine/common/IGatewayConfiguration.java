@@ -10,9 +10,9 @@ public interface IGatewayConfiguration extends ISyncEntity {
 
 	public abstract void setName(String name);
 
-	public abstract String getPartnerKey();
+	public abstract Long getPartnerKey();
 
-	public abstract void setPartnerKey(String partner);
+	public abstract void setPartnerKey(Long partner);
 
 	public abstract DebugLevel getDebugLevel();
 

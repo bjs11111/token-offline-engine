@@ -30,7 +30,7 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	@Column
 	protected String name;
 	@Column
-	protected String modelKey;
+	protected Long modelKey;
 	@Column
 	protected int bleAdvertisingInterval;
 	@Column
@@ -40,7 +40,7 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	@Column
 	protected int bleTxPower;
 	@Basic
-	private Set<String> sensorConfigKeys = new HashSet<String>();
+	private Set<Long> sensorConfigKeys = new HashSet<Long>();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -96,12 +96,12 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	}
 
 	@Override
-	public String getModelKey() {
+	public Long getModelKey() {
 		return modelKey;
 	}
 
 	@Override
-	public void setModelKey(String model) {
+	public void setModelKey(Long model) {
 		this.modelKey = model;
 	}
 
@@ -146,12 +146,12 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	}
 
 	@Override
-	public Set<String> getSensorConfigKeys() {
+	public Set<Long> getSensorConfigKeys() {
 		return sensorConfigKeys;
 	}
 
 	@Override
-	public void setSensorConfigKeys(Set<String> sensorConfigs) {
+	public void setSensorConfigKeys(Set<Long> sensorConfigs) {
 		this.sensorConfigKeys = sensorConfigs;
 	}
 

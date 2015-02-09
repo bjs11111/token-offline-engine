@@ -18,8 +18,8 @@ import com.starnberger.tokenofflineengine.common.ITokenModel;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.deleted = :isDeleted")})
-		//@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.webKey = :webKey") })
+		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.deleted = :isDeleted"),
+		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.id = :webKey") })
 public class TokenModel extends SyncEntity implements ITokenModel  {
 
 	/**
@@ -29,7 +29,7 @@ public class TokenModel extends SyncEntity implements ITokenModel  {
 	@Column
 	protected String name;
 	@Basic
-	private List<String> sensorKeys;
+	private List<Long> sensorKeys;
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -82,12 +82,12 @@ public class TokenModel extends SyncEntity implements ITokenModel  {
 	}
 
 	@Override
-	public List<String> getSensorKeys() {
+	public List<Long> getSensorKeys() {
 		return sensorKeys;
 	}
 
 	@Override
-	public void setSensorKeys(List<String> sensors) {
+	public void setSensorKeys(List<Long> sensors) {
 		this.sensorKeys = sensors;
 	}
 

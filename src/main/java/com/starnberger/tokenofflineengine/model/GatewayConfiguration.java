@@ -35,7 +35,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	@Column
 	private int logUpdateInterval;
 	@Column
-	private String partnerKey;
+	private Long partnerKey;
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -98,12 +98,12 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	}
 
 	@Override
-	public String getPartnerKey() {
+	public Long getPartnerKey() {
 		return this.partnerKey;
 	}
 
 	@Override
-	public void setPartnerKey(final String partner) {
+	public void setPartnerKey(final Long partner) {
 		this.partnerKey = partner;
 	}
 

@@ -8,9 +8,9 @@ import java.util.List;
  */
 public interface ITokenModel extends ISyncEntity {
 
-	public abstract List<String> getSensorKeys();
+	public abstract List<Long> getSensorKeys();
 
-	public abstract void setSensorKeys(List<String> sensors);
+	public abstract void setSensorKeys(List<Long> sensors);
 
 	public abstract String getName();
 

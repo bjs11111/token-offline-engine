@@ -28,11 +28,11 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 	 */
 	private static final long serialVersionUID = -7079529239682539322L;
 	@Column
-	private String ownerKey;
+	private Long ownerKey;
 	@Column
-	private String sensorTypeKey;
+	private Long sensorTypeKey;
 	@Basic
-	private List<String> configValueKeys = new ArrayList<String>();
+	private List<Long> configValueKeys = new ArrayList<Long>();
 
 	@Override
 	public String toString() {
@@ -83,32 +83,32 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 	}
 
 	@Override
-	public String getOwnerKey() {
+	public Long getOwnerKey() {
 		return ownerKey;
 	}
 
 	@Override
-	public void setOwnerKey(String owner) {
+	public void setOwnerKey(Long owner) {
 		this.ownerKey = owner;
 	}
 
 	@Override
-	public String getSensorTypeKey() {
+	public Long getSensorTypeKey() {
 		return sensorTypeKey;
 	}
 
 	@Override
-	public void setSensorTypeKey(String sensorType) {
+	public void setSensorTypeKey(Long sensorType) {
 		this.sensorTypeKey = sensorType;
 	}
 
 	@Override
-	public List<String> getConfigValueKeys() {
+	public List<Long> getConfigValueKeys() {
 		return configValueKeys;
 	}
 
 	@Override
-	public void setConfigValueKeys(List<String> configValue) {
+	public void setConfigValueKeys(List<Long> configValue) {
 		this.configValueKeys = configValue;
 	}
 

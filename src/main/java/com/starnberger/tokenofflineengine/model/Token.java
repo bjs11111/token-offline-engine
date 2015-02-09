@@ -40,11 +40,11 @@ public class Token extends SyncEntity implements IToken   {
 	@Column
 	protected boolean needsConfigUpdate;
 	@Column
-	protected String model;
+	protected Long model;
 	@Column
 	protected Date lastSyncDate;
 	@Column
-	private String owner;
+	private Long owner;
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -167,12 +167,12 @@ public class Token extends SyncEntity implements IToken   {
 	}
 
 	@Override
-	public String getModel() {
+	public Long getModel() {
 		return model;
 	}
 
 	@Override
-	public void setModel(String model) {
+	public void setModel(Long model) {
 		this.model = model;
 	}
 
@@ -187,12 +187,12 @@ public class Token extends SyncEntity implements IToken   {
 	}
 
 	@Override
-	public String getOwner() {
+	public Long getOwner() {
 		return owner;
 	}
 
 	@Override
-	public void setOwner(String owner) {
+	public void setOwner(Long owner) {
 		this.owner = owner;
 	}
 

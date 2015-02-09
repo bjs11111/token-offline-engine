@@ -32,9 +32,9 @@ public interface IToken extends ISyncEntity {
 
 	public abstract void setNeedsConfigUpdate(boolean needsConfigUpdate);
 
-	public abstract String getModel();
+	public abstract Long getModel();
 
-	public abstract void setModel(String model);
+	public abstract void setModel(Long model);
 
 	public abstract Date getLastSyncDate();
 
@@ -43,12 +43,12 @@ public interface IToken extends ISyncEntity {
 	/**
 	 * @return the owner
 	 */
-	public abstract String getOwner();
+	public abstract Long getOwner();
 
 	/**
 	 * @param owner
 	 *            the owner to set
 	 */
-	public abstract void setOwner(String owner);
+	public abstract void setOwner(Long owner);
 
 }

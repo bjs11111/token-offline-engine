@@ -11,12 +11,12 @@ public interface ITokenConfiguration extends ISyncEntity {
 	/**
 	 * @return
 	 */
-	public abstract String getModelKey();
+	public abstract Long getModelKey();
 
 	/**
 	 * @param model
 	 */
-	public abstract void setModelKey(String model);
+	public abstract void setModelKey(Long model);
 
 	/**
 	 * @return
@@ -61,13 +61,13 @@ public interface ITokenConfiguration extends ISyncEntity {
 	/**
 	 * @return the sensorConfigs
 	 */
-	public abstract Set<String> getSensorConfigKeys();
+	public abstract Set<Long> getSensorConfigKeys();
 
 	/**
 	 * @param sensorConfigs
 	 *            the sensorConfigs to set
 	 */
-	public abstract void setSensorConfigKeys(Set<String> sensorConfigs);
+	public abstract void setSensorConfigKeys(Set<Long> sensorConfigs);
 
 	public abstract void setName(String name);
 

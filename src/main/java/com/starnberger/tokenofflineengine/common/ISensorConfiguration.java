@@ -11,34 +11,34 @@ public interface ISensorConfiguration extends ISyncEntity {
 	/**
 	 * @return the owner
 	 */
-	public abstract String getOwnerKey();
+	public abstract Long getOwnerKey();
 
 	/**
 	 * @param owner
 	 *            the owner to set
 	 */
-	public abstract void setOwnerKey(String owner);
+	public abstract void setOwnerKey(Long owner);
 
 	/**
 	 * @return the sensorType
 	 */
-	public abstract String getSensorTypeKey();
+	public abstract Long getSensorTypeKey();
 
 	/**
 	 * @param sensorType
 	 *            the sensorType to set
 	 */
-	public abstract void setSensorTypeKey(String sensorType);
+	public abstract void setSensorTypeKey(Long sensorType);
 
 	/**
 	 * @return the configValue
 	 */
-	public abstract List<String> getConfigValueKeys();
+	public abstract List<Long> getConfigValueKeys();
 
 	/**
 	 * @param configValue
 	 *            the configValue to set
 	 */
-	public abstract void setConfigValueKeys(List<String> configValue);
+	public abstract void setConfigValueKeys(List<Long> configValue);
 
 }

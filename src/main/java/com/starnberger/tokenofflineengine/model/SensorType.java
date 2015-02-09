@@ -35,7 +35,7 @@ public class SensorType extends SyncEntity implements ISensorType {
 	@Column
 	protected int numberOfValues;
 	@Basic
-	protected List<String> configValues = new ArrayList<String>();
+	protected List<Long> configValues = new ArrayList<Long>();
 	/**
 	 * Default constructor.
 	 */
@@ -53,10 +53,10 @@ public class SensorType extends SyncEntity implements ISensorType {
 		SensorConfigParameter loggingIntervalAlarm = new SensorConfigParameter();
 		loggingIntervalAlarm.setConfigKey("loggingIntervalAlarm");
 		loggingIntervalAlarm.setType(SensorConfigType.INT);
-		configValues.add(String.valueOf(broadCastEnabled.getId()));
-		configValues.add(String.valueOf(readInterval.getId()));
-		configValues.add(String.valueOf(loggingInterval.getId()));
-		configValues.add(String.valueOf(loggingIntervalAlarm.getId()));
+		configValues.add(broadCastEnabled.getId());
+		configValues.add(readInterval.getId());
+		configValues.add(loggingInterval.getId());
+		configValues.add(loggingIntervalAlarm.getId());
 	}
 
 	/*
@@ -175,12 +175,12 @@ public class SensorType extends SyncEntity implements ISensorType {
 	}
 
 	@Override
-	public List<String> getConfigValues() {
+	public List<Long> getConfigValues() {
 		return configValues;
 	}
 
 	@Override
-	public void setConfigValues(List<String> configValues) {
+	public void setConfigValues(List<Long> configValues) {
 		this.configValues = configValues;
 	}
 
