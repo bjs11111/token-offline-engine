@@ -62,6 +62,7 @@ public class AuthenticationManager {
 			me.setUuid(GatewayInfo.CPUID);
 			me.setPassword(UUID.randomUUID().toString());
 			em.persist(me);
+			em.flush();
 			em.getTransaction().commit();
 			reportForWork(me);
 		} else if (me.getUuid() == null || "".equals(me.getUuid()))
@@ -89,6 +90,8 @@ public class AuthenticationManager {
 			me.setGatewayToken(newServiceToken);
 			GatewayInfo.SERVICE_TOKEN = newServiceToken;
 			return true;
+		} else {
+			System.out.println(response.toString());
 		}
 		GatewayInfo.SERVICE_TOKEN = null;
 		return false;

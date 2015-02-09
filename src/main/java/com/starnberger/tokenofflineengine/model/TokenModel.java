@@ -18,8 +18,8 @@ import com.starnberger.tokenofflineengine.common.ITokenModel;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.deleted = :isDeleted"),
-		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.webKey = :webKey") })
+		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.deleted = :isDeleted")})
+		//@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.webKey = :webKey") })
 public class TokenModel extends SyncEntity implements ITokenModel  {
 
 	/**
@@ -108,7 +108,8 @@ public class TokenModel extends SyncEntity implements ITokenModel  {
 		if (source instanceof TokenModel)
 		{
 			TokenModel token = (TokenModel) source;
-			setWebKey(token.getWebKey());
+			//setWebKey(token.getWebKey());
+			setId(token.getId());
 			setName(token.getName());
 			setSensorKeys(token.getSensorKeys());
 		}

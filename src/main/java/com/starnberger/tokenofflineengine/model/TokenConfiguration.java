@@ -20,7 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 @NamedQueries({
 		@NamedQuery(name = "TokenConfiguration.lastModified", query = "SELECT g from TokenConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.deleted = :isDeleted"),
-		@NamedQuery(name = "TokenConfiguration.findMyWebKey", query = "select s from TokenConfiguration s where s.webKey = :webKey") })
+		@NamedQuery(name = "TokenConfiguration.findMyWebKey", query = "select s from TokenConfiguration s where s.id = :webKey") })
 public class TokenConfiguration extends SyncEntity implements ITokenConfiguration {
 
 	/**
@@ -160,14 +160,15 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 		if (source == null)
 			return;
 		if (source instanceof TokenConfiguration) {
-			ITokenConfiguration token = (ITokenConfiguration) source;
+			TokenConfiguration token = (TokenConfiguration) source;
 			setBleAdvertisingConditionAlways(token.isBleAdvertisingConditionAlways());
 			setBleAdvertisingInterval(token.getBleAdvertisingInterval());
 			setBleBondableInterval(token.getBleBondableInterval());
 			setBleTxPower(token.getBleTxPower());
 			setModelKey(token.getModelKey());
 			setSensorConfigKeys(token.getSensorConfigKeys());
-			setWebKey(token.getWebKey());
+			//setWebKey(token.getWebKey());
+			setId(token.getId());
 		}
 	}
 

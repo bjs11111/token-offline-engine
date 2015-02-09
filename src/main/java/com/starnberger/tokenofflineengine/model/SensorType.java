@@ -21,7 +21,7 @@ import com.starnberger.tokenofflineengine.common.SensorConfigType;
 @NamedQueries({
 		@NamedQuery(name = "SensorType.lastModified", query = "SELECT g from SensorType g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorType.deleted", query = "SELECT g from SensorType g WHERE g.deleted = :isDeleted"),
-		@NamedQuery(name = "SensorType.findMyWebKey", query = "select s from SensorType s where s.webKey = :webKey") })
+		@NamedQuery(name = "SensorType.findMyWebKey", query = "select s from SensorType s where s.id = :webKey") })
 public class SensorType extends SyncEntity implements ISensorType {
 
 	/**
@@ -53,10 +53,10 @@ public class SensorType extends SyncEntity implements ISensorType {
 		SensorConfigParameter loggingIntervalAlarm = new SensorConfigParameter();
 		loggingIntervalAlarm.setConfigKey("loggingIntervalAlarm");
 		loggingIntervalAlarm.setType(SensorConfigType.INT);
-		configValues.add(broadCastEnabled.getWebKey());
-		configValues.add(readInterval.getWebKey());
-		configValues.add(loggingInterval.getWebKey());
-		configValues.add(loggingIntervalAlarm.getWebKey());
+		configValues.add(String.valueOf(broadCastEnabled.getId()));
+		configValues.add(String.valueOf(readInterval.getId()));
+		configValues.add(String.valueOf(loggingInterval.getId()));
+		configValues.add(String.valueOf(loggingIntervalAlarm.getId()));
 	}
 
 	/*
@@ -191,7 +191,8 @@ public class SensorType extends SyncEntity implements ISensorType {
 		if (source instanceof SensorType)
 		{
 			SensorType token = (SensorType) source;
-			setWebKey(token.getWebKey());
+			//setWebKey(token.getWebKey());
+			setId(token.getId());
 			setConfigValues(token.getConfigValues());
 			setDescription(token.getDescription());
 			setNumberOfValues(token.getNumberOfValues());

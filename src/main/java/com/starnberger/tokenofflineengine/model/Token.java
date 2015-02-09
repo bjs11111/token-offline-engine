@@ -20,7 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "Token.lastModifiedByOwner", query = "SELECT t from Token t WHERE t.owner = :owner and t.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Token.lastModified", query = "SELECT t from Token t WHERE t.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Token.deleted", query = "SELECT t from Token t WHERE t.deleted = :isDeleted"),
-		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.webKey = :webKey") })
+		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.id = :webKey") })
 public class Token extends SyncEntity implements IToken   {
 
 	/**
@@ -203,7 +203,8 @@ public class Token extends SyncEntity implements IToken   {
 		if (source instanceof Token)
 		{
 			Token token = (Token) source;
-			setWebKey(token.getWebKey());
+			//setWebKey(token.getWebKey());
+			setId(token.getId());
 			setName(token.getName());
 			setLastSyncDate(token.getLastSyncDate());
 			setMac(token.getMac());

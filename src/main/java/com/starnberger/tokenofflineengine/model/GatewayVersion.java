@@ -115,7 +115,8 @@ public class GatewayVersion extends SyncEntity implements IGatewayVersion {
 		if (source instanceof GatewayVersion)
 		{
 			GatewayVersion token = (GatewayVersion) source;
-			setWebKey(token.getWebKey());
+			//setWebKey(token.getWebKey());
+			setId(token.getId());
 			setDescription(token.getDescription());
 			setFile(token.getFile());
 			setName(token.getName());

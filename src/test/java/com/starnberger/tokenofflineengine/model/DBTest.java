@@ -128,7 +128,7 @@ public class DBTest {
 		em.persist(sensorConfiguration);
 		em.flush();
 		HashSet<String> sensorConfigKeys = new HashSet<String>();
-		sensorConfigKeys.add(sensorConfiguration.getWebKey());
+		sensorConfigKeys.add(String.valueOf(sensorConfiguration.getId()));
 		tokenConfiguration.setSensorConfigKeys(sensorConfigKeys);
 		em.persist(tokenConfiguration);
 		em.getTransaction().commit();

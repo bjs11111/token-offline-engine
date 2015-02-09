@@ -177,7 +177,8 @@ public class SensorData extends TokenEntity implements ISensorData {
 			setValue1(sourceSensorData.getValue1());
 			setValue2(sourceSensorData.getValue2());
 			setValue3(sourceSensorData.getValue3());
-			setWebKey(sourceSensorData.getWebKey());
+			//setWebKey(sourceSensorData.getWebKey());
+			setId(sourceSensorData.getId());
 		}
 	}
 }

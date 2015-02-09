@@ -7,10 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.PostPersist;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.starnberger.tokenofflineengine.common.ITokenEntity;
 
 @MappedSuperclass
@@ -24,10 +22,9 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	@Column(name = "version")
 	protected int version;
 	@Column
-	protected String webKey;
+	//protected String webKey;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonIgnore
 	protected Long id;
 
 	/**
@@ -62,13 +59,13 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	 * 
 	 * @see com.starnberger.tokenengine.server.dao.ITokenEntity#getWebKey()
 	 */
-	@Override
+	/*@Override
 	public String getWebKey() {
 		if (webKey == null) {
 			calculateWebKey();
 		}
 		return webKey;
-	}
+	}*/
 
 	/*
 	 * (non-Javadoc)
@@ -77,10 +74,10 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	 * com.starnberger.tokenengine.server.dao.ITokenEntity#setWebKey(java.lang
 	 * .String)
 	 */
-	@Override
+	/*@Override
 	public void setWebKey(String webKey) {
 		this.webKey = webKey;
-	}
+	}*/
 
 	/**
 	 * @return the serialversionuid
@@ -100,7 +97,7 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 		int result = 1;
 		//result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + version;
-		result = prime * result + ((webKey == null) ? 0 : webKey.hashCode());
+		//result = prime * result + ((webKey == null) ? 0 : webKey.hashCode());
 		return result;
 	}
 
@@ -125,11 +122,11 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 			return false;*/
 		if (version != other.version)
 			return false;
-		if (webKey == null) {
+		/*if (webKey == null) {
 			if (other.webKey != null)
 				return false;
 		} else if (!webKey.equals(other.webKey))
-			return false;
+			return false;*/
 		return true;
 	}
 
@@ -141,22 +138,23 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	@Override
 	public String toString() {
 		//return "TokenEntity [id=" + id + ", version=" + version + ", webKey=" + webKey + "]";
-		return "TokenEntity [version=" + version + ", webKey=" + webKey + "]";
+		//return "TokenEntity [version=" + version + ", webKey=" + webKey + "]";
+		return "TokenEntity [version=" + version + ", id=" + id + "]";
 	}
 	
-	@PostPersist
+	/*@PostPersist
 	public void beforePersist() {
 		calculateWebKey();
-	}
+	}*/
 	
 	
 	/**
 	 * Default implementation does not calculate a webkey. Can be overriden in child classes. 
 	 */
-	public void calculateWebKey() {
+	/*public void calculateWebKey() {
 		if (id != null)
 			setWebKey(String.valueOf(getId()));
-	}
+	}*/
 
 	/**
 	 * @return the id

@@ -22,7 +22,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "Gateway.lastModified", query = "SELECT g from Gateway g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Gateway.deleted", query = "SELECT g from Gateway g WHERE g.deleted = :isDeleted"),
 		@NamedQuery(name = "Gateway.findMe", query = "SELECT g FROM Gateway g"),
-		@NamedQuery(name = "Gateway.findMyWebKey", query = "select s from Gateway s where s.webKey = :webKey") })
+		@NamedQuery(name = "Gateway.findMyWebKey", query = "select s from Gateway s where s.id = :webKey") })
 public class Gateway extends SyncEntity implements IGateway {
 
 	/**
@@ -212,7 +212,8 @@ public class Gateway extends SyncEntity implements IGateway {
 			setGatewayConfigKey(sourceGate.getGatewayConfigKey());
 			setName(sourceGate.getName());
 			setUuid(sourceGate.getUuid());
-			setWebKey(sourceGate.getWebKey());
+			//setWebKey(sourceGate.getWebKey());
+			setId(sourceGate.getId());
 			setNeedsConfigUpgrade(sourceGate.isNeedsConfigUpgrade());
 			setNeedsFirmwareUpgrade(sourceGate.isNeedsFirmwareUpgrade());
 		}

@@ -178,7 +178,7 @@ public class DownloadTask {
 	 */
 	private SyncEntity findWebKey(SyncEntity search) {
 		TypedQuery<? extends SyncEntity> query = em.createNamedQuery(search.getClass().getSimpleName() + ".findMyWebKey", search.getClass());
-		query.setParameter("webKey", search.getWebKey());
+		query.setParameter("webKey", search.getId());
 		List<? extends SyncEntity> resultList = query.getResultList();
 		if (resultList == null || resultList.isEmpty())
 			return null;
