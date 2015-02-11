@@ -28,7 +28,7 @@ public class Token extends SyncEntity implements IToken   {
 	 */
 	private static final long serialVersionUID = -7298223670658279856L;
 	@Column
-	protected long mac;
+	protected String mac;
 	@Column
 	protected String name;
 	@Column
@@ -107,12 +107,12 @@ public class Token extends SyncEntity implements IToken   {
 	}
 
 	@Override
-	public long getMac() {
+	public String getMac() {
 		return mac;
 	}
 
 	@Override
-	public void setMac(long mac) {
+	public void setMac(String mac) {
 		this.mac = mac;
 	}
 

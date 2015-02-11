@@ -8,9 +8,9 @@ import java.util.Date;
  */
 public interface IToken extends ISyncEntity {
 
-	public abstract long getMac();
+	public abstract String getMac();
 
-	public abstract void setMac(long mac);
+	public abstract void setMac(String mac);
 
 	public abstract String getName();
 
