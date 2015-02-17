@@ -17,6 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.starnberger.tokenofflineengine.common.ITokenConfiguration;
+import com.starnberger.tokenofflineengine.common.ITokenModel;
 import com.starnberger.tokenofflineengine.dao.EMF;
 
 /**
@@ -56,7 +57,7 @@ public class DBTest {
 	@Test
 	public void testTokenModel() {
 		EntityManager em = DBTest.emf.createEntityManager();
-		TokenModel token = new TokenModel();
+		ITokenModel token = new TokenModel();
 		em.persist(token);
 		em.close();
 	}

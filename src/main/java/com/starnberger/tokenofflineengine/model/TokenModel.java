@@ -20,7 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenModel;
 		@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.deleted = :isDeleted"),
 		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.id = :webKey") })
-public class TokenModel extends SyncEntity implements ITokenModel  {
+public class TokenModel extends SyncEntity implements ITokenModel {
 
 	/**
 	 * 
@@ -30,6 +30,9 @@ public class TokenModel extends SyncEntity implements ITokenModel  {
 	protected String name;
 	@Basic
 	private List<Long> sensorKeys;
+	@Column
+	private List<Character> sensorPosition;
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -55,15 +58,14 @@ public class TokenModel extends SyncEntity implements ITokenModel  {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (id != null)
-			result += "id: " + id;
-		result += ", version: " + version;
-		if (name != null && !name.trim().isEmpty())
-			result += ", name: " + name;
-		return result;
+		return "TokenModel [name=" + name + ", sensorKeys=" + sensorKeys + ", sensorPosition=" + sensorPosition + "]";
 	}
 
 	/**
@@ -101,14 +103,30 @@ public class TokenModel extends SyncEntity implements ITokenModel  {
 		this.name = name;
 	}
 
+	/**
+	 * @return the sensorPosition
+	 */
+	@Override
+	public List<Character> getSensorPositions() {
+		return sensorPosition;
+	}
+
+	/**
+	 * @param sensorPosition
+	 *            the sensorPosition to set
+	 */
+	@Override
+	public void setSensorPositions(List<Character> sensorPosition) {
+		this.sensorPosition = sensorPosition;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
-		if (source instanceof TokenModel)
-		{
-			TokenModel token = (TokenModel) source;
-			//setWebKey(token.getWebKey());
+		if (source instanceof TokenModel) {
+			ITokenModel token = (ITokenModel) source;
+			// setWebKey(token.getWebKey());
 			setId(token.getId());
 			setName(token.getName());
 			setSensorKeys(token.getSensorKeys());

@@ -16,4 +16,8 @@ public interface ITokenModel extends ISyncEntity {
 
 	public abstract void setName(String name);
 
+	public abstract void setSensorPositions(List<Character> sensorPosition);
+
+	public abstract List<Character> getSensorPositions();
+
 }
