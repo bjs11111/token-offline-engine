@@ -45,7 +45,7 @@ public class Gateway extends SyncEntity implements IGateway {
 	@JsonIgnore
 	private String gatewayToken;
 	@Column
-	private String associatedUserKey;
+	private Long associatedUserKey;
 	@Column
 	@JsonIgnore
 	private String password;
@@ -164,12 +164,12 @@ public class Gateway extends SyncEntity implements IGateway {
 	}
 
 	@Override
-	public String getAssociatedUserKey() {
+	public Long getAssociatedUserKey() {
 		return associatedUserKey;
 	}
 
 	@Override
-	public void setAssociatedUserKey(String associatedUser) {
+	public void setAssociatedUserKey(Long associatedUser) {
 		this.associatedUserKey = associatedUser;
 	}
 

@@ -73,4 +73,8 @@ public interface ITokenConfiguration extends ISyncEntity {
 
 	public abstract String getName();
 
+	public abstract void setPartnerKey(Long partnerKey);
+
+	public abstract Long getPartnerKey();
+
 }

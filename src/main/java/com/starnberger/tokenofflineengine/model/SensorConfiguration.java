@@ -20,6 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 @NamedQueries({
 		@NamedQuery(name = "SensorConfiguration.lastModified", query = "SELECT g from SensorConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorConfiguration.deleted", query = "SELECT g from SensorConfiguration g WHERE g.deleted = :isDeleted"),
+		@NamedQuery(name = "SensorConfiguration.forPartner", query = "SELECT g from SensorConfiguration g, TokenConfiguration t WHERE g.ownerKey = t.id and g.deleted = FALSE and t.deleted = FALSE and t.partnerKey = :partner"),
 		@NamedQuery(name = "SensorConfiguration.findMyWebKey", query = "select s from SensorConfiguration s where s.id = :webKey") })
 public class SensorConfiguration extends SyncEntity implements ISensorConfiguration {
 
@@ -118,7 +119,7 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 			return;
 		if (source instanceof SensorConfiguration) {
 			SensorConfiguration token = (SensorConfiguration) source;
-			//setWebKey(token.getWebKey());
+			// setWebKey(token.getWebKey());
 			setId(token.getId());
 			setConfigValueKeys(token.getConfigValueKeys());
 			setOwnerKey(token.getOwnerKey());

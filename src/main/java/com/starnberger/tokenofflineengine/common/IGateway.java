@@ -82,13 +82,13 @@ public interface IGateway extends ISyncEntity {
 	/**
 	 * @return the associatedUser
 	 */
-	public abstract String getAssociatedUserKey();
+	public abstract Long getAssociatedUserKey();
 
 	/**
 	 * @param associatedUser
 	 *            the associatedUser to set
 	 */
-	public abstract void setAssociatedUserKey(String associatedUser);
+	public abstract void setAssociatedUserKey(Long associatedUser);
 
 	/**
 	 * @return the password

@@ -31,7 +31,7 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 	@Basic
 	private List<Long> sensorKeys;
 	@Column
-	private List<Character> sensorPosition;
+	private List<String> sensorPosition;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -107,7 +107,7 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 	 * @return the sensorPosition
 	 */
 	@Override
-	public List<Character> getSensorPositions() {
+	public List<String> getSensorPositions() {
 		return sensorPosition;
 	}
 
@@ -116,7 +116,7 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 	 *            the sensorPosition to set
 	 */
 	@Override
-	public void setSensorPositions(List<Character> sensorPosition) {
+	public void setSensorPositions(List<String> sensorPosition) {
 		this.sensorPosition = sensorPosition;
 	}
 

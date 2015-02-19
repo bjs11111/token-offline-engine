@@ -20,6 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 @NamedQueries({
 		@NamedQuery(name = "TokenConfiguration.lastModified", query = "SELECT g from TokenConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenConfiguration.deleted", query = "SELECT g from TokenConfiguration g WHERE g.deleted = :isDeleted"),
+		@NamedQuery(name = "TokenConfiguration.forPartner", query = "SELECT g from TokenConfiguration g WHERE g.deleted = FALSE and g.partnerKey = :partner"),
 		@NamedQuery(name = "TokenConfiguration.findMyWebKey", query = "select s from TokenConfiguration s where s.id = :webKey") })
 public class TokenConfiguration extends SyncEntity implements ITokenConfiguration {
 
@@ -41,6 +42,8 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	protected int bleTxPower;
 	@Basic
 	private Set<Long> sensorConfigKeys = new HashSet<Long>();
+	@Column
+	protected Long partnerKey;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -167,9 +170,26 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 			setBleTxPower(token.getBleTxPower());
 			setModelKey(token.getModelKey());
 			setSensorConfigKeys(token.getSensorConfigKeys());
-			//setWebKey(token.getWebKey());
+			// setWebKey(token.getWebKey());
 			setId(token.getId());
 		}
+	}
+
+	/**
+	 * @return the partnerKey
+	 */
+	@Override
+	public Long getPartnerKey() {
+		return partnerKey;
+	}
+
+	/**
+	 * @param partnerKey
+	 *            the partnerKey to set
+	 */
+	@Override
+	public void setPartnerKey(Long partnerKey) {
+		this.partnerKey = partnerKey;
 	}
 
 	/**
