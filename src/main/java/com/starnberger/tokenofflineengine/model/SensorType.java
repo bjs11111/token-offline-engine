@@ -34,6 +34,10 @@ public class SensorType extends SyncEntity implements ISensorType {
 	protected String unit;
 	@Column
 	protected int numberOfValues;
+	@Column
+	protected String webComponentName;
+	@Column
+	protected String webComponentPath;
 	@Basic
 	protected List<Long> configValues = new ArrayList<Long>();
 	/**
@@ -197,7 +201,41 @@ public class SensorType extends SyncEntity implements ISensorType {
 			setDescription(token.getDescription());
 			setNumberOfValues(token.getNumberOfValues());
 			setUnit(token.getUnit());
+			setWebComponentName(token.getWebComponentName());
+			setWebComponentPath(token.getWebComponentPath());
 		}
+	}
+
+	/**
+	 * @return the webComponentName
+	 */
+	@Override
+	public String getWebComponentName() {
+		return webComponentName;
+	}
+
+	/**
+	 * @param webComponentName the webComponentName to set
+	 */
+	@Override
+	public void setWebComponentName(String webComponentName) {
+		this.webComponentName = webComponentName;
+	}
+
+	/**
+	 * @return the webComponentPath
+	 */
+	@Override
+	public String getWebComponentPath() {
+		return webComponentPath;
+	}
+
+	/**
+	 * @param webComponentPath the webComponentPath to set
+	 */
+	@Override
+	public void setWebComponentPath(String webComponentPath) {
+		this.webComponentPath = webComponentPath;
 	}
 
 }

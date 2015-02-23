@@ -52,4 +52,12 @@ public interface ISensorType extends ISyncEntity {
 	 */
 	public abstract void setConfigValues(List<Long> configValues);
 
+	public abstract void setWebComponentPath(String webComponentPath);
+
+	public abstract String getWebComponentPath();
+
+	public abstract void setWebComponentName(String webComponentName);
+
+	public abstract String getWebComponentName();
+
 }
