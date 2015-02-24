@@ -21,8 +21,6 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	@Version
 	@Column(name = "version")
 	protected int version;
-	@Column
-	//protected String webKey;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected Long id;
