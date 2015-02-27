@@ -11,7 +11,6 @@ import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorType;
 import com.starnberger.tokenofflineengine.common.ITokenEntity;
-import com.starnberger.tokenofflineengine.common.SensorConfigType;
 
 /**
  * @author Roman Kaufmann
@@ -40,28 +39,6 @@ public class SensorType extends SyncEntity implements ISensorType {
 	protected String webComponentPath;
 	@Basic
 	protected List<Long> configValues = new ArrayList<Long>();
-	/**
-	 * Default constructor.
-	 */
-	public SensorType() {
-		// Add default sensor config parameter values
-		SensorConfigParameter broadCastEnabled = new SensorConfigParameter();
-		broadCastEnabled.setConfigKey("broadCastEnabled");
-		broadCastEnabled.setType(SensorConfigType.BOOLEAN);
-		SensorConfigParameter readInterval = new SensorConfigParameter();
-		readInterval.setConfigKey("readInterval");
-		readInterval.setType(SensorConfigType.INT);
-		SensorConfigParameter loggingInterval = new SensorConfigParameter();
-		loggingInterval.setConfigKey("loggingInterval");
-		loggingInterval.setType(SensorConfigType.INT);
-		SensorConfigParameter loggingIntervalAlarm = new SensorConfigParameter();
-		loggingIntervalAlarm.setConfigKey("loggingIntervalAlarm");
-		loggingIntervalAlarm.setType(SensorConfigType.INT);
-		configValues.add(broadCastEnabled.getId());
-		configValues.add(readInterval.getId());
-		configValues.add(loggingInterval.getId());
-		configValues.add(loggingIntervalAlarm.getId());
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -192,10 +169,9 @@ public class SensorType extends SyncEntity implements ISensorType {
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
-		if (source instanceof SensorType)
-		{
+		if (source instanceof SensorType) {
 			SensorType token = (SensorType) source;
-			//setWebKey(token.getWebKey());
+			// setWebKey(token.getWebKey());
 			setId(token.getId());
 			setConfigValues(token.getConfigValues());
 			setDescription(token.getDescription());
@@ -215,7 +191,8 @@ public class SensorType extends SyncEntity implements ISensorType {
 	}
 
 	/**
-	 * @param webComponentName the webComponentName to set
+	 * @param webComponentName
+	 *            the webComponentName to set
 	 */
 	@Override
 	public void setWebComponentName(String webComponentName) {
@@ -231,7 +208,8 @@ public class SensorType extends SyncEntity implements ISensorType {
 	}
 
 	/**
-	 * @param webComponentPath the webComponentPath to set
+	 * @param webComponentPath
+	 *            the webComponentPath to set
 	 */
 	@Override
 	public void setWebComponentPath(String webComponentPath) {
