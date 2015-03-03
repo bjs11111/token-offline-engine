@@ -36,6 +36,9 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	private int logUpdateInterval;
 	@Column
 	private Long partnerKey;
+	@Column
+	private boolean uploadAlarmImmediately;
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -161,7 +164,24 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 			setPartnerKey(token.getPartnerKey());
 			setStatusUpdateInterval(token.getStatusUpdateInterval());
 			setSyncInterval(token.getSyncInterval());
+			setUploadAlarmImmediately(token.isUploadAlarmImmediately());
 		}
+	}
+
+	/**
+	 * @return the uploadAlarmImmediately
+	 */
+	@Override
+	public boolean isUploadAlarmImmediately() {
+		return uploadAlarmImmediately;
+	}
+
+	/**
+	 * @param uploadAlarmImmediately the uploadAlarmImmediately to set
+	 */
+	@Override
+	public void setUploadAlarmImmediately(boolean uploadAlarmImmediately) {
+		this.uploadAlarmImmediately = uploadAlarmImmediately;
 	}
 
 }

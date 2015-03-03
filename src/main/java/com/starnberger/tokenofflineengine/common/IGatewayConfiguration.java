@@ -30,4 +30,8 @@ public interface IGatewayConfiguration extends ISyncEntity {
 
 	public abstract void setLogUpdateInterval(int logUpdateInterval);
 
+	public abstract void setUploadAlarmImmediately(boolean uploadAlarmImmediately);
+
+	public abstract boolean isUploadAlarmImmediately();
+
 }
