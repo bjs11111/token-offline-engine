@@ -20,20 +20,24 @@ public interface ISensorData extends ITokenEntity {
 
 	public abstract void setGateway(Long gateway);
 
-	public abstract double getValue1();
+	public abstract Double getValue1();
 
-	public abstract void setValue1(double value1);
+	public abstract void setValue1(Double value1);
 
-	public abstract double getValue2();
+	public abstract Double getValue2();
 
-	public abstract void setValue2(double value2);
+	public abstract void setValue2(Double value2);
 
-	public abstract double getValue3();
+	public abstract Double getValue3();
 
-	public abstract void setValue3(double value3);
+	public abstract void setValue3(Double value3);
 
 	public abstract Long getToken();
 
 	public abstract void setToken(Long token);
+
+	public abstract void setAlarm(boolean isAlarm);
+
+	public abstract boolean isAlarm();
 
 }

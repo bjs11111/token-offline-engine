@@ -26,14 +26,17 @@ public class SensorData extends TokenEntity implements ISensorData {
 	@Column
 	protected Long gateway;
 	@Column
-	protected double value1;
+	protected Double value1;
 	@Column
-	protected double value2;
+	protected Double value2;
 	@Column
-	protected double value3;
+	protected Double value3;
+	// Token.id
 	@Column
 	protected Long token;
-
+	@Column
+	protected boolean isAlarm;
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -125,32 +128,32 @@ public class SensorData extends TokenEntity implements ISensorData {
 	}
 
 	@Override
-	public double getValue1() {
+	public Double getValue1() {
 		return value1;
 	}
 
 	@Override
-	public void setValue1(double value1) {
+	public void setValue1(Double value1) {
 		this.value1 = value1;
 	}
 
 	@Override
-	public double getValue2() {
+	public Double getValue2() {
 		return value2;
 	}
 
 	@Override
-	public void setValue2(double value2) {
+	public void setValue2(Double value2) {
 		this.value2 = value2;
 	}
 
 	@Override
-	public double getValue3() {
+	public Double getValue3() {
 		return value3;
 	}
 
 	@Override
-	public void setValue3(double value3) {
+	public void setValue3(Double value3) {
 		this.value3 = value3;
 	}
 
@@ -177,8 +180,25 @@ public class SensorData extends TokenEntity implements ISensorData {
 			setValue1(sourceSensorData.getValue1());
 			setValue2(sourceSensorData.getValue2());
 			setValue3(sourceSensorData.getValue3());
-			//setWebKey(sourceSensorData.getWebKey());
-			setId(sourceSensorData.getId());
+			setAlarm(sourceSensorData.isAlarm());
 		}
 	}
+
+	/**
+	 * @return the isAlarm
+	 */
+	@Override
+	public boolean isAlarm() {
+		return isAlarm;
+	}
+
+	/**
+	 * @param isAlarm
+	 *            the isAlarm to set
+	 */
+	@Override
+	public void setAlarm(boolean isAlarm) {
+		this.isAlarm = isAlarm;
+	}
+
 }

@@ -25,13 +25,6 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	protected Long id;
 
-	/**
-	 * 
-	 */
-	public TokenEntity() {
-		super();
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
