@@ -42,7 +42,6 @@ public class DBTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		emf.close();
 		logger.debug("tear down");
 	}
 

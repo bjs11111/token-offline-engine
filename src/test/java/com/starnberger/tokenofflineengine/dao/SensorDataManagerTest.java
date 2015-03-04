@@ -33,7 +33,6 @@ public class SensorDataManagerTest {
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		emf.close();
 		logger.debug("tear down");
 	}
 
