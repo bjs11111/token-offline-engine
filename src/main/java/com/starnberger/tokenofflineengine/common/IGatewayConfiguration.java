@@ -34,4 +34,8 @@ public interface IGatewayConfiguration extends ISyncEntity {
 
 	public abstract boolean isUploadAlarmImmediately();
 
+	public abstract void setConnectionTimeout3G(int connectionTimeout3G);
+
+	public abstract int getConnectionTimeout3G();
+
 }

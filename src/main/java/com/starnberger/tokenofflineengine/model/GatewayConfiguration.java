@@ -38,6 +38,8 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	private Long partnerKey;
 	@Column
 	private boolean uploadAlarmImmediately;
+	@Column
+	private int connectionTimeout3G;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -165,7 +167,24 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 			setStatusUpdateInterval(token.getStatusUpdateInterval());
 			setSyncInterval(token.getSyncInterval());
 			setUploadAlarmImmediately(token.isUploadAlarmImmediately());
+			setConnectionTimeout3G(token.getConnectionTimeout3G());
 		}
+	}
+
+	/**
+	 * @return the connectionTimeout3G
+	 */
+	@Override
+	public int getConnectionTimeout3G() {
+		return connectionTimeout3G;
+	}
+
+	/**
+	 * @param connectionTimeout3G the connectionTimeout3G to set
+	 */
+	@Override
+	public void setConnectionTimeout3G(int connectionTimeout3G) {
+		this.connectionTimeout3G = connectionTimeout3G;
 	}
 
 	/**
