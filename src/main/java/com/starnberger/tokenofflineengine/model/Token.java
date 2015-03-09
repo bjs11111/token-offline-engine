@@ -46,6 +46,9 @@ public class Token extends SyncEntity implements IToken   {
 	protected Date lastSyncDate;
 	@Column
 	private Long owner;
+	@Column
+	private String tag;
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -197,6 +200,22 @@ public class Token extends SyncEntity implements IToken   {
 		this.owner = owner;
 	}
 
+	/**
+	 * @return the tag
+	 */
+	@Override
+	public String getTag() {
+		return tag;
+	}
+
+	/**
+	 * @param tag the tag to set
+	 */
+	@Override
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
@@ -215,6 +234,7 @@ public class Token extends SyncEntity implements IToken   {
 			setNeedsConfigUpdate(token.isNeedsConfigUpdate());
 			setOwner(token.getOwner());
 			setUuid(token.getUuid());
+			setTag(token.getTag());
 		}
 	}
 }

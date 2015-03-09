@@ -51,6 +51,8 @@ public class Gateway extends SyncEntity implements IGateway {
 	private String password;
 	@Column
 	private Date lastSync;
+	@Column
+	private String simCardNumber;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -200,22 +202,39 @@ public class Gateway extends SyncEntity implements IGateway {
 		this.lastSync = lastSync;
 	}
 
+	/**
+	 * @return the simCardNumber
+	 */
+	@Override
+	public String getSimCardNumber() {
+		return simCardNumber;
+	}
+
+	/**
+	 * @param simCardNumber
+	 *            the simCardNumber to set
+	 */
+	@Override
+	public void setSimCardNumber(String simCardNumber) {
+		this.simCardNumber = simCardNumber;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
-		if (source instanceof Gateway)
-		{
+		if (source instanceof Gateway) {
 			Gateway sourceGate = (Gateway) source;
 			setAssociatedUserKey(sourceGate.getAssociatedUserKey());
 			setFirmwareVersionKey(sourceGate.getFirmwareVersionKey());
 			setGatewayConfigKey(sourceGate.getGatewayConfigKey());
 			setName(sourceGate.getName());
 			setUuid(sourceGate.getUuid());
-			//setWebKey(sourceGate.getWebKey());
+			// setWebKey(sourceGate.getWebKey());
 			setId(sourceGate.getId());
 			setNeedsConfigUpgrade(sourceGate.isNeedsConfigUpgrade());
 			setNeedsFirmwareUpgrade(sourceGate.isNeedsFirmwareUpgrade());
+			setSimCardNumber(sourceGate.getSimCardNumber());
 		}
 	}
 }

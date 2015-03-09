@@ -51,4 +51,8 @@ public interface IToken extends ISyncEntity {
 	 */
 	public abstract void setOwner(Long owner);
 
+	public abstract void setTag(String tag);
+
+	public abstract String getTag();
+
 }
