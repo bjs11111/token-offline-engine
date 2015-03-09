@@ -20,7 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "Gateway.findCpuId", query = "SELECT g from Gateway g WHERE g.uuid = :cpuid and g.deleted = FALSE"),
 		@NamedQuery(name = "Gateway.findToken", query = "SELECT g from Gateway g WHERE g.gatewayToken = :gatewayToken and g.deleted = FALSE"),
 		@NamedQuery(name = "Gateway.lastModified", query = "SELECT g from Gateway g WHERE g.lastModified > :lastSyncDate"),
-		@NamedQuery(name = "Gateway.deleted", query = "SELECT g from Gateway g WHERE g.deleted = :isDeleted"),
+		@NamedQuery(name = "Gateway.deleted", query = "SELECT g from Gateway g WHERE g.deleted = :isDeleted ORDER BY g.name"),
 		@NamedQuery(name = "Gateway.findMe", query = "SELECT g FROM Gateway g"),
 		@NamedQuery(name = "Gateway.findMyWebKey", query = "select s from Gateway s where s.id = :webKey") })
 public class Gateway extends SyncEntity implements IGateway {
