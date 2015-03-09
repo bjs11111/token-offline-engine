@@ -37,7 +37,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	@Column
 	private Long partnerKey;
 	@Column
-	private boolean uploadAlarmImmediately;
+	private boolean uploadAlarmImmediately = true;
 	@Column
 	private int connectionTimeout3G;
 	
