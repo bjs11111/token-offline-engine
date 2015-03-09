@@ -27,7 +27,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	@Column
 	protected String name;
 	@Column
-	private DebugLevel debugLevel;
+	private DebugLevel debugLevel = DebugLevel.ERROR;
 	@Column
 	private int syncInterval;
 	@Column
