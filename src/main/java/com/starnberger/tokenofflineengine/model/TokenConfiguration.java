@@ -33,13 +33,13 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	@Column
 	protected Long modelKey;
 	@Column
-	protected int bleAdvertisingInterval;
+	protected int bleAdvertisingInterval = 1000;
 	@Column
-	protected int bleBondableInterval;
+	protected int bleBondableInterval = -1;
 	@Column
-	protected boolean bleAdvertisingConditionAlways;
+	protected boolean bleAdvertisingConditionAlways = true;
 	@Column
-	protected int bleTxPower;
+	protected int bleTxPower = 0;
 	@Basic
 	private Set<Long> sensorConfigKeys = new HashSet<Long>();
 	@Column
