@@ -17,6 +17,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 @NamedQueries({
 		@NamedQuery(name = "GatewayConfiguration.lastModified", query = "SELECT g from GatewayConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "GatewayConfiguration.deleted", query = "SELECT g from GatewayConfiguration g WHERE g.deleted = :isDeleted ORDER BY g.name"),
+		@NamedQuery(name = "GatewayConfiguration.findByOwner", query = "SELECT g from GatewayConfiguration g WHERE g.deleted = false and g.partnerKey = :owner ORDER BY g.name"),
 		@NamedQuery(name = "GatewayConfiguration.findMyWebKey", query = "select s from GatewayConfiguration s where s.id = :webKey") })
 public class GatewayConfiguration extends SyncEntity implements IGatewayConfiguration {
 
@@ -40,7 +41,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	private boolean uploadAlarmImmediately = true;
 	@Column
 	private int connectionTimeout3G;
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -158,7 +159,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 			return;
 		if (source instanceof GatewayConfiguration) {
 			GatewayConfiguration token = (GatewayConfiguration) source;
-			//setWebKey(token.getWebKey());
+			// setWebKey(token.getWebKey());
 			setId(token.getId());
 			setName(token.getName());
 			setDebugLevel(token.getDebugLevel());
@@ -180,7 +181,8 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	}
 
 	/**
-	 * @param connectionTimeout3G the connectionTimeout3G to set
+	 * @param connectionTimeout3G
+	 *            the connectionTimeout3G to set
 	 */
 	@Override
 	public void setConnectionTimeout3G(int connectionTimeout3G) {
@@ -196,7 +198,8 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	}
 
 	/**
-	 * @param uploadAlarmImmediately the uploadAlarmImmediately to set
+	 * @param uploadAlarmImmediately
+	 *            the uploadAlarmImmediately to set
 	 */
 	@Override
 	public void setUploadAlarmImmediately(boolean uploadAlarmImmediately) {
