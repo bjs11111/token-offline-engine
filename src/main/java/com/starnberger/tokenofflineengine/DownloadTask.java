@@ -3,6 +3,7 @@
  */
 package com.starnberger.tokenofflineengine;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +35,7 @@ import com.starnberger.tokenofflineengine.model.Task;
  * @author Roman Kaufmann
  *
  */
-public class DownloadTask {
+public class DownloadTask implements ITask {
 	private static final String SYNC_URL = GatewayInfo.SERVER_URL + "auth/sync";
 	private static final String LOGIN_URL = GatewayInfo.SERVER_URL + "auth/login";
 	private static final String LOGOUT_URL = GatewayInfo.SERVER_URL + "auth/logout";
@@ -42,6 +43,7 @@ public class DownloadTask {
 	private final EntityManager em;
 	private final Client client;
 	private final Task task;
+	private final List<Task> followUpTasks = new ArrayList<Task>();
 
 	/**
 	 * Constructor.
@@ -87,11 +89,10 @@ public class DownloadTask {
 		return false;
 	}
 
-	/**
-	 * Executes the task
-	 * 
-	 * @return true if the execution was successful
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenofflineengine.ITask#execute()
 	 */
+	@Override
 	public boolean execute() {
 		Gateway me = GatewayManager.getInstance().findMe();
 		login(me);
@@ -103,11 +104,9 @@ public class DownloadTask {
 		Response response = client.target(SYNC_URL).path("/{date}")
 				.resolveTemplate("date", Long.toString(lastSyncDate.getTime())).request(MediaType.APPLICATION_JSON)
 				.get();
-		System.out.println(response.toString());
-		System.out.println(response.getStatusInfo());
-		System.out.println(response.getHeaders());
-		if (response.bufferEntity())
-		{
+		if (response.getStatus() >= 400)
+			return false;
+		if (response.bufferEntity()) {
 			SyncData entity = response.readEntity(SyncData.class);
 			System.out.println(entity.toString());
 			// Store all entities
@@ -118,14 +117,16 @@ public class DownloadTask {
 			updateEntities(entity.getUpdatedTokens());
 			updateEntities(entity.getUpdatedTokenConfigurations());
 			updateEntities(entity.getUpdatedSensorConfigurations());
+			updateEntities(entity.getSensorConfigParameters());
+			updateEntities(entity.getSensorConfigValues());
 			updateEntities(entity.getUpdatedGatewayConfigurations());
+			em.flush();
 			em.getTransaction().commit();
 		}
 		logout();
 		return true;
 	}
-	
-	
+
 	/**
 	 * @param list
 	 * @return
@@ -140,7 +141,7 @@ public class DownloadTask {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @param entity
 	 * @return
@@ -164,20 +165,21 @@ public class DownloadTask {
 			break;
 		case DELETED:
 			em.remove(entity);
-			break;			
+			break;
 
 		default:
 			break;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @param search
 	 * @return
 	 */
 	private SyncEntity findWebKey(SyncEntity search) {
-		TypedQuery<? extends SyncEntity> query = em.createNamedQuery(search.getClass().getSimpleName() + ".findMyWebKey", search.getClass());
+		TypedQuery<? extends SyncEntity> query = em.createNamedQuery(search.getClass().getSimpleName()
+				+ ".findMyWebKey", search.getClass());
 		query.setParameter("webKey", search.getId());
 		List<? extends SyncEntity> resultList = query.getResultList();
 		if (resultList == null || resultList.isEmpty())
@@ -185,9 +187,18 @@ public class DownloadTask {
 		return resultList.get(0);
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenofflineengine.ITask#getFollowUpTasks()
 	 */
+	@Override
+	public List<Task> getFollowUpTasks() {
+		return followUpTasks;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.starnberger.tokenofflineengine.ITask#getTask()
+	 */
+	@Override
 	public Task getTask() {
 		return task;
 	}

@@ -3,13 +3,21 @@
  */
 package com.starnberger.tokenofflineengine;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.starnberger.tokenofflineengine.common.TaskType;
 import com.starnberger.tokenofflineengine.dao.AuthenticationManager;
+import com.starnberger.tokenofflineengine.dao.GatewayConfigurationManager;
+import com.starnberger.tokenofflineengine.dao.GatewayManager;
+import com.starnberger.tokenofflineengine.model.Gateway;
+import com.starnberger.tokenofflineengine.model.GatewayConfiguration;
 import com.starnberger.tokenofflineengine.model.Task;
 
 /**
@@ -21,6 +29,44 @@ public class Main {
 	private static final Logger logger = LogManager.getLogger(Main.class.getName());
 
 	private LinkedBlockingQueue<Task> tasks = new LinkedBlockingQueue<Task>();
+	private GatewayConfiguration config = null;
+	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+	private final Runnable addSyncTask = new Runnable() {
+
+		@Override
+		public void run() {
+			Task uploadTask = new Task();
+			uploadTask.setType(TaskType.UPLOAD);
+			tasks.add(uploadTask);
+			Task downloadTask = new Task();
+			downloadTask.setType(TaskType.DOWNLOAD);
+			tasks.add(downloadTask);
+		}
+	};
+	private final Runnable uploadStatusTask = new Runnable() {
+
+		@Override
+		public void run() {
+			Task uploadStatusTask = new Task();
+			uploadStatusTask.setType(TaskType.UPLOAD_STATUS);
+			tasks.add(uploadStatusTask);
+		}
+	};
+	private final Runnable uploadLogTask = new Runnable() {
+
+		@Override
+		public void run() {
+			Task uploadLogs = new Task();
+			uploadLogs.setType(TaskType.UPLOAD_LOGS);
+			tasks.add(uploadLogs);
+		}
+	};
+
+	private ScheduledFuture<?> syncFuture;
+
+	private ScheduledFuture<?> statusUpdateFuture;
+
+	private ScheduledFuture<?> logUploadFuture;
 
 	/**
 	 * @param args
@@ -52,9 +98,6 @@ public class Main {
 				tasks.add(shutdownTask);
 			}
 		}
-		Task shutdownTask = new Task();
-		shutdownTask.setType(TaskType.SHUTDOWN);
-		tasks.add(shutdownTask);
 	}
 
 	/**
@@ -79,6 +122,7 @@ public class Main {
 	 */
 	private void workerLoop() {
 		logger.info("Starting main logic");
+		prepareScheduledTasks();
 		while (true) {
 			try {
 				processTask(tasks.take());
@@ -87,6 +131,28 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * Prepares all regular appearing tasks
+	 */
+	private void prepareScheduledTasks() {
+		if (config == null) {
+			config = new GatewayConfiguration();
+			// TODO: Find better default values
+			config.setSyncInterval(1);
+			config.setStatusUpdateInterval(2);
+			config.setLogUpdateInterval(3);
+		}
+		if (syncFuture != null)
+			syncFuture.cancel(false);
+		if (statusUpdateFuture != null)
+			statusUpdateFuture.cancel(false);
+		if (logUploadFuture != null)
+			logUploadFuture.cancel(false);
+		syncFuture = scheduler.scheduleAtFixedRate(addSyncTask, config.getSyncInterval(), config.getSyncInterval(), TimeUnit.MINUTES);
+		statusUpdateFuture = scheduler.scheduleAtFixedRate(uploadStatusTask, config.getStatusUpdateInterval(), config.getStatusUpdateInterval(), TimeUnit.MINUTES);
+		logUploadFuture = scheduler.scheduleAtFixedRate(uploadLogTask, config.getLogUpdateInterval(), config.getLogUpdateInterval(), TimeUnit.MINUTES);
 	}
 
 	/**
@@ -203,7 +269,24 @@ public class Main {
 		logger.info("Starting synchronization");
 		DownloadTask downloadTask = new DownloadTask(task);
 		boolean result = downloadTask.execute();
+		if (result == true) {
+			checkGatewayConfig();
+		}
 		logger.info("Download task execution returned: " + result);
+	}
+
+	/**
+	 * 
+	 */
+	private void checkGatewayConfig() {
+		Gateway findMe = GatewayManager.getInstance().findMe();
+		if (findMe == null)
+			return;
+		GatewayConfiguration config = GatewayConfigurationManager.getInstance().findById(findMe.getGatewayConfigKey());
+		if (config != null) {
+			this.config = config;
+			prepareScheduledTasks();
+		}
 	}
 
 	private void shutdownTasks() {
