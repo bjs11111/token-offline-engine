@@ -109,4 +109,8 @@ public interface IGateway extends ISyncEntity {
 
 	public abstract String getSimCardNumber();
 
+	public abstract void setLastUpload(Date lastUpload);
+
+	public abstract Date getLastUpload();
+
 }

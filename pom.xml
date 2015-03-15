@@ -172,7 +172,12 @@
 			<groupId>com.workingflows.js</groupId>
 			<artifactId>jscore</artifactId>
 			<version>1.0</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>com.starnberger.tokenengine</groupId>
+			<artifactId>tokenengine-bluezconnector</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>

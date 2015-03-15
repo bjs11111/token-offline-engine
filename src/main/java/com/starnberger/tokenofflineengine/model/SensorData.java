@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 import com.starnberger.tokenofflineengine.common.ISensorData;
 import com.starnberger.tokenofflineengine.common.ITokenEntity;
@@ -13,6 +15,9 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
  *
  */
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "SensorData.findSinceLastSync", query = "SELECT s from SensorData s WHERE s.timestamp >= :lastSync")
+})
 public class SensorData extends TokenEntity implements ISensorData {
 
 	/**

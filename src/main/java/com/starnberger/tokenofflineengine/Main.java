@@ -3,6 +3,9 @@
  */
 package com.starnberger.tokenofflineengine;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,10 +15,15 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.starnberger.tokenengine.connector.bluez.BluezConnector;
+import com.starnberger.tokenengine.connector.parser.AdvertisingPackageParser;
+import com.starnberger.tokenengine.connector.parser.SensorList;
+import com.starnberger.tokenengine.connector.parser.SensorValue;
 import com.starnberger.tokenofflineengine.common.TaskType;
 import com.starnberger.tokenofflineengine.dao.AuthenticationManager;
 import com.starnberger.tokenofflineengine.dao.GatewayConfigurationManager;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
+import com.starnberger.tokenofflineengine.dao.SensorDataManager;
 import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.GatewayConfiguration;
 import com.starnberger.tokenofflineengine.model.Task;
@@ -63,9 +71,7 @@ public class Main {
 	};
 
 	private ScheduledFuture<?> syncFuture;
-
 	private ScheduledFuture<?> statusUpdateFuture;
-
 	private ScheduledFuture<?> logUploadFuture;
 
 	/**
@@ -87,7 +93,8 @@ public class Main {
 	}
 
 	/**
-	 * 
+	 * Checks if this gateway is already registered. If not it tries to register
+	 * itself at the token engine.
 	 */
 	private void startUpChecks() {
 		logger.info("Performing startup checks");
@@ -122,6 +129,7 @@ public class Main {
 	 */
 	private void workerLoop() {
 		logger.info("Starting main logic");
+		registerBroadcastListener();
 		prepareScheduledTasks();
 		while (true) {
 			try {
@@ -131,6 +139,23 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * Registers a generic broadcast listener that immediately stores the
+	 * received sensor values.
+	 */
+	private void registerBroadcastListener() {
+		BluezConnector connector = new BluezConnector();
+		AdvertisingPackageParser listener = new AdvertisingPackageParser() {
+
+			@Override
+			public void onSuccessfullyParsed(SensorList sensorValues) {
+				storeSensorList(sensorValues);
+			}
+		};
+		listener.notifyAfterAmountOfValues = 10;
+		connector.registerAdvertisingListener(listener);
 	}
 
 	/**
@@ -150,9 +175,14 @@ public class Main {
 			statusUpdateFuture.cancel(false);
 		if (logUploadFuture != null)
 			logUploadFuture.cancel(false);
-		syncFuture = scheduler.scheduleAtFixedRate(addSyncTask, config.getSyncInterval(), config.getSyncInterval(), TimeUnit.MINUTES);
-		statusUpdateFuture = scheduler.scheduleAtFixedRate(uploadStatusTask, config.getStatusUpdateInterval(), config.getStatusUpdateInterval(), TimeUnit.MINUTES);
-		logUploadFuture = scheduler.scheduleAtFixedRate(uploadLogTask, config.getLogUpdateInterval(), config.getLogUpdateInterval(), TimeUnit.MINUTES);
+		if (config != null) {
+			syncFuture = scheduler.scheduleAtFixedRate(addSyncTask, config.getSyncInterval(), config.getSyncInterval(),
+					TimeUnit.MINUTES);
+			statusUpdateFuture = scheduler.scheduleAtFixedRate(uploadStatusTask, config.getStatusUpdateInterval(),
+					config.getStatusUpdateInterval(), TimeUnit.MINUTES);
+			logUploadFuture = scheduler.scheduleAtFixedRate(uploadLogTask, config.getLogUpdateInterval(),
+					config.getLogUpdateInterval(), TimeUnit.MINUTES);
+		}
 	}
 
 	/**
@@ -209,9 +239,17 @@ public class Main {
 		}
 	}
 
+	/**
+	 * @param task
+	 */
 	private void uploadSensorData(Task task) {
-		// TODO Auto-generated method stub
 		logger.info("Starting sensor upload");
+		UploadSensorDataTask uploadSensorDataTask = new UploadSensorDataTask(task);
+		boolean result = uploadSensorDataTask.execute();
+		if (result == true) {
+			GatewayManager.getInstance().updateUploadDate(new Date());
+		}
+		logger.info("Download task execution returned: " + result);
 	}
 
 	private void upgradeGateway(Task task) {
@@ -270,6 +308,7 @@ public class Main {
 		DownloadTask downloadTask = new DownloadTask(task);
 		boolean result = downloadTask.execute();
 		if (result == true) {
+			GatewayManager.getInstance().updateSyncDate(new Date());
 			checkGatewayConfig();
 		}
 		logger.info("Download task execution returned: " + result);
@@ -291,6 +330,23 @@ public class Main {
 
 	private void shutdownTasks() {
 		logger.info("Shutting down");
+	}
+
+	/**
+	 * @param sensorValues
+	 */
+	protected void storeSensorList(SensorList sensorValues) {
+		Iterator<SensorValue> iterator = sensorValues.iterator();
+		while (iterator.hasNext()) {
+			SensorValue sensorValue = (SensorValue) iterator.next();
+			try {
+				SensorDataManager.getInstance().addNewRecord(sensorValue);
+			} catch (NumberFormatException e) {
+				logger.fatal(e);
+			} catch (ParseException e) {
+				logger.fatal(e);
+			}
+		}
 	}
 
 }

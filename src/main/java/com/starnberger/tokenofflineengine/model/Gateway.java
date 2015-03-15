@@ -53,6 +53,8 @@ public class Gateway extends SyncEntity implements IGateway {
 	@Column
 	private Date lastSync;
 	@Column
+	private Date lastUpload;
+	@Column
 	private String simCardNumber;
 
 	@Override
@@ -220,6 +222,22 @@ public class Gateway extends SyncEntity implements IGateway {
 		this.simCardNumber = simCardNumber;
 	}
 
+	/**
+	 * @return the lastUpload
+	 */
+	@Override
+	public Date getLastUpload() {
+		return lastUpload;
+	}
+
+	/**
+	 * @param lastUpload the lastUpload to set
+	 */
+	@Override
+	public void setLastUpload(Date lastUpload) {
+		this.lastUpload = lastUpload;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
@@ -236,6 +254,8 @@ public class Gateway extends SyncEntity implements IGateway {
 			setNeedsConfigUpgrade(sourceGate.isNeedsConfigUpgrade());
 			setNeedsFirmwareUpgrade(sourceGate.isNeedsFirmwareUpgrade());
 			setSimCardNumber(sourceGate.getSimCardNumber());
+			setLastSync(sourceGate.getLastSync());
+			setLastUpload(sourceGate.getLastUpload());
 		}
 	}
 }

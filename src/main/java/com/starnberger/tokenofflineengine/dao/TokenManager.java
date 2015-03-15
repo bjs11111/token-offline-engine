@@ -16,23 +16,23 @@ import com.starnberger.tokenofflineengine.model.Token;
  */
 public class TokenManager {
 	private static final TokenManager _INSTANCE = new TokenManager();
-	
+
 	/**
 	 * @return
 	 */
 	public static final TokenManager getInstance() {
 		return _INSTANCE;
 	}
-	
+
 	private final EntityManager em;
-	
+
 	/**
 	 * Private default constructor
 	 */
 	private TokenManager() {
 		this.em = EMF.get().createEntityManager();
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -44,4 +44,5 @@ public class TokenManager {
 			return resultList.get(0);
 		return null;
 	}
+
 }
