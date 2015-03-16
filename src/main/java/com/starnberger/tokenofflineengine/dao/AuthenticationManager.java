@@ -71,7 +71,7 @@ public class AuthenticationManager {
 		}
 		if (me.getGatewayToken() == null || "".equals(me.getGatewayToken()))
 			return false;
-		GatewayInfo.MY_TOKEN = me.getGatewayToken();
+		GatewayInfo.getInstance().SERVICE_TOKEN = me.getGatewayToken();
 		return true;
 	}
 
@@ -88,12 +88,13 @@ public class AuthenticationManager {
 		if (response.getStatus() == 200){
 			String newServiceToken = response.getHeaderString(AuthHttpHeader.SERVICE_KEY);
 			me.setGatewayToken(newServiceToken);
-			GatewayInfo.SERVICE_TOKEN = newServiceToken;
+			GatewayManager.getInstance().update(me);
+			GatewayInfo.getInstance().SERVICE_TOKEN = newServiceToken;
 			return true;
 		} else {
 			System.out.println(response.toString());
 		}
-		GatewayInfo.SERVICE_TOKEN = null;
+		GatewayInfo.getInstance().SERVICE_TOKEN = null;
 		return false;
 	}
 

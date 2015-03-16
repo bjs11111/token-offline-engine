@@ -49,6 +49,8 @@ public class Token extends SyncEntity implements IToken   {
 	private Long owner;
 	@Column
 	private String tag;
+	@Column
+	private Long configId;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -217,6 +219,22 @@ public class Token extends SyncEntity implements IToken   {
 		this.tag = tag;
 	}
 
+	/**
+	 * @return the configId
+	 */
+	@Override
+	public Long getConfigId() {
+		return configId;
+	}
+
+	/**
+	 * @param configId the configId to set
+	 */
+	@Override
+	public void setConfigId(Long configId) {
+		this.configId = configId;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
@@ -236,6 +254,7 @@ public class Token extends SyncEntity implements IToken   {
 			setOwner(token.getOwner());
 			setUuid(token.getUuid());
 			setTag(token.getTag());
+			setConfigId(token.getConfigId());
 		}
 	}
 }

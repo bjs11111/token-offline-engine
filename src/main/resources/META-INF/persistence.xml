@@ -22,16 +22,10 @@
 		<class>com.starnberger.tokenofflineengine.model.SyncEntity</class>		
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
-			<!--property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-			<property name="hibernate.transaction.flush_before_completion" value="true" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-			<property name="hibernate.connection.url" value="jdbc:h2:~/tokenengine"/-->
 			<property name="datanucleus.NontransactionalRead" value="true" />
 			<property name="datanucleus.NontransactionalWrite" value="true" />
 			<property name="datanucleus.singletonEMFForName" value="true" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:h2:~/tokenofflineengine"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:./tokenofflineengine"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value=""/>
             <property name="javax.persistence.jdbc.password" value=""/>

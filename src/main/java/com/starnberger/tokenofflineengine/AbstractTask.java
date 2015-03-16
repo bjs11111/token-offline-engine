@@ -58,10 +58,10 @@ public abstract class AbstractTask implements ITask {
 		formData.add("password", me.getPassword());
 		Response response = client.target(LOGIN_URL).request().post(Entity.form(formData));
 		if (response.getStatus() == 200) {
-			GatewayInfo.MY_TOKEN = response.getHeaderString(AuthHttpHeader.AUTH_TOKEN);
+			GatewayInfo.getInstance().MY_TOKEN = response.getHeaderString(AuthHttpHeader.AUTH_TOKEN);
 			return true;
 		}
-		GatewayInfo.MY_TOKEN = null;
+		GatewayInfo.getInstance().MY_TOKEN = null;
 		return false;
 	}
 
@@ -70,7 +70,7 @@ public abstract class AbstractTask implements ITask {
 	 */
 	protected boolean logout() {
 		Response response = client.target(LOGOUT_URL).request().get();
-		GatewayInfo.MY_TOKEN = null;
+		GatewayInfo.getInstance().MY_TOKEN = null;
 		if (response.getStatus() == 200) {
 			return true;
 		}

@@ -26,13 +26,16 @@ public class UploadSensorDataTask extends AbstractTask {
 
 	/**
 	 * Default constructor.
+	 * 
 	 * @param task
 	 */
 	public UploadSensorDataTask(Task task) {
 		super(task);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenofflineengine.ITask#execute()
 	 */
 	@Override
@@ -43,7 +46,11 @@ public class UploadSensorDataTask extends AbstractTask {
 		updateTask(Status.IN_PROGRESS);
 		Date lastSync = me.getLastSync();
 		SensorDataListWrapper wrapper = SensorDataManager.getInstance().findSensorDataValuesSinceLastSync(lastSync);
-		login(me);
+		boolean result = login(me);
+		if (!result) {
+			updateTask(Status.FAILED);			
+			return false;
+		}
 		Response response = client.target(UPLOAD_URL).request(MediaType.APPLICATION_JSON).post(Entity.json(wrapper));
 		if (response.getStatus() >= 400) {
 			updateTask(Status.FAILED);			
@@ -54,7 +61,9 @@ public class UploadSensorDataTask extends AbstractTask {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenofflineengine.ITask#getFollowUpTasks()
 	 */
 	@Override

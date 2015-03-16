@@ -319,7 +319,7 @@ public class Main {
 	 */
 	private void checkGatewayConfig() {
 		Gateway findMe = GatewayManager.getInstance().findMe();
-		if (findMe == null)
+		if (findMe == null || findMe.getGatewayConfigKey() == null)
 			return;
 		GatewayConfiguration config = GatewayConfigurationManager.getInstance().findById(findMe.getGatewayConfigKey());
 		if (config != null) {

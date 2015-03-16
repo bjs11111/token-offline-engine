@@ -4,12 +4,15 @@
 package com.starnberger.tokenofflineengine.dao;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.starnberger.tokenengine.connector.parser.SensorValue;
 import com.starnberger.tokenofflineengine.model.SensorData;
@@ -22,8 +25,8 @@ import com.starnberger.tokenofflineengine.model.Token;
  *
  */
 public class SensorDataManager {
+	private static final Logger logger = LogManager.getLogger(SensorDataManager.class.getName());
 	private static final SensorDataManager _INSTANCE = new SensorDataManager();
-	private static final SimpleDateFormat formater = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 
 	/**
 	 * @return
@@ -81,12 +84,15 @@ public class SensorDataManager {
 	/**
 	 * @param value
 	 * @return
-	 * @throws ParseException 
-	 * @throws NumberFormatException 
+	 * @throws ParseException
+	 * @throws NumberFormatException
 	 */
 	public SensorData addNewRecord(SensorValue value) throws NumberFormatException, ParseException {
-		return addNewRecord(value.mac, getPositionForSensorType(value.sensor), formater.parse(value.timestamp), Double.valueOf(value.value1),
-				Double.valueOf(value.value2), Double.valueOf(value.value3), value.isAlarm);
+		Double value1 = !value.value1.isEmpty() ? Double.valueOf(value.value1) : null;
+		Double value2 = !value.value2.isEmpty() ? Double.valueOf(value.value2) : null;
+		Double value3 = !value.value3.isEmpty() ? Double.valueOf(value.value3) : null;
+		return addNewRecord(value.mac, getPositionForSensorType(value.sensor), new Date(Long.valueOf(value.timestamp)),
+				value1, value2, value3, value.isAlarm);
 	}
 
 	/**
@@ -140,7 +146,8 @@ public class SensorDataManager {
 		Token token = TokenManager.getInstance().findByMac(mac);
 		SensorType sensorType = null;
 		if (token == null) {
-			// TODO: Record error message
+			logger.fatal("Token with mac address " + mac + " not found. Value not stored.");
+			return null;
 		} else {
 			sensorType = TokenModelManager.getInstance().findSensorTypeByPosition(token.getModel(), sensorPosition);
 		}
@@ -158,15 +165,17 @@ public class SensorDataManager {
 		persist(newRecord);
 		return newRecord;
 	}
-	
+
 	/**
 	 * @param lastSync
 	 * @return
 	 */
 	public SensorDataListWrapper findSensorDataValuesSinceLastSync(Date lastSync) {
+		if (lastSync == null)
+			lastSync = new Date(0);
 		SensorDataListWrapper wrapper = new SensorDataListWrapper();
 		TypedQuery<SensorData> query = em.createNamedQuery("SensorData.findSinceLastSync", SensorData.class);
-		query.setParameter("lastSync", lastSync);
+		query.setParameter("lastSync", lastSync, TemporalType.TIMESTAMP);
 		List<SensorData> resultList = query.getResultList();
 		if (resultList != null && resultList.size() > 0)
 			wrapper.setList(resultList);

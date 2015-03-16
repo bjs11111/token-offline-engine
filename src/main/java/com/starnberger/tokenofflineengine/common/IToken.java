@@ -55,4 +55,8 @@ public interface IToken extends ISyncEntity {
 
 	public abstract String getTag();
 
+	public abstract void setConfigId(Long configId);
+
+	public abstract Long getConfigId();
+
 }
