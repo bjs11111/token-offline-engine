@@ -28,4 +28,8 @@ public interface ISyncEntity extends ITokenEntity {
 	 */
 	public abstract void setDeleted(boolean isDeleted);
 
+	public abstract void setRemoteId(Long remoteId);
+
+	public abstract Long getRemoteId();
+
 }

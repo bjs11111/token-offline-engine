@@ -43,7 +43,7 @@ public class OrientationSensorStructure extends AbstractSensorStructure {
 		alarmHighY = new Int16(getIntValue("sensorOrientationAlarmHighY"));
 		alarmLowZ = new Int16(getIntValue("sensorOrientationAlarmLowZ"));
 		alarmHighZ = new Int16(getIntValue("sensorOrientationAlarmHighZ"));
-		alarmInside = new UInt8(getIntValue("sensorOrientationAlarmInside"));
+		alarmInside = new UInt8(getBooleanValue("sensorOrientationAlarmInside"));
 		samplingFrequency = new UInt8(getIntValue("sensorOrientationSemplingFrequency"));
 		cutOffHpLpFrequency = new UInt8(getIntValue("sensorOrientationCutOffHpLpFrequency"));
 		oversamplingMode = new UInt8(getIntValue("sensorOrientationOversamplingMode"));

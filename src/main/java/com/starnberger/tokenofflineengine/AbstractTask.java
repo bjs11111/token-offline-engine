@@ -3,7 +3,6 @@ package com.starnberger.tokenofflineengine;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -16,7 +15,6 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 
 import com.starnberger.tokenofflineengine.common.Status;
 import com.starnberger.tokenofflineengine.dao.AuthRequestFilter;
-import com.starnberger.tokenofflineengine.dao.EMF;
 import com.starnberger.tokenofflineengine.dao.TaskManager;
 import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.Task;
@@ -29,7 +27,6 @@ public abstract class AbstractTask implements ITask {
 
 	private static final String LOGIN_URL = GatewayInfo.SERVER_URL + "auth/login";
 	private static final String LOGOUT_URL = GatewayInfo.SERVER_URL + "auth/logout";
-	protected final EntityManager em;
 	protected final Client client;
 	protected final Task task;
 
@@ -40,7 +37,6 @@ public abstract class AbstractTask implements ITask {
 	 */
 	public AbstractTask(Task task) {
 		this.task = task;
-		this.em = EMF.get().createEntityManager();
 		ClientConfig config = new ClientConfig();
 		config.register(AuthRequestFilter.class);
 		config.register(JacksonFeature.class);

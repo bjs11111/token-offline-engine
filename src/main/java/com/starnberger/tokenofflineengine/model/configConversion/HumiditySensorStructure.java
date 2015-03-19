@@ -35,7 +35,7 @@ public class HumiditySensorStructure extends AbstractSensorStructure {
 		super(configValues);
 		alarmLow = new Int16(getIntValue("sensorHumidityAlarmLow"));
 		alarmHigh = new Int16(getIntValue("sensorHumidityAlarmHigh"));
-		alarmInside = new Int8(getIntValue("sensorHumidityAlarmInside"));
+		alarmInside = new Int8(getBooleanValue("sensorHumidityAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorHumidityOversamplingMode"));
 		standbyTime = new UInt8(getIntValue("sensorHumidityStandbyTime"));
 		iirFilter = new UInt8(getIntValue("sensorHumidityIIRFilter"));

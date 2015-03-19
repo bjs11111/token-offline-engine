@@ -33,7 +33,7 @@ public class TemperatureSensorStructure extends AbstractSensorStructure {
 		super(configValues);
 		alarmLow = new Int16(getIntValue("sensorTemperatureAlarmLow"));
 		alarmHigh = new Int16(getIntValue("sensorTemperatureAlarmHigh"));
-		alarmInside = new Int8(getIntValue("sensorTemperatureAlarmInside"));
+		alarmInside = new Int8(getBooleanValue("sensorTemperatureAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorTemperatureOversamplingMode"));
 		common = new SensorCommon(configValues);
 		commonPeriodic = new PeriodicSensorCommon(configValues);

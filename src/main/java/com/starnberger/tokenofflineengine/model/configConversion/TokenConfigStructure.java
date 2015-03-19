@@ -1,5 +1,6 @@
 package com.starnberger.tokenofflineengine.model.configConversion;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -13,17 +14,18 @@ import com.starnberger.tokenofflineengine.model.TokenConfiguration;
  *
  */
 public class TokenConfigStructure {
+	private final static Map<String, SensorConfigValue> EMPTY_MAP = new HashMap<String, SensorConfigValue>();
 	private BleGeneral bleGeneral; // Offset 0, Size 5
-	private TemperatureSensorStructure temperature1; // Offset 5, Size 17
-	private TemperatureSensorStructure temperature2; // Offset 22, Size 17
-	private TemperatureSensorStructure temperature3; // Offset 39, Size 17
-	private HumiditySensorStructure humidity; // Offset 56, Size 19
-	private PressureSensorStructure pressure; // Offset 75, Size 21
-	private OrientationSensorStructure orientation; // Offset 96, Size 27
-	private PIRSensorStructure pir; // Offset 123, Size 9
-	private MotionSensorStructure motion; // Offset 132, Size 12
-	private ShockSensorStructure mechanicalShock; // Offset 144, Size 15
-	private byte[] filler = new byte[6]; // Offset 159, Size 6 = 165
+	private TemperatureSensorStructure temperature1 = new TemperatureSensorStructure(EMPTY_MAP); // Offset 5, Size 17
+	private TemperatureSensorStructure temperature2 = new TemperatureSensorStructure(EMPTY_MAP); // Offset 22, Size 17
+	private TemperatureSensorStructure temperature3 = new TemperatureSensorStructure(EMPTY_MAP); // Offset 39, Size 17
+	private HumiditySensorStructure humidity = new HumiditySensorStructure(EMPTY_MAP); // Offset 56, Size 19
+	private PressureSensorStructure pressure = new PressureSensorStructure(EMPTY_MAP); // Offset 75, Size 21
+	private OrientationSensorStructure orientation = new OrientationSensorStructure(EMPTY_MAP); // Offset 96, Size 27
+	private PIRSensorStructure pir= new PIRSensorStructure(EMPTY_MAP); // Offset 123, Size 9
+	private MotionSensorStructure motion = new MotionSensorStructure(EMPTY_MAP); // Offset 132, Size 12
+	private ShockSensorStructure mechanicalShock = new ShockSensorStructure(EMPTY_MAP); // Offset 144, Size 15
+	private byte[] filler = new byte[24]; 
 
 	/**
 	 * @param tokenConfiguration

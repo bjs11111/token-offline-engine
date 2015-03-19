@@ -29,16 +29,17 @@ public class TokenManager {
 	 */
 	private TokenManager() {
 	}
-	
+
 	/**
 	 * Mark the token config upgrade flag as completed.
+	 * 
 	 * @param token
 	 */
 	public void markTokenConfigUpgradeDone(Token token) {
 		token.setNeedsConfigUpdate(false);
 		merge(token);
 	}
-	
+
 	/**
 	 * @param token
 	 * @return
@@ -64,6 +65,22 @@ public class TokenManager {
 		Token token = em.find(Token.class, id);
 		em.close();
 		return token;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public Token findByRemoteId(Long id) {
+		if (id == null)
+			return null;
+		EntityManager em = EMF.get().createEntityManager();
+		TypedQuery<Token> query = em.createNamedQuery("Token.findMyWebKey", Token.class);
+		query.setParameter("webKey", id);
+		List<Token> resultList = query.getResultList();
+		if (resultList == null || resultList.isEmpty())
+			return null;
+		return resultList.get(0);
 	}
 
 	/**

@@ -22,7 +22,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "Token.deleted", query = "SELECT t from Token t WHERE t.deleted = :isDeleted ORDER BY t.name"),
 		@NamedQuery(name = "Token.findByMac", query = "SELECT t from Token t WHERE t.deleted = false AND t.mac = :mac"),
 		@NamedQuery(name = "Token.findByOwner", query = "SELECT t from Token t WHERE t.deleted = false AND t.owner = :owner"),
-		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.id = :webKey") })
+		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.remoteId = :webKey") })
 public class Token extends SyncEntity implements IToken   {
 
 	/**

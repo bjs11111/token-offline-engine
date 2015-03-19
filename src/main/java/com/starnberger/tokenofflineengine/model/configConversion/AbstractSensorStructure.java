@@ -32,7 +32,10 @@ public abstract class AbstractSensorStructure {
 	protected int getBooleanValue(String key) {
 		SensorConfigValue sensorConfigValue = configValues.get(key);
 		if (sensorConfigValue != null) {
-			if (Boolean.parseBoolean(sensorConfigValue.getValue()) == true)
+			String value = sensorConfigValue.getValue();
+			if (value == null || value.isEmpty())
+				return 0;
+			if (Boolean.parseBoolean(value) == true)
 				return 1;
 		}
 		return 0;
@@ -45,7 +48,10 @@ public abstract class AbstractSensorStructure {
 	protected int getIntValue(String key) {
 		SensorConfigValue sensorConfigValue = configValues.get(key);
 		if (sensorConfigValue != null) {
-			return Integer.parseInt(sensorConfigValue.getValue());
+			String value = sensorConfigValue.getValue();
+			if (value == null || value.isEmpty())
+				return 0;
+			return Integer.parseInt(value);
 		}
 		return 0;
 	}

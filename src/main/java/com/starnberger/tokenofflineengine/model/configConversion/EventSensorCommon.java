@@ -28,7 +28,7 @@ public class EventSensorCommon extends AbstractSensorStructure {
 	 */
 	public EventSensorCommon(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		alarmEnabled = new UInt8(getIntValue("alarmEnabled"));
+		alarmEnabled = new UInt8(getBooleanValue("alarmEnabled"));
 		logIntervalAlarm = new UInt8(getIntValue("logIntervalAlarm"));
 		logSizeAlarm = new UInt8(getIntValue("logSizeAlarm"));
 		bleAdvertisingAction = new UInt8(getIntValue("bleAdvertisingAction"));

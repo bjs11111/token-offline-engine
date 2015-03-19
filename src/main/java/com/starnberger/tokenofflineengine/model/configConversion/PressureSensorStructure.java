@@ -33,7 +33,7 @@ public class PressureSensorStructure extends AbstractSensorStructure {
 		super(configValues);
 		alarmLow = new Int16(getIntValue("sensorPressureAlarmLow"));
 		alarmHigh = new Int16(getIntValue("sensorPressureAlarmHigh"));
-		alarmInside = new Int8(getIntValue("sensorPressureAlarmInside"));
+		alarmInside = new Int8(getBooleanValue("sensorPressureAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorPressureOversamplingMode"));
 		common = new SensorCommon(configValues);
 		commonPeriodic = new PeriodicSensorCommon(configValues);

@@ -8,12 +8,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.starnberger.tokenofflineengine.common.EntityState;
 import com.starnberger.tokenofflineengine.common.Status;
+import com.starnberger.tokenofflineengine.dao.EMF;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
 import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.SyncData;
@@ -37,7 +39,9 @@ public class DownloadTask extends AbstractTask implements ITask {
 		super(task);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenofflineengine.ITask#execute()
 	 */
 	@Override
@@ -54,25 +58,27 @@ public class DownloadTask extends AbstractTask implements ITask {
 				.resolveTemplate("date", Long.toString(lastSyncDate.getTime())).request(MediaType.APPLICATION_JSON)
 				.get();
 		if (response.getStatus() >= 400) {
-			updateTask(Status.FAILED);			
+			updateTask(Status.FAILED);
 			return false;
 		}
 		if (response.bufferEntity()) {
+			EntityManager em = EMF.get().createEntityManager();
 			SyncData entity = response.readEntity(SyncData.class);
 			System.out.println(entity.toString());
 			// Store all entities
 			em.getTransaction().begin();
-			updateEntities(entity.getUpdatedTasks());
-			updateEntities(entity.getUpdatedSensorTypes());
-			updateEntities(entity.getUpdatedTokenModels());
-			updateEntities(entity.getUpdatedTokens());
-			updateEntities(entity.getUpdatedTokenConfigurations());
-			updateEntities(entity.getUpdatedSensorConfigurations());
-			updateEntities(entity.getSensorConfigParameters());
-			updateEntities(entity.getSensorConfigValues());
-			updateEntities(entity.getUpdatedGatewayConfigurations());
+			updateEntities(em, entity.getUpdatedTasks());
+			updateEntities(em, entity.getUpdatedSensorTypes());
+			updateEntities(em, entity.getUpdatedTokenModels());
+			updateEntities(em, entity.getUpdatedTokens());
+			updateEntities(em, entity.getUpdatedTokenConfigurations());
+			updateEntities(em, entity.getUpdatedSensorConfigurations());
+			updateEntities(em, entity.getSensorConfigParameters());
+			updateEntities(em, entity.getSensorConfigValues());
+			updateEntities(em, entity.getUpdatedGatewayConfigurations());
 			em.flush();
 			em.getTransaction().commit();
+			em.close();
 			updateTask(Status.COMPLETED);
 		}
 		logout();
@@ -80,40 +86,50 @@ public class DownloadTask extends AbstractTask implements ITask {
 	}
 
 	/**
+	 * @param em
+	 *            TODO
 	 * @param list
 	 * @return
 	 */
-	private boolean updateEntities(List<? extends SyncEntity> list) {
+	private boolean updateEntities(EntityManager em, List<? extends SyncEntity> list) {
 		if (list == null)
 			return false;
 		Iterator<? extends SyncEntity> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			SyncEntity syncEntity = (SyncEntity) iterator.next();
-			storeEntity(syncEntity);
+			storeEntity(em, syncEntity);
 		}
 		return true;
 	}
 
 	/**
+	 * @param em
+	 *            TODO
 	 * @param entity
 	 * @return
 	 */
-	private boolean storeEntity(SyncEntity entity) {
+	private boolean storeEntity(EntityManager em, SyncEntity entity) {
 		if (entity == null)
 			return false;
 		if (entity.getState() == null)
 			entity.setState(EntityState.CREATED);
-		System.out.println("Entity type: " + entity.getClass().getName());
+		System.out.println("Entity type: " + entity.getClass().getName() + " id: " + entity.getId() + " state: "
+				+ entity.getState());
 		switch (entity.getState()) {
 		case CREATED:
+			entity.setRemoteId(entity.getId());
 			em.persist(entity);
 			break;
 		case UPDATED:
-			SyncEntity foundEntity = findWebKey(entity);
-			if (foundEntity == null)
+			SyncEntity foundEntity = findWebKey(em, entity);
+			if (foundEntity == null) {
+				System.out.print("Entity to update was not found. Persisting instead!");
 				em.persist(entity);
-			else
+			} else {
 				foundEntity.copyValues(entity);
+				SyncEntity updated = em.merge(foundEntity);
+				System.out.println("Entity was updated. Old id " + foundEntity.getId() + " new id " + updated.getId());
+			}
 			break;
 		case DELETED:
 			em.remove(entity);
@@ -126,12 +142,14 @@ public class DownloadTask extends AbstractTask implements ITask {
 	}
 
 	/**
+	 * @param em
+	 *            TODO
 	 * @param search
 	 * @return
 	 */
-	private SyncEntity findWebKey(SyncEntity search) {
-		TypedQuery<? extends SyncEntity> query = em.createNamedQuery(search.getClass().getSimpleName()
-				+ ".findMyWebKey", search.getClass());
+	private SyncEntity findWebKey(EntityManager em, SyncEntity search) {
+		TypedQuery<? extends SyncEntity> query = em.createQuery("select s from " + search.getClass().getSimpleName()
+				+ " s where s.remoteId = :webKey", search.getClass());
 		query.setParameter("webKey", search.getId());
 		List<? extends SyncEntity> resultList = query.getResultList();
 		if (resultList == null || resultList.isEmpty())
@@ -139,7 +157,9 @@ public class DownloadTask extends AbstractTask implements ITask {
 		return resultList.get(0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.starnberger.tokenofflineengine.ITask#getFollowUpTasks()
 	 */
 	@Override

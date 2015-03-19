@@ -20,7 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 @NamedQueries({
 		@NamedQuery(name = "SensorType.lastModified", query = "SELECT g from SensorType g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "SensorType.deleted", query = "SELECT g from SensorType g WHERE g.deleted = :isDeleted ORDER BY g.description"),
-		@NamedQuery(name = "SensorType.findMyWebKey", query = "select s from SensorType s where s.id = :webKey") })
+		@NamedQuery(name = "SensorType.findMyWebKey", query = "select s from SensorType s where s.remoteId = :webKey") })
 public class SensorType extends SyncEntity implements ISensorType {
 
 	/**

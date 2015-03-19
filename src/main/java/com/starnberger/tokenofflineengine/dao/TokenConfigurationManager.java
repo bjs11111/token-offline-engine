@@ -5,9 +5,11 @@ package com.starnberger.tokenofflineengine.dao;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import com.starnberger.tokenofflineengine.model.SensorConfigValue;
 import com.starnberger.tokenofflineengine.model.SensorConfiguration;
@@ -49,6 +51,23 @@ public class TokenConfigurationManager {
 	}
 
 	/**
+	 * @param id
+	 * @return
+	 */
+	public TokenConfiguration findByRemoteId(Long id) {
+		if (id == null)
+			return null;
+		EntityManager em = EMF.get().createEntityManager();
+		TypedQuery<TokenConfiguration> query = em.createNamedQuery("TokenConfiguration.findMyWebKey",
+				TokenConfiguration.class);
+		query.setParameter("webKey", id);
+		List<TokenConfiguration> resultList = query.getResultList();
+		if (resultList == null || resultList.isEmpty())
+			return null;
+		return resultList.get(0);
+	}
+
+	/**
 	 * @param tokenConfiguration
 	 * @param token
 	 * @return
@@ -58,8 +77,10 @@ public class TokenConfigurationManager {
 		Map<String, Map<String, SensorConfigValue>> sensorConfigValuesPerPosition = loadSensorConfigValues(
 				tokenConfiguration, token, em);
 		em.close();
-		TokenConfigStructure tokenConfigStructure = new TokenConfigStructure(tokenConfiguration, sensorConfigValuesPerPosition);
-		return tokenConfigStructure.toByteArray(true);
+		TokenConfigStructure tokenConfigStructure = new TokenConfigStructure(tokenConfiguration,
+				sensorConfigValuesPerPosition);
+		// Generate byte array in Little Endian format
+		return tokenConfigStructure.toByteArray(false);
 	}
 
 	/**
@@ -70,20 +91,22 @@ public class TokenConfigurationManager {
 	 */
 	private Map<String, Map<String, SensorConfigValue>> loadSensorConfigValues(TokenConfiguration tokenConfiguration,
 			Token token, EntityManager em) {
-		Map<String, Map<String, SensorConfigValue>> sensorConfigValuesPerPosition = new HashMap<String, Map<String,SensorConfigValue>>();
+		Map<String, Map<String, SensorConfigValue>> sensorConfigValuesPerPosition = new HashMap<String, Map<String, SensorConfigValue>>();
 		Iterator<Long> iterator = tokenConfiguration.getSensorConfigKeys().iterator();
 		while (iterator.hasNext()) {
 			Long sensorConfigId = (Long) iterator.next();
-			SensorConfiguration sensorConfiguration = em.find(SensorConfiguration.class, sensorConfigId);
+			SensorConfiguration sensorConfiguration = SensorConfigurationManager.getInstance().findByRemoteId(
+					sensorConfigId);
 			if (sensorConfiguration != null && sensorConfiguration.getConfigValueKeys() != null) {
-				Map<String,SensorConfigValue> sensorConfigValues = new HashMap<String, SensorConfigValue>();
+				Map<String, SensorConfigValue> sensorConfigValues = new HashMap<String, SensorConfigValue>();
 				Iterator<Long> valueIterator = sensorConfiguration.getConfigValueKeys().iterator();
 				while (valueIterator.hasNext()) {
 					Long valueId = (Long) valueIterator.next();
-					SensorConfigValue configValue = em.find(SensorConfigValue.class, valueId);
+					SensorConfigValue configValue = SensorConfigValueManager.getInstance().findByRemoteId(valueId);
 					sensorConfigValues.put(configValue.getConfigKey(), configValue);
 				}
-				String sensorPosition = TokenModelManager.getInstance().getSensorPosition(token.getModel(), sensorConfiguration.getSensorTypeKey());
+				String sensorPosition = TokenModelManager.getInstance().getSensorPosition(token.getModel(),
+						sensorConfiguration.getSensorTypeKey());
 				sensorConfigValuesPerPosition.put(sensorPosition, sensorConfigValues);
 			}
 		}

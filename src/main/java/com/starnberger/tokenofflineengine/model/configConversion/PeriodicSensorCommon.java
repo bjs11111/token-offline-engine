@@ -25,7 +25,7 @@ public class PeriodicSensorCommon extends AbstractSensorStructure {
 	 */
 	public PeriodicSensorCommon(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		sensorReadInterval = new UInt8(getIntValue("sensorEnabled"));
+		sensorReadInterval = new UInt8(getIntValue("sensorReadInterval"));
 		logInterval = new UInt8(getIntValue("logInterval"));
 		logSize = new UInt8(getIntValue("logSize"));
 	}

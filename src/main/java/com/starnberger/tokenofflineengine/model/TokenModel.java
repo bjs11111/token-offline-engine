@@ -19,7 +19,7 @@ import com.starnberger.tokenofflineengine.common.ITokenModel;
 @NamedQueries({
 		@NamedQuery(name = "TokenModel.lastModified", query = "SELECT g from TokenModel g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "TokenModel.deleted", query = "SELECT g from TokenModel g WHERE g.deleted = :isDeleted  ORDER BY g.name"),
-		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.id = :webKey") })
+		@NamedQuery(name = "TokenModel.findMyWebKey", query = "select s from TokenModel s where s.remoteId = :webKey") })
 public class TokenModel extends SyncEntity implements ITokenModel {
 
 	/**

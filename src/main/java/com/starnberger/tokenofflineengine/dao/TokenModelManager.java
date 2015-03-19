@@ -3,7 +3,10 @@
  */
 package com.starnberger.tokenofflineengine.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import com.starnberger.tokenofflineengine.model.SensorType;
 import com.starnberger.tokenofflineengine.model.TokenModel;
@@ -43,20 +46,52 @@ public class TokenModelManager {
 	 * @param id
 	 * @return
 	 */
+	public TokenModel findByRemoteId(Long id) {
+		if (id == null)
+			return null;
+		EntityManager em = EMF.get().createEntityManager();
+		TypedQuery<TokenModel> query = em.createNamedQuery("TokenModel.findMyWebKey", TokenModel.class);
+		query.setParameter("webKey", id);
+		List<TokenModel> resultList = query.getResultList();
+		if (resultList == null || resultList.isEmpty())
+			return null;
+		return resultList.get(0);
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
 	public SensorType findSensorById(Long id) {
 		EntityManager em = EMF.get().createEntityManager();
 		SensorType find = em.find(SensorType.class, id);
 		em.close();
 		return find;
 	}
-	
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public SensorType findSensorByRemoteId(Long id) {
+		if (id == null)
+			return null;
+		EntityManager em = EMF.get().createEntityManager();
+		TypedQuery<SensorType> query = em.createNamedQuery("SensorType.findMyWebKey", SensorType.class);
+		query.setParameter("webKey", id);
+		List<SensorType> resultList = query.getResultList();
+		if (resultList == null || resultList.isEmpty())
+			return null;
+		return resultList.get(0);
+	}
+
 	/**
 	 * @param modelId
 	 * @param sensorTypeId
 	 * @return
 	 */
 	public String getSensorPosition(Long modelId, Long sensorTypeId) {
-		TokenModel model = findById(modelId);
+		TokenModel model = findByRemoteId(modelId);
 		if (model == null)
 			return null;
 		int index = model.getSensorKeys().indexOf(sensorTypeId);
@@ -71,7 +106,7 @@ public class TokenModelManager {
 	 * @return
 	 */
 	public SensorType findSensorTypeByPosition(Long id, String position) {
-		TokenModel model = findById(id);
+		TokenModel model = findByRemoteId(id);
 		if (model == null)
 			return null;
 		int index = model.getSensorPositions().indexOf(position);
@@ -80,6 +115,6 @@ public class TokenModelManager {
 		Long sensorId = model.getSensorKeys().get(index);
 		if (id == null)
 			return null;
-		return findSensorById(sensorId);
+		return findSensorByRemoteId(sensorId);
 	}
 }

@@ -5,7 +5,9 @@ package com.starnberger.tokenofflineengine;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -78,6 +80,8 @@ public class Main {
 	private ScheduledFuture<?> logUploadFuture;
 
 	private final BluezConnector connector = new BluezConnector();
+
+	private Map<String, String> upgradeTokens = new HashMap<String, String>();
 
 	/**
 	 * @param args
@@ -347,10 +351,11 @@ public class Main {
 		while (iterator.hasNext()) {
 			SensorValue sensorValue = (SensorValue) iterator.next();
 			Token token = TokenManager.getInstance().findByMac(sensorValue.mac);
-			if (token != null && token.isNeedsConfigUpdate()) {
+			if (token != null && token.isNeedsConfigUpdate() && !upgradeTokens.containsKey(sensorValue.mac)) {
+				upgradeTokens.put(sensorValue.mac, sensorValue.mac);
 				Task configUpgradeTask = new Task();
 				configUpgradeTask.setType(TaskType.UPGRADE_TOKEN);
-				configUpgradeTask.setRelatedId(token.getId());
+				configUpgradeTask.setRelatedId(token.getRemoteId());
 				TaskManager.getInstance().persist(configUpgradeTask);
 				tasks.add(configUpgradeTask);
 			}

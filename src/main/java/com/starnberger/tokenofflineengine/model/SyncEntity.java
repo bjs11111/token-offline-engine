@@ -26,10 +26,12 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 
 	@Column
 	protected Date lastModified = new Date();
-	@Column( name ="deleted")
+	@Column(name = "deleted")
 	protected boolean deleted = false;
 	@Column
 	protected EntityState state = EntityState.CREATED;
+	@Column
+	protected Long remoteId = null;
 
 	@PreUpdate
 	public void beforeUpdate() {
@@ -118,6 +120,23 @@ public abstract class SyncEntity extends TokenEntity implements ISyncEntity {
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * @return the remoteId
+	 */
+	@Override
+	public Long getRemoteId() {
+		return remoteId;
+	}
+
+	/**
+	 * @param remoteId
+	 *            the remoteId to set
+	 */
+	@Override
+	public void setRemoteId(Long remoteId) {
+		this.remoteId = remoteId;
 	}
 
 }

@@ -22,7 +22,7 @@ import com.starnberger.tokenofflineengine.common.TaskType;
 @NamedQueries({
 		@NamedQuery(name = "Task.lastModified", query = "SELECT g from Task g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Task.deleted", query = "SELECT g from Task g WHERE g.deleted = :isDeleted"),
-		@NamedQuery(name = "Task.findMyWebKey", query = "select s from Task s where s.id = :webKey") })
+		@NamedQuery(name = "Task.findMyWebKey", query = "select s from Task s where s.remoteId = :webKey") })
 public class Task extends SyncEntity implements ITask  {
 
 	/**

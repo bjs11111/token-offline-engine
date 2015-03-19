@@ -6,6 +6,7 @@ package com.starnberger.tokenofflineengine;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,7 +45,7 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 	@Override
 	public boolean execute() {
 		Long relatedId = task.getRelatedId();
-		final Token token = TokenManager.getInstance().findById(relatedId);
+		final Token token = TokenManager.getInstance().findByRemoteId(relatedId);
 		if (token == null) {
 			logger.error("Token " + relatedId + " not found.");
 			updateTask(Status.FAILED);
@@ -55,7 +56,7 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 			updateTask(Status.FAILED);
 			return false;
 		}
-		TokenConfiguration configuration = TokenConfigurationManager.getInstance().findById(token.getConfigId());
+		TokenConfiguration configuration = TokenConfigurationManager.getInstance().findByRemoteId(token.getConfigId());
 		if (configuration == null) {
 			logger.fatal("TokenConfiguration " + token.getConfigId() + " not found for Token " + token);
 			updateTask(Status.FAILED);
@@ -64,20 +65,28 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 		updateTask(Status.IN_PROGRESS);
 		byte[] configurationArray = TokenConfigurationManager.getInstance().generateByteArrayFromConfig(configuration,
 				token);
+		System.out.println("Byte array length: " + configurationArray.length);
+		System.out.println("HEX Byte Array: " + Hex.encodeHexString(configurationArray));
+		System.out.println("Byte Array: " + ArrayUtils.toString(configurationArray));
 		connector.writeService(token.getMac(), CONFIG_UPGRADE_FLAG,
 				new WriteConfigurationController(configurationArray) {
 
 					@Override
-					public void onSuccess(String address, byte[] message, int bytesWritten) {
-						String writeData = new String(Hex.encodeHex(message));
-						logger.info("written to " + address + " " + writeData + " written: " + bytesWritten + " bytes");
-						TokenManager.getInstance().markTokenConfigUpgradeDone(token);
-						updateTask(Status.COMPLETED);
+					public void onFailed(String msg, Exception e) {
+						logger.error("failed to write " + msg, e);
 					}
 
 					@Override
-					public void onFailed(String msg, Exception e) {
-						logger.error("failed to write " + msg, e);
+					public void onSuccessPartMessage(String address, byte[] writeData, int bytesWritten) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onSuccess(String address, int bytesWritten) {
+						logger.info("written to " + " written: " + bytesWritten + " bytes");
+						TokenManager.getInstance().markTokenConfigUpgradeDone(token);
+						updateTask(Status.COMPLETED);
 					}
 
 				});

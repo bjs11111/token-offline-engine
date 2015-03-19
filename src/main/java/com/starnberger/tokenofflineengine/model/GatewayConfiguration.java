@@ -18,7 +18,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "GatewayConfiguration.lastModified", query = "SELECT g from GatewayConfiguration g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "GatewayConfiguration.deleted", query = "SELECT g from GatewayConfiguration g WHERE g.deleted = :isDeleted ORDER BY g.name"),
 		@NamedQuery(name = "GatewayConfiguration.findByOwner", query = "SELECT g from GatewayConfiguration g WHERE g.deleted = false and g.partnerKey = :owner ORDER BY g.name"),
-		@NamedQuery(name = "GatewayConfiguration.findMyWebKey", query = "select s from GatewayConfiguration s where s.id = :webKey") })
+		@NamedQuery(name = "GatewayConfiguration.findMyWebKey", query = "select s from GatewayConfiguration s where s.remoteId = :webKey") })
 public class GatewayConfiguration extends SyncEntity implements IGatewayConfiguration {
 
 	/**
