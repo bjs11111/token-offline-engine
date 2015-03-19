@@ -32,7 +32,7 @@ public class Task extends SyncEntity implements ITask  {
 	@Column
 	private TaskType type;
 	@Column
-	private String relatedId;
+	private Long relatedId;
 	@Column
 	private Status status;
 	@Basic
@@ -100,12 +100,12 @@ public class Task extends SyncEntity implements ITask  {
 	}
 
 	@Override
-	public String getRelatedId() {
+	public Long getRelatedId() {
 		return relatedId;
 	}
 
 	@Override
-	public void setRelatedId(String relatedId) {
+	public void setRelatedId(Long relatedId) {
 		this.relatedId = relatedId;
 	}
 

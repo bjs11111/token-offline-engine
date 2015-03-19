@@ -22,13 +22,10 @@ public class TokenModelManager {
 		return _INSTANCE;
 	}
 
-	private final EntityManager em;
-
 	/**
 	 * Private default constructor
 	 */
 	private TokenModelManager() {
-		this.em = EMF.get().createEntityManager();
 	}
 
 	/**
@@ -36,7 +33,10 @@ public class TokenModelManager {
 	 * @return
 	 */
 	public TokenModel findById(Long id) {
-		return this.em.find(TokenModel.class, id);
+		EntityManager em = EMF.get().createEntityManager();
+		TokenModel find = em.find(TokenModel.class, id);
+		em.close();
+		return find;
 	}
 
 	/**
@@ -44,7 +44,25 @@ public class TokenModelManager {
 	 * @return
 	 */
 	public SensorType findSensorById(Long id) {
-		return this.em.find(SensorType.class, id);
+		EntityManager em = EMF.get().createEntityManager();
+		SensorType find = em.find(SensorType.class, id);
+		em.close();
+		return find;
+	}
+	
+	/**
+	 * @param modelId
+	 * @param sensorTypeId
+	 * @return
+	 */
+	public String getSensorPosition(Long modelId, Long sensorTypeId) {
+		TokenModel model = findById(modelId);
+		if (model == null)
+			return null;
+		int index = model.getSensorKeys().indexOf(sensorTypeId);
+		if (index == -1)
+			return null;
+		return model.getSensorPositions().get(index);
 	}
 
 	/**

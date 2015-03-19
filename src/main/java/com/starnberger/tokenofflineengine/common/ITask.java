@@ -13,9 +13,9 @@ public interface ITask extends ISyncEntity {
 
 	public abstract void setType(TaskType type);
 
-	public abstract String getRelatedId();
+	public abstract Long getRelatedId();
 
-	public abstract void setRelatedId(String relatedId);
+	public abstract void setRelatedId(Long relatedId);
 
 	public abstract Status getStatus();
 

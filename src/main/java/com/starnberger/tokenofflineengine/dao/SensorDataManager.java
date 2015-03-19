@@ -35,22 +35,21 @@ public class SensorDataManager {
 		return _INSTANCE;
 	}
 
-	private final EntityManager em;
-
 	/**
 	 * Private default constructor
 	 */
 	private SensorDataManager() {
-		this.em = EMF.get().createEntityManager();
 	}
 
 	/**
 	 * @param dataRecord
 	 */
 	public void persist(SensorData dataRecord) {
+		EntityManager em = EMF.get().createEntityManager();
 		em.getTransaction().begin();
 		em.persist(dataRecord);
 		em.getTransaction().commit();
+		em.close();
 	}
 
 	/**
@@ -58,9 +57,11 @@ public class SensorDataManager {
 	 * @return
 	 */
 	public SensorData merge(SensorData dataRecord) {
+		EntityManager em = EMF.get().createEntityManager();
 		em.getTransaction().begin();
 		SensorData updatedRecord = em.merge(dataRecord);
 		em.getTransaction().commit();
+		em.close();
 		return updatedRecord;
 	}
 
@@ -68,9 +69,11 @@ public class SensorDataManager {
 	 * @param dataRecord
 	 */
 	public void remove(SensorData dataRecord) {
+		EntityManager em = EMF.get().createEntityManager();
 		em.getTransaction().begin();
 		em.remove(dataRecord);
 		em.getTransaction().commit();
+		em.close();
 	}
 
 	/**
@@ -78,7 +81,10 @@ public class SensorDataManager {
 	 * @return
 	 */
 	public SensorData findById(Long id) {
-		return em.find(SensorData.class, id);
+		EntityManager em = EMF.get().createEntityManager();
+		SensorData find = em.find(SensorData.class, id);
+		em.close();
+		return find;
 	}
 
 	/**
@@ -173,12 +179,14 @@ public class SensorDataManager {
 	public SensorDataListWrapper findSensorDataValuesSinceLastSync(Date lastSync) {
 		if (lastSync == null)
 			lastSync = new Date(0);
+		EntityManager em = EMF.get().createEntityManager();
 		SensorDataListWrapper wrapper = new SensorDataListWrapper();
 		TypedQuery<SensorData> query = em.createNamedQuery("SensorData.findSinceLastSync", SensorData.class);
 		query.setParameter("lastSync", lastSync, TemporalType.TIMESTAMP);
 		List<SensorData> resultList = query.getResultList();
 		if (resultList != null && resultList.size() > 0)
 			wrapper.setList(resultList);
+		em.close();
 		return wrapper;
 	}
 }

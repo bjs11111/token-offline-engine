@@ -24,9 +24,12 @@ import com.starnberger.tokenofflineengine.dao.AuthenticationManager;
 import com.starnberger.tokenofflineengine.dao.GatewayConfigurationManager;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
 import com.starnberger.tokenofflineengine.dao.SensorDataManager;
+import com.starnberger.tokenofflineengine.dao.TaskManager;
+import com.starnberger.tokenofflineengine.dao.TokenManager;
 import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.GatewayConfiguration;
 import com.starnberger.tokenofflineengine.model.Task;
+import com.starnberger.tokenofflineengine.model.Token;
 
 /**
  * @author Roman Kaufmann
@@ -73,6 +76,8 @@ public class Main {
 	private ScheduledFuture<?> syncFuture;
 	private ScheduledFuture<?> statusUpdateFuture;
 	private ScheduledFuture<?> logUploadFuture;
+
+	private final BluezConnector connector = new BluezConnector();
 
 	/**
 	 * @param args
@@ -146,7 +151,6 @@ public class Main {
 	 * received sensor values.
 	 */
 	private void registerBroadcastListener() {
-		BluezConnector connector = new BluezConnector();
 		AdvertisingPackageParser listener = new AdvertisingPackageParser() {
 
 			@Override
@@ -255,7 +259,6 @@ public class Main {
 	private void upgradeGateway(Task task) {
 		// TODO Auto-generated method stub
 		logger.info("Starting gateway upgrade");
-
 	}
 
 	private void uploadGatewayStatus(Task task) {
@@ -263,15 +266,19 @@ public class Main {
 		logger.info("Starting gateway status upload");
 	}
 
+	/**
+	 * @param task
+	 */
 	private void upgradeToken(Task task) {
-		// TODO Auto-generated method stub
 		logger.info("Starting token upgrade");
+		UpgradeTokenConfigTask upgradeTokenConfigTask = new UpgradeTokenConfigTask(task, connector);
+		boolean result = upgradeTokenConfigTask.execute();
+		logger.info("Token upgrade task execution returned: " + result);
 	}
 
 	private void scanForToken(Task task) {
 		// TODO Auto-generated method stub
 		logger.info("Starting sensor token scan");
-
 	}
 
 	private void stopTokenScan(Task task) {
@@ -339,6 +346,14 @@ public class Main {
 		Iterator<SensorValue> iterator = sensorValues.iterator();
 		while (iterator.hasNext()) {
 			SensorValue sensorValue = (SensorValue) iterator.next();
+			Token token = TokenManager.getInstance().findByMac(sensorValue.mac);
+			if (token != null && token.isNeedsConfigUpdate()) {
+				Task configUpgradeTask = new Task();
+				configUpgradeTask.setType(TaskType.UPGRADE_TOKEN);
+				configUpgradeTask.setRelatedId(token.getId());
+				TaskManager.getInstance().persist(configUpgradeTask);
+				tasks.add(configUpgradeTask);
+			}
 			try {
 				SensorDataManager.getInstance().addNewRecord(sensorValue);
 			} catch (NumberFormatException e) {

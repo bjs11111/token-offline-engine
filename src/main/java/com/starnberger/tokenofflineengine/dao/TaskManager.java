@@ -21,13 +21,24 @@ public class TaskManager {
 		return _INSTANCE;
 	}
 	
-	private final EntityManager em;
-	
 	/**
 	 * Private default constructor
 	 */
 	private TaskManager() {
-		this.em = EMF.get().createEntityManager();
+	}
+	
+	/**
+	 * @param task
+	 * @return
+	 */
+	public Task persist(Task task) {
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
+		em.persist(task);
+		em.flush();
+		em.getTransaction().commit();
+		em.close();
+		return task;
 	}
 	
 	/**
@@ -35,10 +46,12 @@ public class TaskManager {
 	 * @return
 	 */
 	public Task update(Task task) {
+		EntityManager em = EMF.get().createEntityManager();
 		em.getTransaction().begin();
 		Task updated = em.merge(task);
 		em.flush();
 		em.getTransaction().commit();
+		em.close();
 		return updated;
 	}
 }
