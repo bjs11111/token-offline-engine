@@ -45,36 +45,26 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 		this.version = version;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.starnberger.tokenengine.server.dao.ITokenEntity#getWebKey()
-	 */
-	/*@Override
-	public String getWebKey() {
-		if (webKey == null) {
-			calculateWebKey();
-		}
-		return webKey;
-	}*/
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.starnberger.tokenengine.server.dao.ITokenEntity#setWebKey(java.lang
-	 * .String)
-	 */
-	/*@Override
-	public void setWebKey(String webKey) {
-		this.webKey = webKey;
-	}*/
-
 	/**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/*
@@ -86,9 +76,8 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		//result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + version;
-		//result = prime * result + ((webKey == null) ? 0 : webKey.hashCode());
 		return result;
 	}
 
@@ -106,18 +95,13 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		TokenEntity other = (TokenEntity) obj;
-		/*if (id == null) {
+		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;*/
+			return false;
 		if (version != other.version)
 			return false;
-		/*if (webKey == null) {
-			if (other.webKey != null)
-				return false;
-		} else if (!webKey.equals(other.webKey))
-			return false;*/
 		return true;
 	}
 
@@ -128,38 +112,7 @@ public abstract class TokenEntity implements Serializable, ITokenEntity {
 	 */
 	@Override
 	public String toString() {
-		//return "TokenEntity [id=" + id + ", version=" + version + ", webKey=" + webKey + "]";
-		//return "TokenEntity [version=" + version + ", webKey=" + webKey + "]";
 		return "TokenEntity [version=" + version + ", id=" + id + "]";
-	}
-	
-	/*@PostPersist
-	public void beforePersist() {
-		calculateWebKey();
-	}*/
-	
-	
-	/**
-	 * Default implementation does not calculate a webkey. Can be overriden in child classes. 
-	 */
-	/*public void calculateWebKey() {
-		if (id != null)
-			setWebKey(String.valueOf(getId()));
-	}*/
-
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 }
