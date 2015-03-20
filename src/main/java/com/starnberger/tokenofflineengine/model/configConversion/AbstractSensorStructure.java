@@ -4,6 +4,7 @@ import java.util.Map;
 
 import net.sourceforge.juint.Int16;
 import net.sourceforge.juint.UInt16;
+import net.sourceforge.juint.UInt32;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -40,7 +41,7 @@ public abstract class AbstractSensorStructure {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * @param key
 	 * @return
@@ -55,7 +56,7 @@ public abstract class AbstractSensorStructure {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * @param target
 	 * @param value
@@ -68,7 +69,20 @@ public abstract class AbstractSensorStructure {
 		else
 			return ArrayUtils.addAll(target, value.toLittleEndian());
 	}
-	
+
+	/**
+	 * @param target
+	 * @param value
+	 * @param isBigEndian
+	 * @return
+	 */
+	protected byte[] addAll(byte[] target, UInt32 value, boolean isBigEndian) {
+		if (isBigEndian)
+			return ArrayUtils.addAll(target, value.toBigEndian());
+		else
+			return ArrayUtils.addAll(target, value.toLittleEndian());
+	}
+
 	/**
 	 * @param target
 	 * @param value
@@ -81,8 +95,7 @@ public abstract class AbstractSensorStructure {
 		else
 			return ArrayUtils.addAll(target, value.toLittleEndian());
 	}
-	
-	
+
 	/**
 	 * @param isBigEndian
 	 * @return

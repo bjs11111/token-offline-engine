@@ -5,8 +5,8 @@ package com.starnberger.tokenofflineengine.model.configConversion;
 
 import java.util.Map;
 
-import net.sourceforge.juint.Int16;
 import net.sourceforge.juint.Int8;
+import net.sourceforge.juint.UInt32;
 import net.sourceforge.juint.UInt8;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -18,8 +18,8 @@ import com.starnberger.tokenofflineengine.model.SensorConfigValue;
  *
  */
 public class PressureSensorStructure extends AbstractSensorStructure {
-	private Int16 alarmLow;															//0
-	private Int16 alarmHigh;														//2
+	private UInt32 alarmLow;															//0
+	private UInt32 alarmHigh;														//2
 	private Int8 alarmInside;														//4
 	private UInt8 oversamplingMode;											//5
 	private SensorCommon common;									//6, size 2
@@ -31,8 +31,8 @@ public class PressureSensorStructure extends AbstractSensorStructure {
 	 */
 	public PressureSensorStructure(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		alarmLow = new Int16(getIntValue("sensorPressureAlarmLow"));
-		alarmHigh = new Int16(getIntValue("sensorPressureAlarmHigh"));
+		alarmLow = new UInt32(getIntValue("sensorPressureAlarmLow"));
+		alarmHigh = new UInt32(getIntValue("sensorPressureAlarmHigh"));
 		alarmInside = new Int8(getBooleanValue("sensorPressureAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorPressureOversamplingMode"));
 		common = new SensorCommon(configValues);

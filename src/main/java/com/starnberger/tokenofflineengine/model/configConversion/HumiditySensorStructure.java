@@ -5,8 +5,8 @@ package com.starnberger.tokenofflineengine.model.configConversion;
 
 import java.util.Map;
 
-import net.sourceforge.juint.Int16;
 import net.sourceforge.juint.Int8;
+import net.sourceforge.juint.UInt16;
 import net.sourceforge.juint.UInt8;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -18,8 +18,8 @@ import com.starnberger.tokenofflineengine.model.SensorConfigValue;
  *
  */
 public class HumiditySensorStructure extends AbstractSensorStructure {
-	private Int16 alarmLow;															//0
-	private Int16 alarmHigh;														//2
+	private UInt16 alarmLow;															//0
+	private UInt16 alarmHigh;														//2
 	private Int8 alarmInside;														//4
 	private UInt8 oversamplingMode;											//5
 	private UInt8 standbyTime;													//6
@@ -33,8 +33,8 @@ public class HumiditySensorStructure extends AbstractSensorStructure {
 	 */
 	public HumiditySensorStructure(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		alarmLow = new Int16(getIntValue("sensorHumidityAlarmLow"));
-		alarmHigh = new Int16(getIntValue("sensorHumidityAlarmHigh"));
+		alarmLow = new UInt16(getIntValue("sensorHumidityAlarmLow"));
+		alarmHigh = new UInt16(getIntValue("sensorHumidityAlarmHigh"));
 		alarmInside = new Int8(getBooleanValue("sensorHumidityAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorHumidityOversamplingMode"));
 		standbyTime = new UInt8(getIntValue("sensorHumidityStandbyTime"));
