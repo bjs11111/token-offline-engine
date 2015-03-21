@@ -17,6 +17,7 @@ public class SyncData implements Serializable {
 	 */
 	private static final long serialVersionUID = -3514984342099377219L;
 
+	private Gateway gateway;
 	private List<Token> updatedTokens = new ArrayList<Token>();
 	private List<TokenConfiguration> updatedTokenConfigurations = new ArrayList<TokenConfiguration>();
 	private List<TokenModel> updatedTokenModels = new ArrayList<TokenModel>();
@@ -175,6 +176,21 @@ public class SyncData implements Serializable {
 	 */
 	public void setSensorConfigValues(List<SensorConfigValue> sensorConfigValues) {
 		this.sensorConfigValues = sensorConfigValues;
+	}
+
+	/**
+	 * @return the gateway
+	 */
+	public Gateway getGateway() {
+		return gateway;
+	}
+
+	/**
+	 * @param gateway
+	 *            the gateway to set
+	 */
+	public void setGateway(Gateway gateway) {
+		this.gateway = gateway;
 	}
 
 	/**

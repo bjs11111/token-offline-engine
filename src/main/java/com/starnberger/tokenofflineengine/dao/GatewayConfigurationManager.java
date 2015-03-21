@@ -3,7 +3,10 @@
  */
 package com.starnberger.tokenofflineengine.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import com.starnberger.tokenofflineengine.model.GatewayConfiguration;
 
@@ -21,21 +24,27 @@ public class GatewayConfigurationManager {
 		return _INSTANCE;
 	}
 
-	private final EntityManager em;
-
 	/**
 	 * Private default constructor
 	 */
 	private GatewayConfigurationManager() {
-		this.em = EMF.get().createEntityManager();
 	}
 
 	/**
 	 * @param id
 	 * @return
 	 */
-	public GatewayConfiguration findById(Long id) {
-		return this.em.find(GatewayConfiguration.class, id);
+	public GatewayConfiguration findByRemoteId(Long id) {
+		if (id == null)
+			return null;
+		EntityManager em = EMF.get().createEntityManager();
+		TypedQuery<GatewayConfiguration> query = em.createNamedQuery("GatewayConfiguration.findMyWebKey",
+				GatewayConfiguration.class);
+		query.setParameter("webKey", id);
+		List<GatewayConfiguration> resultList = query.getResultList();
+		if (resultList == null || resultList.isEmpty())
+			return null;
+		return resultList.get(0);
 	}
 
 }

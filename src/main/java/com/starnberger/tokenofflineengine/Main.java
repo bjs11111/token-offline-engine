@@ -332,7 +332,7 @@ public class Main {
 		Gateway findMe = GatewayManager.getInstance().findMe();
 		if (findMe == null || findMe.getGatewayConfigKey() == null)
 			return;
-		GatewayConfiguration config = GatewayConfigurationManager.getInstance().findById(findMe.getGatewayConfigKey());
+		GatewayConfiguration config = GatewayConfigurationManager.getInstance().findByRemoteId(findMe.getGatewayConfigKey());
 		if (config != null) {
 			this.config = config;
 			prepareScheduledTasks();
