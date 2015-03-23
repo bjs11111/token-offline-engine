@@ -41,9 +41,7 @@ public class TokenConfigStructureTest {
 		TokenConfigStructure tokenConfigStructure = new TokenConfigStructure(new TokenConfiguration(),
 				new HashMap<String, Map<String, SensorConfigValue>>());
 		byte[] byteArray = tokenConfigStructure.toByteArray(false);
-		assertEquals(171, byteArray.length);
-		//TODO: The actual length should be 180, set to 171 for the moment to pass unit tests
-		//assertEquals(180, byteArray.length);
+		assertEquals(165, byteArray.length);
 	}
 
 }

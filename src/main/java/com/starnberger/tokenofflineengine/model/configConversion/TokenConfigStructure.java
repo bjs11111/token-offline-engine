@@ -25,7 +25,7 @@ public class TokenConfigStructure {
 	private PIRSensorStructure pir= new PIRSensorStructure(EMPTY_MAP); // Offset 123, Size 9
 	private MotionSensorStructure motion = new MotionSensorStructure(EMPTY_MAP); // Offset 132, Size 12
 	private ShockSensorStructure mechanicalShock = new ShockSensorStructure(EMPTY_MAP); // Offset 144, Size 15
-	private byte[] filler = new byte[14]; 
+	private byte[] filler = new byte[8]; 
 
 	/**
 	 * @param tokenConfiguration
