@@ -32,6 +32,8 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 	private Long ownerKey;
 	@Column
 	private Long sensorTypeKey;
+	@Column
+	private String position;
 	@Basic
 	private List<Long> configValueKeys = new ArrayList<Long>();
 
@@ -113,6 +115,22 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 		this.configValueKeys = configValue;
 	}
 
+	/**
+	 * @return the position
+	 */
+	@Override
+	public String getPosition() {
+		return position;
+	}
+
+	/**
+	 * @param position the position to set
+	 */
+	@Override
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
@@ -124,6 +142,7 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 			setConfigValueKeys(token.getConfigValueKeys());
 			setOwnerKey(token.getOwnerKey());
 			setSensorTypeKey(token.getSensorTypeKey());
+			setPosition(token.getPosition());
 		}
 	}
 

@@ -41,4 +41,8 @@ public interface ISensorConfiguration extends ISyncEntity {
 	 */
 	public abstract void setConfigValueKeys(List<Long> configValue);
 
+	public abstract void setPosition(String position);
+
+	public abstract String getPosition();
+
 }
