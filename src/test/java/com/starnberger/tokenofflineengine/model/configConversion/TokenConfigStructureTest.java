@@ -3,15 +3,23 @@
  */
 package com.starnberger.tokenofflineengine.model.configConversion;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fest.assertions.AssertExtension;
+import javax.persistence.EntityManagerFactory;
+
+import org.apache.commons.codec.binary.Hex;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.starnberger.EMF;
+import com.starnberger.tokenofflineengine.dao.TokenConfigurationManager;
+import com.starnberger.tokenofflineengine.dao.TokenManager;
 import com.starnberger.tokenofflineengine.model.SensorConfigValue;
+import com.starnberger.tokenofflineengine.model.Token;
 import com.starnberger.tokenofflineengine.model.TokenConfiguration;
 
 /**
@@ -19,6 +27,16 @@ import com.starnberger.tokenofflineengine.model.TokenConfiguration;
  *
  */
 public class TokenConfigStructureTest {
+	public static EntityManagerFactory emf = null;
+	
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		emf = EMF.get();
+	}
+
 
 	/**
 	 * Test method for
@@ -38,9 +56,10 @@ public class TokenConfigStructureTest {
 	 */
 	@Test
 	public void testToByteArray() {
-		TokenConfigStructure tokenConfigStructure = new TokenConfigStructure(new TokenConfiguration(),
-				new HashMap<String, Map<String, SensorConfigValue>>());
-		byte[] byteArray = tokenConfigStructure.toByteArray(false);
+		Token token = TokenManager.getInstance().findByMac("CA:FF:E0:0C:AF:FE");
+		TokenConfiguration config = TokenConfigurationManager.getInstance().findById(1L);
+		byte[] byteArray =TokenConfigurationManager.getInstance().generateByteArrayFromConfig(config, token);
+		System.out.println(Hex.encodeHexString(byteArray));
 		assertEquals(165, byteArray.length);
 	}
 

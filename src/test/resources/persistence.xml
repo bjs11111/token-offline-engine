@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+	version="1.0">
+	<persistence-unit name="test-offline-engine-persistence-unit">
+		<!--provider>org.hibernate.ejb.HibernatePersistence</provider-->
+		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+		<class>com.starnberger.tokenofflineengine.model.TokenModel</class>
+		<class>com.starnberger.tokenofflineengine.model.Token</class>
+		<class>com.starnberger.tokenofflineengine.model.TokenConfiguration</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorType</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorData</class>
+		<class>com.starnberger.tokenofflineengine.model.GatewayConfiguration</class>
+		<class>com.starnberger.tokenofflineengine.model.Gateway</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorConfiguration</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorConfigParameter</class>
+		<class>com.starnberger.tokenofflineengine.model.SensorConfigValue</class>
+		<class>com.starnberger.tokenofflineengine.model.Task</class>
+		<class>com.starnberger.tokenofflineengine.model.TokenEntity</class>
+		<class>com.starnberger.tokenofflineengine.model.SyncEntity</class>		
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="datanucleus.NontransactionalRead" value="true" />
+			<property name="datanucleus.NontransactionalWrite" value="true" />
+			<property name="datanucleus.singletonEMFForName" value="true" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:/home/protoss78/git/token-offline-engine/src/test/resources/test.mv.db"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.user" value=""/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="datanucleus.autoCreateTables" value="true"/>
+            <property name="datanucleus.generateSchema.database.mode" value="drop-and-create" />
+		</properties>
+	</persistence-unit>
+</persistence>
