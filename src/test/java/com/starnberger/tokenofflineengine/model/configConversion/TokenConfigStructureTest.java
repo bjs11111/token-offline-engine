@@ -57,7 +57,7 @@ public class TokenConfigStructureTest {
 	@Test
 	public void testToByteArray() {
 		Token token = TokenManager.getInstance().findByMac("CA:FF:E0:0C:AF:FE");
-		TokenConfiguration config = TokenConfigurationManager.getInstance().findById(1L);
+		TokenConfiguration config = TokenConfigurationManager.getInstance().findByRemoteId(5603111255146496L);
 		byte[] byteArray =TokenConfigurationManager.getInstance().generateByteArrayFromConfig(config, token);
 		System.out.println(Hex.encodeHexString(byteArray));
 		assertEquals(165, byteArray.length);

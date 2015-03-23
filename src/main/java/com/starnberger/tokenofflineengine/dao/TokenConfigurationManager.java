@@ -105,9 +105,7 @@ public class TokenConfigurationManager {
 					SensorConfigValue configValue = SensorConfigValueManager.getInstance().findByRemoteId(valueId);
 					sensorConfigValues.put(configValue.getConfigKey(), configValue);
 				}
-				String sensorPosition = TokenModelManager.getInstance().getSensorPosition(token.getModel(),
-						sensorConfiguration.getSensorTypeKey());
-				sensorConfigValuesPerPosition.put(sensorPosition, sensorConfigValues);
+				sensorConfigValuesPerPosition.put(sensorConfiguration.getPosition(), sensorConfigValues);
 			}
 		}
 		return sensorConfigValuesPerPosition;
