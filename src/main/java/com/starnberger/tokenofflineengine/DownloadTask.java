@@ -117,18 +117,15 @@ public class DownloadTask extends AbstractTask implements ITask {
 				+ entity.getState());
 		switch (entity.getState()) {
 		case CREATED:
-			entity.setRemoteId(entity.getId());
-			em.persist(entity);
+			storeNewEntity(em, entity);
 			break;
 		case UPDATED:
 			SyncEntity foundEntity = findWebKey(em, entity);
 			if (foundEntity == null) {
-				System.out.print("Entity to update was not found. Persisting instead!");
-				em.persist(entity);
+				storeNewEntity(em, entity);
 			} else {
 				foundEntity.copyValues(entity);
-				SyncEntity updated = em.merge(foundEntity);
-				System.out.println("Entity was updated. Old id " + foundEntity.getId() + " new id " + updated.getId());
+				em.merge(foundEntity);
 			}
 			break;
 		case DELETED:
@@ -139,6 +136,15 @@ public class DownloadTask extends AbstractTask implements ITask {
 			break;
 		}
 		return true;
+	}
+
+	/**
+	 * @param em
+	 * @param entity
+	 */
+	private void storeNewEntity(EntityManager em, SyncEntity entity) {
+		entity.setRemoteId(entity.getId());
+		em.persist(entity);
 	}
 
 	/**
