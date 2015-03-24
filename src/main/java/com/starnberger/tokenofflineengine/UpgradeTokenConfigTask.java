@@ -5,6 +5,9 @@ package com.starnberger.tokenofflineengine;
 
 import java.util.List;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -13,8 +16,10 @@ import org.apache.logging.log4j.Logger;
 import com.starnberger.tokenengine.connector.bluez.BluezConnector;
 import com.starnberger.tokenengine.connector.controller.WriteConfigurationController;
 import com.starnberger.tokenofflineengine.common.Status;
+import com.starnberger.tokenofflineengine.dao.GatewayManager;
 import com.starnberger.tokenofflineengine.dao.TokenConfigurationManager;
 import com.starnberger.tokenofflineengine.dao.TokenManager;
+import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.Task;
 import com.starnberger.tokenofflineengine.model.Token;
 import com.starnberger.tokenofflineengine.model.TokenConfiguration;
@@ -25,7 +30,9 @@ import com.starnberger.tokenofflineengine.model.TokenConfiguration;
  */
 public class UpgradeTokenConfigTask extends AbstractTask {
 	private static final String CONFIG_UPGRADE_FLAG = "2b40";
+	private static final String UPLOAD_URL = GatewayInfo.SERVER_URL + "tokens/configUpgraded";
 	private static final Logger logger = LogManager.getLogger(UpgradeTokenConfigTask.class.getName());
+
 	private final BluezConnector connector;
 	private final Main owner;
 
@@ -47,7 +54,7 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 	 */
 	@Override
 	public boolean execute() {
-		logger.info("Upgrading token id " + task.getRelatedId()+" mac " + task.getParameters().get(0));
+		logger.info("Upgrading token id " + task.getRelatedId() + " mac " + task.getParameters().get(0));
 		Long relatedId = task.getRelatedId();
 		final Token token = TokenManager.getInstance().findByRemoteId(relatedId);
 		if (token == null) {
@@ -95,10 +102,24 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 						TokenManager.getInstance().markTokenConfigUpgradeDone(token);
 						updateTask(Status.COMPLETED);
 						owner.upgradeTokenDone(true, task);
+						reportTokenAsUpgraded(token);
 					}
 
 				});
 		return true;
+	}
+
+	/**
+	 * Informs the token engine that the configuration of this token was upgraded successfully.
+	 * @param token
+	 */
+	public void reportTokenAsUpgraded(Token token) {
+		Gateway me = GatewayManager.getInstance().findMe();
+		if (me == null)
+			return;
+		Response response = client.target(UPLOAD_URL).path("/{id}").resolveTemplate("date", token.getRemoteId())
+				.request().put(Entity.text(""));
+		response.close();
 	}
 
 	/*

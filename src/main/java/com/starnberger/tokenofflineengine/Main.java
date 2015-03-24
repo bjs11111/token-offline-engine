@@ -409,6 +409,7 @@ public class Main {
 		configUpgradeTask.setRelatedId(token.getRemoteId());
 		List<String> parameters = new ArrayList<String>();
 		parameters.add(token.getMac());
+		configUpgradeTask.setParameters(parameters);
 		TaskManager.getInstance().persist(configUpgradeTask);
 		tasks.add(configUpgradeTask);
 	}
