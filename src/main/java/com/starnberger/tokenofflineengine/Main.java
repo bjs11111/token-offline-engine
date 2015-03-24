@@ -60,9 +60,7 @@ public class Main {
 			Task uploadTask = new Task();
 			uploadTask.setType(TaskType.UPLOAD);
 			tasks.add(uploadTask);
-			Task downloadTask = new Task();
-			downloadTask.setType(TaskType.DOWNLOAD);
-			tasks.add(downloadTask);
+			addDownloadTask();
 		}
 	};
 	private final Runnable uploadStatusTask = new Runnable() {
@@ -118,16 +116,24 @@ public class Main {
 		logger.info("Performing startup checks");
 		if (!AuthenticationManager.getInstance().isAlreadyRegistered()) {
 			if (AuthenticationManager.getInstance().doRegister()) {
-				Task shutdownTask = new Task();
-				shutdownTask.setType(TaskType.DOWNLOAD);
-				tasks.add(shutdownTask);
+				addDownloadTask();
 			}
+		} else {
+			addDownloadTask();
 		}
 	}
 
 	/**
+	 * Adds a download task to the current task list.
+	 */
+	private void addDownloadTask() {
+		Task downloadTask = new Task();
+		downloadTask.setType(TaskType.DOWNLOAD);
+		tasks.add(downloadTask);
+	}
+
+	/**
 	 * This method does a controlled shutdown of the Token Offline Engine.
-	 * 
 	 * @param doReboot
 	 *            when set to reboot, then a different return code is set and
 	 *            the outer shell script restarts the application
@@ -296,7 +302,9 @@ public class Main {
 	public void upgradeTokenDone(boolean result, Task task) {
 		if (task.getParameters() != null) {
 			String mac = task.getParameters().get(0);
-			upgradeTokens.remove(mac);
+			String removedValue = upgradeTokens.remove(mac);
+			logger.info("Removed mac " + mac + " from currently upgrading tokens list. " + removedValue
+					+ " was actually removed from list.");
 		}
 		logger.info("Token upgrade task execution returned: " + result);
 	}
@@ -361,6 +369,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void shutdownTasks() {
 		logger.info("Shutting down");
 	}
@@ -374,14 +385,7 @@ public class Main {
 			SensorValue sensorValue = (SensorValue) iterator.next();
 			Token token = TokenManager.getInstance().findByMac(sensorValue.mac);
 			if (token != null && token.isNeedsConfigUpdate() && !upgradeTokens.containsKey(sensorValue.mac)) {
-				upgradeTokens.put(sensorValue.mac, sensorValue.mac);
-				Task configUpgradeTask = new Task();
-				configUpgradeTask.setType(TaskType.UPGRADE_TOKEN);
-				configUpgradeTask.setRelatedId(token.getRemoteId());
-				List<String> parameters = new ArrayList<String>();
-				parameters.add(token.getMac());
-				TaskManager.getInstance().persist(configUpgradeTask);
-				tasks.add(configUpgradeTask);
+				addTokenToUpgradeList(sensorValue, token);
 			}
 			try {
 				SensorDataManager.getInstance().addNewRecord(sensorValue);
@@ -391,6 +395,22 @@ public class Main {
 				logger.fatal(e);
 			}
 		}
+	}
+
+	/**
+	 * @param sensorValue
+	 * @param token
+	 */
+	private void addTokenToUpgradeList(SensorValue sensorValue, Token token) {
+		upgradeTokens.put(sensorValue.mac, sensorValue.mac);
+		logger.info("Added mac " + sensorValue.mac + " to list of tokens that are already upgrading.");
+		Task configUpgradeTask = new Task();
+		configUpgradeTask.setType(TaskType.UPGRADE_TOKEN);
+		configUpgradeTask.setRelatedId(token.getRemoteId());
+		List<String> parameters = new ArrayList<String>();
+		parameters.add(token.getMac());
+		TaskManager.getInstance().persist(configUpgradeTask);
+		tasks.add(configUpgradeTask);
 	}
 
 }

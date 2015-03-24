@@ -45,6 +45,7 @@ public class SensorDataManager {
 	 * @param dataRecord
 	 */
 	public void persist(SensorData dataRecord) {
+		logger.info("Storing Sensor Data: " + dataRecord.toString());
 		EntityManager em = EMF.get().createEntityManager();
 		em.getTransaction().begin();
 		em.persist(dataRecord);

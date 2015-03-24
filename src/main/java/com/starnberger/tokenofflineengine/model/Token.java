@@ -20,6 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "Token.lastModifiedByOwner", query = "SELECT t from Token t WHERE t.owner = :owner and t.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Token.lastModified", query = "SELECT t from Token t WHERE t.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Token.deleted", query = "SELECT t from Token t WHERE t.deleted = :isDeleted ORDER BY t.name"),
+		@NamedQuery(name = "Token.findByConfig", query = "SELECT t from Token t WHERE t.deleted = false and t.configId = :configId ORDER BY t.name"),
 		@NamedQuery(name = "Token.findByMac", query = "SELECT t from Token t WHERE t.deleted = false AND t.mac = :mac"),
 		@NamedQuery(name = "Token.findByOwner", query = "SELECT t from Token t WHERE t.deleted = false AND t.owner = :owner"),
 		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.remoteId = :webKey") })

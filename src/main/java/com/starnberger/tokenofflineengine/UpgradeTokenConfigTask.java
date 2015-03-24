@@ -47,6 +47,7 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 	 */
 	@Override
 	public boolean execute() {
+		logger.info("Upgrading token id " + task.getRelatedId()+" mac " + task.getParameters().get(0));
 		Long relatedId = task.getRelatedId();
 		final Token token = TokenManager.getInstance().findByRemoteId(relatedId);
 		if (token == null) {
