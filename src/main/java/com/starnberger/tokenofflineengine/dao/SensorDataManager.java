@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.starnberger.tokenengine.connector.parser.SensorValue;
+import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.SensorData;
 import com.starnberger.tokenofflineengine.model.SensorDataListWrapper;
 import com.starnberger.tokenofflineengine.model.SensorType;
@@ -90,16 +91,17 @@ public class SensorDataManager {
 
 	/**
 	 * @param value
+	 * @param gateway TODO
 	 * @return
 	 * @throws ParseException
 	 * @throws NumberFormatException
 	 */
-	public SensorData addNewRecord(SensorValue value) throws NumberFormatException, ParseException {
+	public SensorData addNewRecord(SensorValue value, Gateway gateway) throws NumberFormatException, ParseException {
 		Double value1 = !value.value1.isEmpty() ? Double.valueOf(value.value1) : null;
 		Double value2 = !value.value2.isEmpty() ? Double.valueOf(value.value2) : null;
 		Double value3 = !value.value3.isEmpty() ? Double.valueOf(value.value3) : null;
 		return addNewRecord(value.mac, getPositionForSensorType(value.sensor), new Date(Long.valueOf(value.timestamp)),
-				value1, value2, value3, value.isAlarm);
+				value1, value2, value3, value.isAlarm, gateway);
 	}
 
 	/**
@@ -146,10 +148,11 @@ public class SensorDataManager {
 	 * @param value2
 	 * @param value3
 	 * @param isAlarm
+	 * @param gateway TODO
 	 * @return
 	 */
 	public SensorData addNewRecord(String mac, String sensorPosition, Date timeStamp, Double value1, Double value2,
-			Double value3, boolean isAlarm) {
+			Double value3, boolean isAlarm, Gateway gateway) {
 		Token token = TokenManager.getInstance().findByMac(mac);
 		SensorType sensorType = null;
 		if (token == null) {
@@ -160,7 +163,8 @@ public class SensorDataManager {
 		}
 		SensorData newRecord = new SensorData();
 		newRecord.setAlarm(isAlarm);
-		newRecord.setGateway(GatewayManager.getMyId());
+		if (gateway != null)
+			newRecord.setGateway(gateway.getRemoteId());
 		if (sensorType != null)
 			newRecord.setSensorType(sensorType.getId());
 		newRecord.setTimestamp(timeStamp);

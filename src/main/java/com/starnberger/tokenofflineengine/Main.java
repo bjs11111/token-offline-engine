@@ -380,6 +380,7 @@ public class Main {
 	 * @param sensorValues
 	 */
 	protected void storeSensorList(SensorList sensorValues) {
+		Gateway gateway = GatewayManager.getInstance().findMe();
 		Iterator<SensorValue> iterator = sensorValues.iterator();
 		while (iterator.hasNext()) {
 			SensorValue sensorValue = (SensorValue) iterator.next();
@@ -388,7 +389,7 @@ public class Main {
 				addTokenToUpgradeList(sensorValue, token);
 			}
 			try {
-				SensorDataManager.getInstance().addNewRecord(sensorValue);
+				SensorDataManager.getInstance().addNewRecord(sensorValue, gateway);
 			} catch (NumberFormatException e) {
 				logger.fatal(e);
 			} catch (ParseException e) {

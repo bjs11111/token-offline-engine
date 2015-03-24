@@ -36,8 +36,11 @@ public class TokenManager {
 	 * @param token
 	 */
 	public void markTokenConfigUpgradeDone(Token token) {
-		token.setNeedsConfigUpdate(false);
-		merge(token);
+		Token latestToken = TokenManager.getInstance().findById(token.getId());
+		if (latestToken == null)
+			return;
+		latestToken.setNeedsConfigUpdate(false);
+		merge(latestToken);
 	}
 
 	/**
