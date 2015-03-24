@@ -17,6 +17,7 @@ import com.starnberger.tokenofflineengine.model.SensorConfigValue;
  *
  */
 public class OrientationSensorStructure extends AbstractSensorStructure {
+	private static final int G_FACTOR = 4096;
 	private Int16 alarmLowX;
 	private Int16 alarmHighX;
 	private Int16 alarmLowY;
@@ -37,12 +38,12 @@ public class OrientationSensorStructure extends AbstractSensorStructure {
 	 */
 	public OrientationSensorStructure(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		alarmLowX = new Int16(getIntValue("sensorOrientationAlarmLowX"));
-		alarmHighX = new Int16(getIntValue("sensorOrientationAlarmHighX"));
-		alarmLowY = new Int16(getIntValue("sensorOrientationAlarmLowY"));
-		alarmHighY = new Int16(getIntValue("sensorOrientationAlarmHighY"));
-		alarmLowZ = new Int16(getIntValue("sensorOrientationAlarmLowZ"));
-		alarmHighZ = new Int16(getIntValue("sensorOrientationAlarmHighZ"));
+		alarmLowX = new Int16(getIntValue("sensorOrientationAlarmLowX") * G_FACTOR);
+		alarmHighX = new Int16(getIntValue("sensorOrientationAlarmHighX") * G_FACTOR);
+		alarmLowY = new Int16(getIntValue("sensorOrientationAlarmLowY") * G_FACTOR);
+		alarmHighY = new Int16(getIntValue("sensorOrientationAlarmHighY") * G_FACTOR);
+		alarmLowZ = new Int16(getIntValue("sensorOrientationAlarmLowZ") * G_FACTOR);
+		alarmHighZ = new Int16(getIntValue("sensorOrientationAlarmHighZ") * G_FACTOR);
 		alarmInside = new UInt8(getBooleanValue("sensorOrientationAlarmInside"));
 		samplingFrequency = new UInt8(getIntValue("sensorOrientationSemplingFrequency"));
 		cutOffHpLpFrequency = new UInt8(getIntValue("sensorOrientationCutOffHpLpFrequency"));

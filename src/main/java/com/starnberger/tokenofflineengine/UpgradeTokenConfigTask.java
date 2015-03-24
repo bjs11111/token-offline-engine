@@ -27,14 +27,17 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 	private static final String CONFIG_UPGRADE_FLAG = "2b40";
 	private static final Logger logger = LogManager.getLogger(UpgradeTokenConfigTask.class.getName());
 	private final BluezConnector connector;
+	private final Main owner;
 
 	/**
 	 * @param task
 	 * @param connector
+	 * @param owner
 	 */
-	public UpgradeTokenConfigTask(Task task, BluezConnector connector) {
+	public UpgradeTokenConfigTask(Task task, BluezConnector connector, Main owner) {
 		super(task);
 		this.connector = connector;
+		this.owner = owner;
 	}
 
 	/*
@@ -74,6 +77,8 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 					@Override
 					public void onFailed(String msg, Exception e) {
 						logger.error("failed to write " + msg, e);
+						owner.registerBroadcastListener();
+						owner.upgradeTokenDone(false, task);
 					}
 
 					@Override
@@ -85,8 +90,10 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 					@Override
 					public void onSuccess(String address, int bytesWritten) {
 						logger.info("written to " + " written: " + bytesWritten + " bytes");
+						owner.registerBroadcastListener();
 						TokenManager.getInstance().markTokenConfigUpgradeDone(token);
 						updateTask(Status.COMPLETED);
+						owner.upgradeTokenDone(true, task);
 					}
 
 				});

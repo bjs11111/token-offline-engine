@@ -51,6 +51,7 @@ public class BleGeneral {
 		byte[] result = ArrayUtils.add(advertising, bondableByteValue);
 		result = ArrayUtils.add(result, powerByte);
 		result = ArrayUtils.add(result, alwaysByteValue);
+		result = ArrayUtils.add(result, (byte) 255);
 		return result;
 	}
 }

@@ -18,21 +18,21 @@ import com.starnberger.tokenofflineengine.model.SensorConfigValue;
  *
  */
 public class TemperatureSensorStructure extends AbstractSensorStructure {
-	private Int16 alarmLow;															//0
-	private Int16 alarmHigh;														//2
-	private Int8 alarmInside;														//4
-	private UInt8 oversamplingMode;											//5
-	private SensorCommon common;									//6, size 2
-	private PeriodicSensorCommon commonPeriodic;	//8, size 3
-	private EventSensorCommon commonEvent;				//11, size 6
+	private Int16 alarmLow;													
+	private Int16 alarmHigh;												
+	private Int8 alarmInside;												
+	private UInt8 oversamplingMode;											
+	private SensorCommon common;								
+	private PeriodicSensorCommon commonPeriodic;	
+	private EventSensorCommon commonEvent;	
 
 	/**
 	 * @param configValues
 	 */
 	public TemperatureSensorStructure(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		alarmLow = new Int16(getIntValue("sensorTemperatureAlarmLow"));
-		alarmHigh = new Int16(getIntValue("sensorTemperatureAlarmHigh"));
+		alarmLow = new Int16(getIntValue("sensorTemperatureAlarmLow") * 100);
+		alarmHigh = new Int16(getIntValue("sensorTemperatureAlarmHigh") * 100);
 		alarmInside = new Int8(getBooleanValue("sensorTemperatureAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorTemperatureOversamplingMode"));
 		common = new SensorCommon(configValues);
@@ -49,6 +49,7 @@ public class TemperatureSensorStructure extends AbstractSensorStructure {
 		result = ArrayUtils.add(result, oversamplingMode.byteValue());
 		result = ArrayUtils.addAll(result, common.toByteArray(isBigEndian));
 		result = ArrayUtils.addAll(result, commonPeriodic.toByteArray(isBigEndian));
+		result = ArrayUtils.add(result, (byte) 255);
 		result = ArrayUtils.addAll(result, commonEvent.toByteArray(isBigEndian));
 		return result;
 	}

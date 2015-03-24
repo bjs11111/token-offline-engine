@@ -31,8 +31,8 @@ public class PressureSensorStructure extends AbstractSensorStructure {
 	 */
 	public PressureSensorStructure(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		alarmLow = new UInt32(getIntValue("sensorPressureAlarmLow"));
-		alarmHigh = new UInt32(getIntValue("sensorPressureAlarmHigh"));
+		alarmLow = new UInt32(getIntValue("sensorPressureAlarmLow") * 100);
+		alarmHigh = new UInt32(getIntValue("sensorPressureAlarmHigh") * 100);
 		alarmInside = new Int8(getBooleanValue("sensorPressureAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorPressureOversamplingMode"));
 		common = new SensorCommon(configValues);
@@ -49,7 +49,10 @@ public class PressureSensorStructure extends AbstractSensorStructure {
 		result = ArrayUtils.add(result, oversamplingMode.byteValue());
 		result = ArrayUtils.addAll(result, common.toByteArray(isBigEndian));
 		result = ArrayUtils.addAll(result, commonPeriodic.toByteArray(isBigEndian));
+		result = ArrayUtils.add(result, (byte) 255);
 		result = ArrayUtils.addAll(result, commonEvent.toByteArray(isBigEndian));
+		result = ArrayUtils.add(result, (byte) 255);
+		result = ArrayUtils.add(result, (byte) 255);
 		return result;
 	}
 }

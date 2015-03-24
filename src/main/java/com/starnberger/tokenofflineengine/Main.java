@@ -4,9 +4,11 @@
 package com.starnberger.tokenofflineengine;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -44,6 +46,13 @@ public class Main {
 	private LinkedBlockingQueue<Task> tasks = new LinkedBlockingQueue<Task>();
 	private GatewayConfiguration config = null;
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+	private final AdvertisingPackageParser listener = new AdvertisingPackageParser() {
+
+		@Override
+		public void onSuccessfullyParsed(SensorList sensorValues) {
+			storeSensorList(sensorValues);
+		}
+	};
 	private final Runnable addSyncTask = new Runnable() {
 
 		@Override
@@ -154,16 +163,16 @@ public class Main {
 	 * Registers a generic broadcast listener that immediately stores the
 	 * received sensor values.
 	 */
-	private void registerBroadcastListener() {
-		AdvertisingPackageParser listener = new AdvertisingPackageParser() {
-
-			@Override
-			public void onSuccessfullyParsed(SensorList sensorValues) {
-				storeSensorList(sensorValues);
-			}
-		};
+	public void registerBroadcastListener() {
 		listener.notifyAfterAmountOfValues = 10;
 		connector.registerAdvertisingListener(listener);
+	}
+
+	/**
+	 * 
+	 */
+	private void stopBroadcastListener() {
+		connector.deregisterAdvertisingListener(listener);
 	}
 
 	/**
@@ -275,8 +284,20 @@ public class Main {
 	 */
 	private void upgradeToken(Task task) {
 		logger.info("Starting token upgrade");
-		UpgradeTokenConfigTask upgradeTokenConfigTask = new UpgradeTokenConfigTask(task, connector);
-		boolean result = upgradeTokenConfigTask.execute();
+		UpgradeTokenConfigTask upgradeTokenConfigTask = new UpgradeTokenConfigTask(task, connector, this);
+		stopBroadcastListener();
+		upgradeTokenConfigTask.execute();
+	}
+
+	/**
+	 * @param result
+	 * @param task
+	 */
+	public void upgradeTokenDone(boolean result, Task task) {
+		if (task.getParameters() != null) {
+			String mac = task.getParameters().get(0);
+			upgradeTokens.remove(mac);
+		}
 		logger.info("Token upgrade task execution returned: " + result);
 	}
 
@@ -332,7 +353,8 @@ public class Main {
 		Gateway findMe = GatewayManager.getInstance().findMe();
 		if (findMe == null || findMe.getGatewayConfigKey() == null)
 			return;
-		GatewayConfiguration config = GatewayConfigurationManager.getInstance().findByRemoteId(findMe.getGatewayConfigKey());
+		GatewayConfiguration config = GatewayConfigurationManager.getInstance().findByRemoteId(
+				findMe.getGatewayConfigKey());
 		if (config != null) {
 			this.config = config;
 			prepareScheduledTasks();
@@ -356,6 +378,8 @@ public class Main {
 				Task configUpgradeTask = new Task();
 				configUpgradeTask.setType(TaskType.UPGRADE_TOKEN);
 				configUpgradeTask.setRelatedId(token.getRemoteId());
+				List<String> parameters = new ArrayList<String>();
+				parameters.add(token.getMac());
 				TaskManager.getInstance().persist(configUpgradeTask);
 				tasks.add(configUpgradeTask);
 			}

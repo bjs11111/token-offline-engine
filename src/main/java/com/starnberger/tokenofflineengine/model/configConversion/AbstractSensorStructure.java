@@ -36,7 +36,7 @@ public abstract class AbstractSensorStructure {
 			String value = sensorConfigValue.getValue();
 			if (value == null || value.isEmpty())
 				return 0;
-			if (Boolean.parseBoolean(value) == true)
+			if (Boolean.parseBoolean(value) == true || "1".equals(value))
 				return 1;
 		}
 		return 0;

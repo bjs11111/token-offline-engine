@@ -33,8 +33,8 @@ public class HumiditySensorStructure extends AbstractSensorStructure {
 	 */
 	public HumiditySensorStructure(Map<String, SensorConfigValue> configValues) {
 		super(configValues);
-		alarmLow = new UInt16(getIntValue("sensorHumidityAlarmLow"));
-		alarmHigh = new UInt16(getIntValue("sensorHumidityAlarmHigh"));
+		alarmLow = new UInt16(getIntValue("sensorHumidityAlarmLow") * 100);
+		alarmHigh = new UInt16(getIntValue("sensorHumidityAlarmHigh") * 100);
 		alarmInside = new Int8(getBooleanValue("sensorHumidityAlarmInside"));
 		oversamplingMode = new UInt8(getIntValue("sensorHumidityOversamplingMode"));
 		standbyTime = new UInt8(getIntValue("sensorHumidityStandbyTime"));
@@ -55,6 +55,7 @@ public class HumiditySensorStructure extends AbstractSensorStructure {
 		result = ArrayUtils.add(result, iirFilter.byteValue());
 		result = ArrayUtils.addAll(result, common.toByteArray(isBigEndian));
 		result = ArrayUtils.addAll(result, commonPeriodic.toByteArray(isBigEndian));
+		result = ArrayUtils.add(result, (byte) 255);
 		result = ArrayUtils.addAll(result, commonEvent.toByteArray(isBigEndian));
 		return result;
 	}

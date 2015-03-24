@@ -35,6 +35,7 @@ public class PIRSensorStructure extends AbstractSensorStructure {
 		byte[] result = ArrayUtils.EMPTY_BYTE_ARRAY;
 		result = ArrayUtils.add(result, sensorPresenceTimeout.byteValue());
 		result = ArrayUtils.addAll(result, common.toByteArray(isBigEndian));
+		result = ArrayUtils.add(result, (byte) 255);
 		result = ArrayUtils.addAll(result, commonEvent.toByteArray(isBigEndian));
 		return result;
 	}
