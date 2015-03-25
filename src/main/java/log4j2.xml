@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<Appenders>
+		<!-- By default => console -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="error">
+			<AppenderRef ref="Console" />
+		</Root>
+		<Logger name="com.starnberger.tokenengine.connector.parser.AdvertisingPackageParser" level="info">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="com.starnberger.tokenofflineengine.Main" level="info">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="com.starnberger.tokenofflineengine.UpgradeTokenConfigTask" level="info">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="com.starnberger.tokenofflineengine.SensorDataManager" level="info">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="org.datanucleus" level="error" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+	</Loggers>
+</Configuration>

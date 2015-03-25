@@ -8,8 +8,6 @@ import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,9 +74,6 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 		updateTask(Status.IN_PROGRESS);
 		byte[] configurationArray = TokenConfigurationManager.getInstance().generateByteArrayFromConfig(configuration,
 				token);
-		System.out.println("Byte array length: " + configurationArray.length);
-		System.out.println("HEX Byte Array: " + Hex.encodeHexString(configurationArray));
-		System.out.println("Byte Array: " + ArrayUtils.toString(configurationArray));
 		connector.writeService(token.getMac(), CONFIG_UPGRADE_FLAG,
 				new WriteConfigurationController(configurationArray) {
 
@@ -91,18 +86,27 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 
 					@Override
 					public void onSuccessPartMessage(String address, byte[] writeData, int bytesWritten) {
-						// TODO Auto-generated method stub
-
+						logger.info("written to address " + address + " data: " + writeData +". " + bytesWritten + " bytes written");
 					}
 
 					@Override
 					public void onSuccess(String address, int bytesWritten) {
 						logger.info("written to " + " written: " + bytesWritten + " bytes");
-						owner.registerBroadcastListener();
-						TokenManager.getInstance().markTokenConfigUpgradeDone(token);
-						updateTask(Status.COMPLETED);
-						owner.upgradeTokenDone(true, task);
-						reportTokenAsUpgraded(token);
+						try {
+							owner.registerBroadcastListener();
+							TokenManager.getInstance().markTokenConfigUpgradeDone(token);
+							reportTokenAsUpgraded(token);
+							updateTask(Status.COMPLETED);
+							owner.upgradeTokenDone(true, task);
+						}
+						catch (RuntimeException e) {
+							logger.fatal(e);
+							owner.registerBroadcastListener();
+						}
+						catch (Exception e) {
+							logger.fatal(e);
+							owner.registerBroadcastListener();
+						}
 					}
 
 				});
@@ -110,7 +114,9 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 	}
 
 	/**
-	 * Informs the token engine that the configuration of this token was upgraded successfully.
+	 * Informs the token engine that the configuration of this token was
+	 * upgraded successfully.
+	 * 
 	 * @param token
 	 */
 	public void reportTokenAsUpgraded(Token token) {

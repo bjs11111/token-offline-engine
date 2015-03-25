@@ -100,8 +100,9 @@ public class SensorDataManager {
 		Double value1 = !value.value1.isEmpty() ? Double.valueOf(value.value1) : null;
 		Double value2 = !value.value2.isEmpty() ? Double.valueOf(value.value2) : null;
 		Double value3 = !value.value3.isEmpty() ? Double.valueOf(value.value3) : null;
+		boolean isBattery = value.sensor == com.starnberger.tokenengine.connector.parser.SensorValue.SensorType.BATT;
 		return addNewRecord(value.mac, getPositionForSensorType(value.sensor), new Date(Long.valueOf(value.timestamp)),
-				value1, value2, value3, value.isAlarm, gateway);
+				value1, value2, value3, value.isAlarm, gateway, isBattery);
 	}
 
 	/**
@@ -149,30 +150,35 @@ public class SensorDataManager {
 	 * @param value3
 	 * @param isAlarm
 	 * @param gateway TODO
+	 * @param isBattery TODO
 	 * @return
 	 */
 	public SensorData addNewRecord(String mac, String sensorPosition, Date timeStamp, Double value1, Double value2,
-			Double value3, boolean isAlarm, Gateway gateway) {
+			Double value3, boolean isAlarm, Gateway gateway, boolean isBattery) {
 		Token token = TokenManager.getInstance().findByMac(mac);
 		SensorType sensorType = null;
 		if (token == null) {
-			logger.fatal("Token with mac address " + mac + " not found. Value not stored.");
 			return null;
-		} else {
+		} else if (!isBattery) {
 			sensorType = TokenModelManager.getInstance().findSensorTypeByPosition(token.getModel(), sensorPosition);
 		}
 		SensorData newRecord = new SensorData();
 		newRecord.setAlarm(isAlarm);
-		if (gateway != null)
-			newRecord.setGateway(gateway.getRemoteId());
 		if (sensorType != null)
 			newRecord.setSensorType(sensorType.getRemoteId());
+		// Skip record creation if sensor type is unknown. SensorType = null is used for battery information
+		else if (!isBattery)
+			return  null;
+		if (gateway != null)
+			newRecord.setGateway(gateway.getRemoteId());
+		
 		newRecord.setTimestamp(timeStamp);
 		if (token != null)
 			newRecord.setToken(token.getRemoteId());
 		newRecord.setValue1(value1);
 		newRecord.setValue2(value2);
 		newRecord.setValue3(value3);
+		logger.info("Adding SensorData value: " + newRecord.toString());
 		persist(newRecord);
 		return newRecord;
 	}

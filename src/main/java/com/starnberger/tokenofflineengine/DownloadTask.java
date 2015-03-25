@@ -64,7 +64,10 @@ public class DownloadTask extends AbstractTask implements ITask {
 		if (response.bufferEntity()) {
 			EntityManager em = EMF.get().createEntityManager();
 			SyncData entity = response.readEntity(SyncData.class);
-			System.out.println(entity.toString());
+			if (me.getRemoteId() == null && entity.getGateway().getId() != null) {
+				me.setRemoteId(entity.getGateway().getId());
+				GatewayManager.getInstance().update(me);
+			}
 			// Store all entities
 			em.getTransaction().begin();
 			updateEntities(em, entity.getUpdatedTasks());

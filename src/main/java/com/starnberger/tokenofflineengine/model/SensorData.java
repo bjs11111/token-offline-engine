@@ -20,7 +20,7 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "SensorData.findLastSyncForGateway", query = "SELECT s from SensorData s WHERE s.gateway = :gateway ORDER BY s.timestamp DESC"),
 		@NamedQuery(name = "SensorData.findLastSyncForToken", query = "SELECT s from SensorData s WHERE s.token = :token ORDER BY s.timestamp DESC"),
 		@NamedQuery(name = "SensorData.findDataBySensorTypes", query = "SELECT s from SensorData s WHERE s.sensorType in (:typeList) ORDER BY s.timestamp DESC"),
-		@NamedQuery(name = "SensorData.listDataDescending", query = "SELECT s from SensorData s ORDER BY s.timestamp DESC")})
+		@NamedQuery(name = "SensorData.listDataDescending", query = "SELECT s from SensorData s ORDER BY s.timestamp DESC") })
 public class SensorData extends TokenEntity implements ISensorData {
 
 	/**
@@ -70,24 +70,16 @@ public class SensorData extends TokenEntity implements ISensorData {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (id != null)
-			result += "id: " + id;
-		result += ", version: " + version;
-		if (timestamp != null)
-			result += ", timestamp: " + timestamp;
-		if (sensorType != null)
-			result += ", sensorType: " + sensorType;
-		if (gateway != null)
-			result += ", gateway: " + gateway;
-		result += ", value1: " + value1;
-		result += ", value2: " + value2;
-		result += ", value3: " + value3;
-		if (token != null)
-			result += ", token: " + token;
-		return result;
+		return "SensorData [timestamp=" + timestamp + ", sensorType=" + sensorType + ", gateway=" + gateway
+				+ ", value1=" + value1 + ", value2=" + value2 + ", value3=" + value3 + ", token=" + token
+				+ ", isAlarm=" + isAlarm + "]";
 	}
 
 	/**

@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.starnberger.tokenengine.connector.bluez.BluezConnector;
+import com.starnberger.tokenengine.connector.examples.GatewayExample;
 import com.starnberger.tokenengine.connector.parser.AdvertisingPackageParser;
 import com.starnberger.tokenengine.connector.parser.SensorList;
 import com.starnberger.tokenengine.connector.parser.SensorValue;
@@ -86,7 +87,7 @@ public class Main {
 	private ScheduledFuture<?> statusUpdateFuture;
 	private ScheduledFuture<?> logUploadFuture;
 
-	private final BluezConnector connector = new BluezConnector();
+	private final BluezConnector connector;
 
 	private Map<String, String> upgradeTokens = new HashMap<String, String>();
 
@@ -106,6 +107,8 @@ public class Main {
 	 */
 	public Main() {
 		logger.info("Starting Token Offline Engine Version: " + Version.INSTANCE.getVersion());
+		connector = new BluezConnector();
+		GatewayExample.checkBluetoothDevice(connector, 5);
 	}
 
 	/**
