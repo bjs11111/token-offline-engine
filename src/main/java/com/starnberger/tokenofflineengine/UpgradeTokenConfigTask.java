@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,6 +66,7 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 			updateTask(Status.FAILED);
 			return false;
 		}
+		logger.info("Reading token configuration " + token.getConfigId());
 		TokenConfiguration configuration = TokenConfigurationManager.getInstance().findByRemoteId(token.getConfigId());
 		if (configuration == null) {
 			logger.fatal("TokenConfiguration " + token.getConfigId() + " not found for Token " + token);
@@ -72,40 +74,39 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 			return false;
 		}
 		updateTask(Status.IN_PROGRESS);
+		logger.info("Converting token configuration to byte array ...");
 		byte[] configurationArray = TokenConfigurationManager.getInstance().generateByteArrayFromConfig(configuration,
 				token);
+		logger.info("Token configuration converted: " + Hex.encodeHexString(configurationArray) + " Length: "
+				+ configurationArray.length);
+		logger.info("Starting BlueZ write service ...");
 		connector.writeService(token.getMac(), CONFIG_UPGRADE_FLAG,
 				new WriteConfigurationController(configurationArray) {
 
 					@Override
 					public void onFailed(String msg, Exception e) {
 						logger.error("failed to write " + msg, e);
-						owner.registerBroadcastListener();
 						owner.upgradeTokenDone(false, task);
 					}
 
 					@Override
 					public void onSuccessPartMessage(String address, byte[] writeData, int bytesWritten) {
-						logger.info("written to address " + address + " data: " + writeData +". " + bytesWritten + " bytes written");
+						logger.info("written to address " + address + " data: " + writeData + ". " + bytesWritten
+								+ " bytes written");
 					}
 
 					@Override
 					public void onSuccess(String address, int bytesWritten) {
 						logger.info("written to " + " written: " + bytesWritten + " bytes");
 						try {
-							owner.registerBroadcastListener();
 							TokenManager.getInstance().markTokenConfigUpgradeDone(token);
 							reportTokenAsUpgraded(token);
 							updateTask(Status.COMPLETED);
 							owner.upgradeTokenDone(true, task);
-						}
-						catch (RuntimeException e) {
+						} catch (RuntimeException e) {
 							logger.fatal(e);
-							owner.registerBroadcastListener();
-						}
-						catch (Exception e) {
+						} catch (Exception e) {
 							logger.fatal(e);
-							owner.registerBroadcastListener();
 						}
 					}
 
@@ -126,6 +127,7 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 		login(me);
 		Response response = client.target(UPLOAD_URL).path("/{id}").resolveTemplate("id", token.getRemoteId())
 				.request().put(Entity.text(""));
+		logger.info("Reported token to server as upgraded!. Returned status code: " + response.getStatus());
 		response.close();
 		logout();
 	}

@@ -137,6 +137,7 @@ public class Main {
 
 	/**
 	 * This method does a controlled shutdown of the Token Offline Engine.
+	 * 
 	 * @param doReboot
 	 *            when set to reboot, then a different return code is set and
 	 *            the outer shell script restarts the application
@@ -175,13 +176,6 @@ public class Main {
 	public void registerBroadcastListener() {
 		listener.notifyAfterAmountOfValues = 10;
 		connector.registerAdvertisingListener(listener);
-	}
-
-	/**
-	 * 
-	 */
-	private void stopBroadcastListener() {
-		connector.deregisterAdvertisingListener(listener);
 	}
 
 	/**
@@ -294,7 +288,6 @@ public class Main {
 	private void upgradeToken(Task task) {
 		logger.info("Starting token upgrade");
 		UpgradeTokenConfigTask upgradeTokenConfigTask = new UpgradeTokenConfigTask(task, connector, this);
-		stopBroadcastListener();
 		upgradeTokenConfigTask.execute();
 	}
 
