@@ -166,10 +166,10 @@ public class SensorDataManager {
 		if (gateway != null)
 			newRecord.setGateway(gateway.getRemoteId());
 		if (sensorType != null)
-			newRecord.setSensorType(sensorType.getId());
+			newRecord.setSensorType(sensorType.getRemoteId());
 		newRecord.setTimestamp(timeStamp);
 		if (token != null)
-			newRecord.setToken(token.getId());
+			newRecord.setToken(token.getRemoteId());
 		newRecord.setValue1(value1);
 		newRecord.setValue2(value2);
 		newRecord.setValue3(value3);
