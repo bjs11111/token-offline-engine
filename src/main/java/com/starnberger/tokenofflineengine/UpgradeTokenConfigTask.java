@@ -123,9 +123,11 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 		Gateway me = GatewayManager.getInstance().findMe();
 		if (me == null)
 			return;
+		login(me);
 		Response response = client.target(UPLOAD_URL).path("/{id}").resolveTemplate("id", token.getRemoteId())
 				.request().put(Entity.text(""));
 		response.close();
+		logout();
 	}
 
 	/*

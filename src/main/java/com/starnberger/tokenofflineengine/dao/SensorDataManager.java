@@ -91,7 +91,8 @@ public class SensorDataManager {
 
 	/**
 	 * @param value
-	 * @param gateway TODO
+	 * @param gateway
+	 *            TODO
 	 * @return
 	 * @throws ParseException
 	 * @throws NumberFormatException
@@ -100,9 +101,8 @@ public class SensorDataManager {
 		Double value1 = !value.value1.isEmpty() ? Double.valueOf(value.value1) : null;
 		Double value2 = !value.value2.isEmpty() ? Double.valueOf(value.value2) : null;
 		Double value3 = !value.value3.isEmpty() ? Double.valueOf(value.value3) : null;
-		boolean isBattery = value.sensor == com.starnberger.tokenengine.connector.parser.SensorValue.SensorType.BATT;
 		return addNewRecord(value.mac, getPositionForSensorType(value.sensor), new Date(Long.valueOf(value.timestamp)),
-				value1, value2, value3, value.isAlarm, gateway, isBattery);
+				value1, value2, value3, value.isAlarm, gateway);
 	}
 
 	/**
@@ -149,29 +149,29 @@ public class SensorDataManager {
 	 * @param value2
 	 * @param value3
 	 * @param isAlarm
-	 * @param gateway TODO
-	 * @param isBattery TODO
+	 * @param gateway
 	 * @return
 	 */
 	public SensorData addNewRecord(String mac, String sensorPosition, Date timeStamp, Double value1, Double value2,
-			Double value3, boolean isAlarm, Gateway gateway, boolean isBattery) {
+			Double value3, boolean isAlarm, Gateway gateway) {
 		Token token = TokenManager.getInstance().findByMac(mac);
 		SensorType sensorType = null;
 		if (token == null) {
 			return null;
-		} else if (!isBattery) {
+		} else {
 			sensorType = TokenModelManager.getInstance().findSensorTypeByPosition(token.getModel(), sensorPosition);
 		}
 		SensorData newRecord = new SensorData();
 		newRecord.setAlarm(isAlarm);
 		if (sensorType != null)
 			newRecord.setSensorType(sensorType.getRemoteId());
-		// Skip record creation if sensor type is unknown. SensorType = null is used for battery information
-		else if (!isBattery)
-			return  null;
+		// Skip record creation if sensor type is unknown. SensorType = null is
+		// used for battery information
+		if (sensorType == null && sensorPosition != "A")
+			return null;
 		if (gateway != null)
 			newRecord.setGateway(gateway.getRemoteId());
-		
+
 		newRecord.setTimestamp(timeStamp);
 		if (token != null)
 			newRecord.setToken(token.getRemoteId());
