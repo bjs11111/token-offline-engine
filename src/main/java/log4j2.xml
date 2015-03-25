@@ -11,7 +11,7 @@
 		<Root level="error">
 			<AppenderRef ref="Console" />
 		</Root>
-		<Logger name="com.starnberger.tokenengine.connector.parser.AdvertisingPackageParser" level="info">
+		<Logger name="com.starnberger.tokenengine.connector" level="info">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger name="com.starnberger.tokenofflineengine.Main" level="info">
