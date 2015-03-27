@@ -17,10 +17,12 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "SensorData.findSinceLastSync", query = "SELECT s from SensorData s WHERE s.timestamp >= :lastSync"),
+		@NamedQuery(name = "SensorData.deleteUploadedData", query = "DELETE from SensorData s WHERE s.timestamp < :deleteUntil"),
 		@NamedQuery(name = "SensorData.findLastSyncForGateway", query = "SELECT s from SensorData s WHERE s.gateway = :gateway ORDER BY s.timestamp DESC"),
 		@NamedQuery(name = "SensorData.findLastSyncForToken", query = "SELECT s from SensorData s WHERE s.token = :token ORDER BY s.timestamp DESC"),
 		@NamedQuery(name = "SensorData.findDataBySensorTypes", query = "SELECT s from SensorData s WHERE s.sensorType in (:typeList) ORDER BY s.timestamp DESC"),
-		@NamedQuery(name = "SensorData.listDataDescending", query = "SELECT s from SensorData s ORDER BY s.timestamp DESC") })
+		@NamedQuery(name = "SensorData.listDataDescending", query = "SELECT s from SensorData s ORDER BY s.timestamp DESC"),
+		@NamedQuery(name = "SensorData.listDataForTokenByType", query = "SELECT s from SensorData s WHERE s.token = :token ORDER BY s.timestamp DESC, s.sensorType ASC") })
 public class SensorData extends TokenEntity implements ISensorData {
 
 	/**

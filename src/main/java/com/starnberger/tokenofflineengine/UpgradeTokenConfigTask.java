@@ -29,7 +29,7 @@ import com.starnberger.tokenofflineengine.model.TokenConfiguration;
  */
 public class UpgradeTokenConfigTask extends AbstractTask {
 	private static final String CONFIG_UPGRADE_FLAG = "2b40";
-	private static final String UPLOAD_URL = GatewayInfo.SERVER_URL + "tokens/configUpgraded";
+	private static final String UPLOAD_URL = GatewayInfo.getInstance().getServerUrl() + "tokens/configUpgraded";
 	private static final Logger logger = LogManager.getLogger(UpgradeTokenConfigTask.class.getName());
 
 	private final BluezConnector connector;
@@ -53,7 +53,8 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 	 */
 	@Override
 	public boolean execute() {
-		logger.info("Upgrading token id " + task.getRelatedId() + " mac " + task.getParameters().get(0));
+		if (logger.isInfoEnabled())
+			logger.info("Upgrading token id " + task.getRelatedId() + " mac " + task.getParameters().get(0));
 		Long relatedId = task.getRelatedId();
 		final Token token = TokenManager.getInstance().findByRemoteId(relatedId);
 		if (token == null) {
@@ -66,7 +67,8 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 			updateTask(Status.FAILED);
 			return false;
 		}
-		logger.info("Reading token configuration " + token.getConfigId());
+		if (logger.isInfoEnabled())
+			logger.info("Reading token configuration " + token.getConfigId());
 		TokenConfiguration configuration = TokenConfigurationManager.getInstance().findByRemoteId(token.getConfigId());
 		if (configuration == null) {
 			logger.fatal("TokenConfiguration " + token.getConfigId() + " not found for Token " + token);
@@ -74,12 +76,15 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 			return false;
 		}
 		updateTask(Status.IN_PROGRESS);
-		logger.info("Converting token configuration to byte array ...");
+		if (logger.isInfoEnabled())
+			logger.info("Converting token configuration to byte array ...");
 		byte[] configurationArray = TokenConfigurationManager.getInstance().generateByteArrayFromConfig(configuration,
 				token);
-		logger.info("Token configuration converted: " + Hex.encodeHexString(configurationArray) + " Length: "
-				+ configurationArray.length);
-		logger.info("Starting BlueZ write service ...");
+		if (logger.isInfoEnabled())
+			logger.info("Token configuration converted: " + Hex.encodeHexString(configurationArray) + " Length: "
+					+ configurationArray.length);
+		if (logger.isInfoEnabled())
+			logger.info("Starting BlueZ write service ...");
 		connector.writeService(token.getMac(), CONFIG_UPGRADE_FLAG,
 				new WriteConfigurationController(configurationArray) {
 
@@ -91,13 +96,15 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 
 					@Override
 					public void onSuccessPartMessage(String address, byte[] writeData, int bytesWritten) {
-						logger.info("written to address " + address + " data: " + writeData + ". " + bytesWritten
-								+ " bytes written");
+						if (logger.isInfoEnabled())
+							logger.info("written to address " + address + " data: " + writeData + ". " + bytesWritten
+									+ " bytes written");
 					}
 
 					@Override
 					public void onSuccess(String address, int bytesWritten) {
-						logger.info("written to " + " written: " + bytesWritten + " bytes");
+						if (logger.isInfoEnabled())
+							logger.info("written to " + " written: " + bytesWritten + " bytes");
 						try {
 							TokenManager.getInstance().markTokenConfigUpgradeDone(token);
 							reportTokenAsUpgraded(token);
@@ -127,7 +134,8 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 		login(me);
 		Response response = client.target(UPLOAD_URL).path("/{id}").resolveTemplate("id", token.getRemoteId())
 				.request().put(Entity.text(""));
-		logger.info("Reported token to server as upgraded!. Returned status code: " + response.getStatus());
+		if (logger.isInfoEnabled())
+			logger.info("Reported token to server as upgraded!. Returned status code: " + response.getStatus());
 		response.close();
 		logout();
 	}

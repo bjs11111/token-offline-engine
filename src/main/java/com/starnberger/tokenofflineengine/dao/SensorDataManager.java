@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
@@ -15,11 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.starnberger.tokenengine.connector.parser.SensorValue;
-import com.starnberger.tokenofflineengine.model.Gateway;
+import com.starnberger.tokenofflineengine.TokenInfoStructure;
 import com.starnberger.tokenofflineengine.model.SensorData;
 import com.starnberger.tokenofflineengine.model.SensorDataListWrapper;
-import com.starnberger.tokenofflineengine.model.SensorType;
-import com.starnberger.tokenofflineengine.model.Token;
 
 /**
  * @author Roman Kaufmann
@@ -43,15 +42,18 @@ public class SensorDataManager {
 	}
 
 	/**
+	 * @param em
+	 *            TODO
 	 * @param dataRecord
 	 */
-	public void persist(SensorData dataRecord) {
-		logger.info("Storing Sensor Data: " + dataRecord.toString());
-		EntityManager em = EMF.get().createEntityManager();
-		em.getTransaction().begin();
+	public void persist(EntityManager em, SensorData dataRecord) {
+		/*if (logger.isInfoEnabled())
+			logger.info("Storing Sensor Data: " + dataRecord.toString());*/
+		// EntityManager em = EMF.get().createEntityManager();
+		// em.getTransaction().begin();
 		em.persist(dataRecord);
-		em.getTransaction().commit();
-		em.close();
+		// em.getTransaction().commit();
+		// em.close();
 	}
 
 	/**
@@ -90,19 +92,22 @@ public class SensorDataManager {
 	}
 
 	/**
-	 * @param value
-	 * @param gateway
+	 * @param em
 	 *            TODO
+	 * @param value
+	 * @param gatewayId
+	 * @param tokenInfo
 	 * @return
 	 * @throws ParseException
 	 * @throws NumberFormatException
 	 */
-	public SensorData addNewRecord(SensorValue value, Gateway gateway) throws NumberFormatException, ParseException {
+	public SensorData addNewRecord(EntityManager em, SensorValue value, Long gatewayId, TokenInfoStructure tokenInfo)
+			throws NumberFormatException, ParseException {
 		Double value1 = !value.value1.isEmpty() ? Double.valueOf(value.value1) : null;
 		Double value2 = !value.value2.isEmpty() ? Double.valueOf(value.value2) : null;
 		Double value3 = !value.value3.isEmpty() ? Double.valueOf(value.value3) : null;
-		return addNewRecord(value.mac, getPositionForSensorType(value.sensor), new Date(Long.valueOf(value.timestamp)),
-				value1, value2, value3, value.isAlarm, gateway);
+		return addNewRecord(em, value.mac, getPositionForSensorType(value.sensor),
+				new Date(Long.valueOf(value.timestamp)), value1, value2, value3, value.isAlarm, gatewayId, tokenInfo);
 	}
 
 	/**
@@ -142,6 +147,8 @@ public class SensorDataManager {
 	/**
 	 * Adds a new
 	 * 
+	 * @param em
+	 *            TODO
 	 * @param mac
 	 * @param sensorPosition
 	 * @param timeStamp
@@ -149,37 +156,28 @@ public class SensorDataManager {
 	 * @param value2
 	 * @param value3
 	 * @param isAlarm
-	 * @param gateway
+	 * @param gatewayId
+	 * @param tokenInfo
+	 * 
 	 * @return
 	 */
-	public SensorData addNewRecord(String mac, String sensorPosition, Date timeStamp, Double value1, Double value2,
-			Double value3, boolean isAlarm, Gateway gateway) {
-		Token token = TokenManager.getInstance().findByMac(mac);
-		SensorType sensorType = null;
-		if (token == null) {
-			return null;
-		} else {
-			sensorType = TokenModelManager.getInstance().findSensorTypeByPosition(token.getModel(), sensorPosition);
-		}
+	public SensorData addNewRecord(EntityManager em, String mac, String sensorPosition, Date timeStamp, Double value1,
+			Double value2, Double value3, boolean isAlarm, Long gatewayId, TokenInfoStructure tokenInfo) {
 		SensorData newRecord = new SensorData();
 		newRecord.setAlarm(isAlarm);
-		if (sensorType != null)
-			newRecord.setSensorType(sensorType.getRemoteId());
-		// Skip record creation if sensor type is unknown. SensorType = null is
-		// used for battery information
-		if (sensorType == null && sensorPosition != "A")
-			return null;
-		if (gateway != null)
-			newRecord.setGateway(gateway.getRemoteId());
-
+		if (tokenInfo != null) {
+			newRecord.setSensorType(tokenInfo.getSensorTypeForPosition(sensorPosition));
+			if (tokenInfo.token != null)
+				newRecord.setToken(tokenInfo.token.getRemoteId());
+		}
+		newRecord.setGateway(gatewayId);
 		newRecord.setTimestamp(timeStamp);
-		if (token != null)
-			newRecord.setToken(token.getRemoteId());
 		newRecord.setValue1(value1);
 		newRecord.setValue2(value2);
 		newRecord.setValue3(value3);
-		logger.info("Adding SensorData value: " + newRecord.toString());
-		persist(newRecord);
+		/*if (logger.isInfoEnabled())
+			logger.info("Adding SensorData value: " + newRecord.toString());*/
+		persist(em, newRecord);
 		return newRecord;
 	}
 
@@ -199,5 +197,22 @@ public class SensorDataManager {
 			wrapper.setList(resultList);
 		em.close();
 		return wrapper;
+	}
+	
+	/**
+	 * @param deleteUntil
+	 * @return
+	 */
+	public int deleteUploadedSensorData(Date deleteUntil) {
+		if (deleteUntil == null)
+			return 0;
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
+		Query deleteQuery = em.createNamedQuery("SensorData.deleteUploadedData");
+		deleteQuery.setParameter("deleteUntil", deleteUntil);
+		int result = deleteQuery.executeUpdate();
+		em.getTransaction().commit();
+		em.close();
+		return result;
 	}
 }

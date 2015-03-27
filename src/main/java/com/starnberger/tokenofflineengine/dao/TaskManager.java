@@ -54,4 +54,14 @@ public class TaskManager {
 		em.close();
 		return updated;
 	}
+	
+	
+	/**
+	 * @param em
+	 * @param task
+	 * @return
+	 */
+	public Task update(EntityManager em, Task task) {
+		return em.merge(task);
+	}
 }

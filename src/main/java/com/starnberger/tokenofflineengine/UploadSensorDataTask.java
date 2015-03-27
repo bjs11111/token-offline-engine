@@ -22,7 +22,7 @@ import com.starnberger.tokenofflineengine.model.Task;
  *
  */
 public class UploadSensorDataTask extends AbstractTask {
-	private static final String UPLOAD_URL = GatewayInfo.SERVER_URL + "sensordata/upload";
+	private static final String UPLOAD_URL = GatewayInfo.getInstance().getServerUrl() + "sensordata/upload";
 
 	/**
 	 * Default constructor.
@@ -40,6 +40,7 @@ public class UploadSensorDataTask extends AbstractTask {
 	 */
 	@Override
 	public boolean execute() {
+		Date deleteTimeStamp = new Date();
 		Gateway me = GatewayManager.getInstance().findMe();
 		if (me == null)
 			return false;
@@ -58,6 +59,7 @@ public class UploadSensorDataTask extends AbstractTask {
 		}
 		logout();
 		updateTask(Status.COMPLETED);
+		SensorDataManager.getInstance().deleteUploadedSensorData(deleteTimeStamp);
 		return true;
 	}
 

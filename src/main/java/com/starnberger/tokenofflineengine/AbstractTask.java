@@ -3,6 +3,7 @@ package com.starnberger.tokenofflineengine;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityManager;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -25,8 +26,8 @@ import com.starnberger.tokenofflineengine.model.Task;
  */
 public abstract class AbstractTask implements ITask {
 
-	private static final String LOGIN_URL = GatewayInfo.SERVER_URL + "auth/login";
-	private static final String LOGOUT_URL = GatewayInfo.SERVER_URL + "auth/logout";
+	private static final String LOGIN_URL = GatewayInfo.getInstance().getServerUrl() + "auth/login";
+	private static final String LOGOUT_URL = GatewayInfo.getInstance().getServerUrl() + "auth/logout";
 	protected final Client client;
 	protected final Task task;
 
@@ -81,6 +82,18 @@ public abstract class AbstractTask implements ITask {
 			task.setCompleted(new Date());
 		task.setStatus(newStatus);
 		TaskManager.getInstance().update(task);
+	}
+	
+	
+	/**
+	 * @param em
+	 * @param newStatus
+	 */
+	protected void updateTask(EntityManager em, Status newStatus) {
+		if (newStatus == Status.COMPLETED)
+			task.setCompleted(new Date());
+		task.setStatus(newStatus);
+		TaskManager.getInstance().update(em, task);
 	}
 
 	@Override

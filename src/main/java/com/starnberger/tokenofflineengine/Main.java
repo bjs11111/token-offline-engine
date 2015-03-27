@@ -16,6 +16,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.EntityManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,11 +28,11 @@ import com.starnberger.tokenengine.connector.parser.SensorList;
 import com.starnberger.tokenengine.connector.parser.SensorValue;
 import com.starnberger.tokenofflineengine.common.TaskType;
 import com.starnberger.tokenofflineengine.dao.AuthenticationManager;
+import com.starnberger.tokenofflineengine.dao.EMF;
 import com.starnberger.tokenofflineengine.dao.GatewayConfigurationManager;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
 import com.starnberger.tokenofflineengine.dao.SensorDataManager;
 import com.starnberger.tokenofflineengine.dao.TaskManager;
-import com.starnberger.tokenofflineengine.dao.TokenManager;
 import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.GatewayConfiguration;
 import com.starnberger.tokenofflineengine.model.Task;
@@ -46,6 +48,7 @@ public class Main {
 
 	private LinkedBlockingQueue<Task> tasks = new LinkedBlockingQueue<Task>();
 	private GatewayConfiguration config = null;
+	private TokenInfoCache tokenInfoCache = new TokenInfoCache();
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 	private final AdvertisingPackageParser listener = new AdvertisingPackageParser() {
 
@@ -106,7 +109,9 @@ public class Main {
 	 * Default constructor.
 	 */
 	public Main() {
-		logger.info("Starting Token Offline Engine Version: " + Version.INSTANCE.getVersion());
+		if (logger.isInfoEnabled())
+			if (logger.isInfoEnabled())
+				logger.info("Starting Token Offline Engine Version: " + Version.INSTANCE.getVersion());
 		connector = new BluezConnector();
 		GatewayExample.checkBluetoothDevice(connector, 5);
 	}
@@ -116,7 +121,8 @@ public class Main {
 	 * itself at the token engine.
 	 */
 	private void startUpChecks() {
-		logger.info("Performing startup checks");
+		if (logger.isInfoEnabled())
+			logger.info("Performing startup checks");
 		if (!AuthenticationManager.getInstance().isAlreadyRegistered()) {
 			if (AuthenticationManager.getInstance().doRegister()) {
 				addDownloadTask();
@@ -145,10 +151,12 @@ public class Main {
 	private void doShutDown(boolean doReboot) {
 		shutdownTasks();
 		if (doReboot) {
-			logger.info("Rebooting the system");
+			if (logger.isInfoEnabled())
+				logger.info("Rebooting the system");
 			System.exit(1);
 		}
-		logger.info("Controlled shutdown");
+		if (logger.isInfoEnabled())
+			logger.info("Controlled shutdown");
 		System.exit(0);
 	}
 
@@ -156,7 +164,8 @@ public class Main {
 	 * Main worker loop for token offline engine.
 	 */
 	private void workerLoop() {
-		logger.info("Starting main logic");
+		if (logger.isInfoEnabled())
+			logger.info("Starting main logic");
 		registerBroadcastListener();
 		prepareScheduledTasks();
 		while (true) {
@@ -174,7 +183,7 @@ public class Main {
 	 * received sensor values.
 	 */
 	public void registerBroadcastListener() {
-		listener.notifyAfterAmountOfValues = 10;
+		listener.notifyAfterAmountOfValues = 256;
 		connector.registerAdvertisingListener(listener);
 	}
 
@@ -213,7 +222,8 @@ public class Main {
 			logger.warn("Null task was inserted into queue!");
 			return;
 		}
-		logger.info("Processing task: " + task.toString());
+		if (logger.isInfoEnabled())
+			logger.info("Processing task: " + task.toString());
 		switch (task.getType()) {
 		case SHUTDOWN:
 			doShutDown(false);
@@ -263,30 +273,35 @@ public class Main {
 	 * @param task
 	 */
 	private void uploadSensorData(Task task) {
-		logger.info("Starting sensor upload");
+		if (logger.isInfoEnabled())
+			logger.info("Starting sensor upload");
 		UploadSensorDataTask uploadSensorDataTask = new UploadSensorDataTask(task);
 		boolean result = uploadSensorDataTask.execute();
 		if (result == true) {
 			GatewayManager.getInstance().updateUploadDate(new Date());
 		}
-		logger.info("Download task execution returned: " + result);
+		if (logger.isInfoEnabled())
+			logger.info("Download task execution returned: " + result);
 	}
 
 	private void upgradeGateway(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Starting gateway upgrade");
+		if (logger.isInfoEnabled())
+			logger.info("Starting gateway upgrade");
 	}
 
 	private void uploadGatewayStatus(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Starting gateway status upload");
+		if (logger.isInfoEnabled())
+			logger.info("Starting gateway status upload");
 	}
 
 	/**
 	 * @param task
 	 */
 	private void upgradeToken(Task task) {
-		logger.info("Starting token upgrade");
+		if (logger.isInfoEnabled())
+			logger.info("Starting token upgrade");
 		UpgradeTokenConfigTask upgradeTokenConfigTask = new UpgradeTokenConfigTask(task, connector, this);
 		upgradeTokenConfigTask.execute();
 	}
@@ -299,55 +314,65 @@ public class Main {
 		if (task.getParameters() != null) {
 			String mac = task.getParameters().get(0);
 			String removedValue = upgradeTokens.remove(mac);
-			logger.info("Removed mac " + mac + " from currently upgrading tokens list. " + removedValue
-					+ " was actually removed from list.");
+			if (logger.isInfoEnabled())
+				logger.info("Removed mac " + mac + " from currently upgrading tokens list. " + removedValue
+						+ " was actually removed from list.");
 		}
-		logger.info("Token upgrade task execution returned: " + result);
+		if (logger.isInfoEnabled())
+			logger.info("Token upgrade task execution returned: " + result);
 	}
 
 	private void scanForToken(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Starting sensor token scan");
+		if (logger.isInfoEnabled())
+			logger.info("Starting sensor token scan");
 	}
 
 	private void stopTokenScan(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Stopping sensor token scan");
+		if (logger.isInfoEnabled())
+			logger.info("Stopping sensor token scan");
 
 	}
 
 	private void uploadLogs(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Starting log upload");
+		if (logger.isInfoEnabled())
+			logger.info("Starting log upload");
 	}
 
 	private void reportStolen(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Starting gateway wipe");
+		if (logger.isInfoEnabled())
+			logger.info("Starting gateway wipe");
 	}
 
 	private void changeCellStatus(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Changin cell status");
+		if (logger.isInfoEnabled())
+			logger.info("Changin cell status");
 	}
 
 	private void updateOs(Task task) {
 		// TODO Auto-generated method stub
-		logger.info("Starting OS update");
+		if (logger.isInfoEnabled())
+			logger.info("Starting OS update");
 	}
 
 	/**
 	 * @param task
 	 */
 	private void doDownload(Task task) {
-		logger.info("Starting synchronization");
+		if (logger.isInfoEnabled())
+			logger.info("Starting synchronization");
 		DownloadTask downloadTask = new DownloadTask(task);
 		boolean result = downloadTask.execute();
 		if (result == true) {
 			GatewayManager.getInstance().updateSyncDate(new Date());
 			checkGatewayConfig();
 		}
-		logger.info("Download task execution returned: " + result);
+		if (logger.isInfoEnabled())
+			logger.info("Download task execution returned: " + result);
 	}
 
 	/**
@@ -369,29 +394,52 @@ public class Main {
 	 * 
 	 */
 	private void shutdownTasks() {
-		logger.info("Shutting down");
+		if (logger.isInfoEnabled())
+			logger.info("Shutting down");
 	}
 
 	/**
 	 * @param sensorValues
 	 */
 	protected void storeSensorList(SensorList sensorValues) {
-		Gateway gateway = GatewayManager.getInstance().findMe();
+		if (logger.isInfoEnabled())
+			logger.info("Received SensorList from AdvertisingPackageParser");
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		Iterator<SensorValue> iterator = sensorValues.iterator();
 		while (iterator.hasNext()) {
 			SensorValue sensorValue = (SensorValue) iterator.next();
-			Token token = TokenManager.getInstance().findByMac(sensorValue.mac);
-			if (token != null && token.isNeedsConfigUpdate() && !upgradeTokens.containsKey(sensorValue.mac)) {
-				addTokenToUpgradeList(sensorValue, token);
-			}
-			try {
-				SensorDataManager.getInstance().addNewRecord(sensorValue, gateway);
-			} catch (NumberFormatException e) {
-				logger.fatal(e);
-			} catch (ParseException e) {
-				logger.fatal(e);
+			TokenInfoStructure tokenInfo = tokenInfoCache.getTokenInfo(sensorValue.mac);
+
+			if (tokenInfo != null) {
+				Token token = tokenInfo.token;
+				if (token != null) {
+					if (logger.isInfoEnabled())
+						logger.info("Token: " + token.toString());
+					if (token.isNeedsConfigUpdate() && !upgradeTokens.containsKey(sensorValue.mac)) {
+						if (logger.isInfoEnabled())
+							logger.info("Token added to upgrade list");
+						addTokenToUpgradeList(sensorValue, token);
+					}
+				} else {
+					if (logger.isInfoEnabled())
+						logger.info("Token is null! Could not upgrade!");
+				}
+				try {
+					SensorDataManager.getInstance().addNewRecord(em, sensorValue, GatewayManager.getMyRemoteId(),
+							tokenInfo);
+				} catch (NumberFormatException e) {
+					logger.fatal(e);
+				} catch (ParseException e) {
+					logger.fatal(e);
+				}
+			} else {
+				if (logger.isInfoEnabled())
+					logger.info("No token information found for token with mac " + sensorValue.mac);
 			}
 		}
+		em.getTransaction().commit();
+		em.close();
 	}
 
 	/**
@@ -400,7 +448,8 @@ public class Main {
 	 */
 	private void addTokenToUpgradeList(SensorValue sensorValue, Token token) {
 		upgradeTokens.put(sensorValue.mac, sensorValue.mac);
-		logger.info("Added mac " + sensorValue.mac + " to list of tokens that are already upgrading.");
+		if (logger.isInfoEnabled())
+			logger.info("Added mac " + sensorValue.mac + " to list of tokens that are already upgrading.");
 		Task configUpgradeTask = new Task();
 		configUpgradeTask.setType(TaskType.UPGRADE_TOKEN);
 		configUpgradeTask.setRelatedId(token.getRemoteId());

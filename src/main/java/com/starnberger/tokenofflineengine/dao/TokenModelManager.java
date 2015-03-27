@@ -3,7 +3,9 @@
  */
 package com.starnberger.tokenofflineengine.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -116,5 +118,23 @@ public class TokenModelManager {
 		if (id == null)
 			return null;
 		return findSensorByRemoteId(sensorId);
+	}
+
+	/**
+	 * @param modelId
+	 * @return
+	 */
+	public Map<String, SensorType> listSensorTypesForModel(Long modelId) {
+		Map<String, SensorType> sensorTypes = new HashMap<String, SensorType>();
+		TokenModel model = findByRemoteId(modelId);
+		List<Long> sensorKeys = model.getSensorKeys();
+
+		for (int i=0; i<sensorKeys.size();i++) {
+			Long sensorTypeId = model.getSensorKeys().get(i);
+			String position = model.getSensorPositions().get(i);
+			SensorType sensorType = findSensorByRemoteId(sensorTypeId);
+			sensorTypes.put(position, sensorType);
+		}
+		return sensorTypes;
 	}
 }

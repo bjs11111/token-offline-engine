@@ -18,6 +18,7 @@ import com.starnberger.tokenofflineengine.model.Gateway;
 public class GatewayManager {
 	private static final GatewayManager _INSTANCE = new GatewayManager();
 	private static Long gatewayId = null;
+	private static Long remoteGatewayId = null;
 	
 	/**
 	 * @return
@@ -39,6 +40,18 @@ public class GatewayManager {
 				gatewayId = me.getId();
 		}
 		return gatewayId;
+	}
+	
+	/**
+	 * @return
+	 */
+	public static Long getMyRemoteId() {
+		if (remoteGatewayId == null) {
+			Gateway me = _INSTANCE.findMe();
+			if (me != null)
+				remoteGatewayId = me.getRemoteId();
+		}
+		return remoteGatewayId;
 	}
 	
 	/**

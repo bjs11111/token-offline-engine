@@ -27,7 +27,7 @@ import com.starnberger.tokenofflineengine.model.Task;
  *
  */
 public class DownloadTask extends AbstractTask implements ITask {
-	private static final String SYNC_URL = GatewayInfo.SERVER_URL + "auth/sync";
+	private static final String SYNC_URL = GatewayInfo.getInstance().getServerUrl() + "auth/sync";
 	private final List<Task> followUpTasks = new ArrayList<Task>();
 
 	/**
@@ -79,10 +79,10 @@ public class DownloadTask extends AbstractTask implements ITask {
 			updateEntities(em, entity.getSensorConfigParameters());
 			updateEntities(em, entity.getSensorConfigValues());
 			updateEntities(em, entity.getUpdatedGatewayConfigurations());
+			updateTask(em, Status.COMPLETED);
 			em.flush();
 			em.getTransaction().commit();
 			em.close();
-			updateTask(Status.COMPLETED);
 		}
 		logout();
 		return true;
@@ -107,7 +107,6 @@ public class DownloadTask extends AbstractTask implements ITask {
 
 	/**
 	 * @param em
-	 *            TODO
 	 * @param entity
 	 * @return
 	 */
@@ -132,7 +131,9 @@ public class DownloadTask extends AbstractTask implements ITask {
 			}
 			break;
 		case DELETED:
-			em.remove(entity);
+			SyncEntity deleteEntity = findWebKey(em, entity);
+			if (deleteEntity != null)
+				em.remove(entity);
 			break;
 
 		default:

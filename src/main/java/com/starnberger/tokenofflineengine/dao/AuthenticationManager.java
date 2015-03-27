@@ -23,8 +23,8 @@ import com.starnberger.tokenofflineengine.model.Gateway;
  *
  */
 public class AuthenticationManager {
-	private static final String AUTH_ASSIGN_ME = GatewayInfo.SERVER_URL + "auth/assignMe";
-	private static final String AUTH_REGISTER_ME = GatewayInfo.SERVER_URL + "auth/registerMe";
+	private static final String AUTH_ASSIGN_ME = GatewayInfo.getInstance().getServerUrl() + "auth/assignMe";
+	private static final String AUTH_REGISTER_ME = GatewayInfo.getInstance().getServerUrl() + "auth/registerMe";
 	private static final AuthenticationManager _INSTANCE = new AuthenticationManager();
 
 	/**
@@ -59,7 +59,7 @@ public class AuthenticationManager {
 			// time
 			em.getTransaction().begin();
 			me = new Gateway();
-			me.setUuid(GatewayInfo.CPUID);
+			me.setUuid(GatewayInfo.getInstance().getUuid());
 			me.setPassword(UUID.randomUUID().toString());
 			em.persist(me);
 			em.flush();
@@ -67,7 +67,7 @@ public class AuthenticationManager {
 			reportForWork(me);
 		} else if (me.getUuid() == null || "".equals(me.getUuid()))
 		{
-			me.setUuid(GatewayInfo.CPUID);
+			me.setUuid(GatewayInfo.getInstance().getUuid());
 		}
 		if (me.getGatewayToken() == null || "".equals(me.getGatewayToken()))
 			return false;
