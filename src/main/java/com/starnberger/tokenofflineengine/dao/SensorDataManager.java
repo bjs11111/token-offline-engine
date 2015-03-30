@@ -47,13 +47,8 @@ public class SensorDataManager {
 	 * @param dataRecord
 	 */
 	public void persist(EntityManager em, SensorData dataRecord) {
-		/*if (logger.isInfoEnabled())
-			logger.info("Storing Sensor Data: " + dataRecord.toString());*/
-		// EntityManager em = EMF.get().createEntityManager();
-		// em.getTransaction().begin();
 		em.persist(dataRecord);
-		// em.getTransaction().commit();
-		// em.close();
+		em.flush();
 	}
 
 	/**
@@ -163,21 +158,37 @@ public class SensorDataManager {
 	 */
 	public SensorData addNewRecord(EntityManager em, String mac, String sensorPosition, Date timeStamp, Double value1,
 			Double value2, Double value3, boolean isAlarm, Long gatewayId, TokenInfoStructure tokenInfo) {
-		SensorData newRecord = new SensorData();
-		newRecord.setAlarm(isAlarm);
+		Long sensorTypeForPosition = null;
+		Long remoteId = null;
+		SensorData newRecord = null;
+		boolean isNew = false;
 		if (tokenInfo != null) {
-			newRecord.setSensorType(tokenInfo.getSensorTypeForPosition(sensorPosition));
-			if (tokenInfo.token != null)
-				newRecord.setToken(tokenInfo.token.getRemoteId());
+			sensorTypeForPosition = tokenInfo.getSensorTypeForPosition(sensorPosition);
+			if (tokenInfo.token != null) {
+				remoteId = tokenInfo.token.getRemoteId();
+			}
+			newRecord = tokenInfo.getLatestSensorData(sensorPosition);
 		}
+		if (newRecord == null) {
+			newRecord = new SensorData();
+			isNew = true;
+		} else {
+			newRecord = findById(newRecord.getId());
+		}
+		newRecord.setAlarm(isAlarm);
+		newRecord.setSensorType(sensorTypeForPosition);
+		newRecord.setToken(remoteId);
 		newRecord.setGateway(gatewayId);
 		newRecord.setTimestamp(timeStamp);
 		newRecord.setValue1(value1);
 		newRecord.setValue2(value2);
 		newRecord.setValue3(value3);
-		/*if (logger.isInfoEnabled())
-			logger.info("Adding SensorData value: " + newRecord.toString());*/
-		persist(em, newRecord);
+		if (isNew)
+			persist(em, newRecord);
+		else
+			newRecord = merge(newRecord);
+		if (tokenInfo != null)
+			tokenInfo.addLatestSensorDataForPosition(sensorPosition, newRecord);
 		return newRecord;
 	}
 
@@ -198,7 +209,7 @@ public class SensorDataManager {
 		em.close();
 		return wrapper;
 	}
-	
+
 	/**
 	 * @param deleteUntil
 	 * @return

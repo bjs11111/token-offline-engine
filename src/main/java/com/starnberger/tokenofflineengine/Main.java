@@ -183,7 +183,7 @@ public class Main {
 	 * received sensor values.
 	 */
 	public void registerBroadcastListener() {
-		listener.notifyAfterAmountOfValues = 256;
+		listener.notifyAfterAmountOfValues = 10;
 		connector.registerAdvertisingListener(listener);
 	}
 

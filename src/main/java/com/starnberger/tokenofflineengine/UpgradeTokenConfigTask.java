@@ -89,12 +89,6 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 				new WriteConfigurationController(configurationArray) {
 
 					@Override
-					public void onFailed(String msg, Exception e) {
-						logger.error("failed to write " + msg, e);
-						owner.upgradeTokenDone(false, task);
-					}
-
-					@Override
 					public void onSuccessPartMessage(String address, byte[] writeData, int bytesWritten) {
 						if (logger.isInfoEnabled())
 							logger.info("written to address " + address + " data: " + writeData + ". " + bytesWritten
@@ -115,6 +109,12 @@ public class UpgradeTokenConfigTask extends AbstractTask {
 						} catch (Exception e) {
 							logger.fatal(e);
 						}
+					}
+
+					@Override
+					public void onFailed(String address, String msg, Exception e) {
+						logger.error("failed to write at address " + address + " Message: " + msg, e);
+						owner.upgradeTokenDone(false, task);
 					}
 
 				});

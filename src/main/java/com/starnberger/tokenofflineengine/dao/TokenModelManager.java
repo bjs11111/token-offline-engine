@@ -126,10 +126,14 @@ public class TokenModelManager {
 	 */
 	public Map<String, SensorType> listSensorTypesForModel(Long modelId) {
 		Map<String, SensorType> sensorTypes = new HashMap<String, SensorType>();
+		if (modelId == null)
+			return sensorTypes;
 		TokenModel model = findByRemoteId(modelId);
+		if (model == null)
+			return sensorTypes;
 		List<Long> sensorKeys = model.getSensorKeys();
 
-		for (int i=0; i<sensorKeys.size();i++) {
+		for (int i = 0; i < sensorKeys.size(); i++) {
 			Long sensorTypeId = model.getSensorKeys().get(i);
 			String position = model.getSensorPositions().get(i);
 			SensorType sensorType = findSensorByRemoteId(sensorTypeId);
