@@ -89,7 +89,7 @@ public class TokenConfigurationManager {
 	 * @param em
 	 * @return
 	 */
-	private Map<String, Map<String, SensorConfigValue>> loadSensorConfigValues(TokenConfiguration tokenConfiguration,
+	public Map<String, Map<String, SensorConfigValue>> loadSensorConfigValues(TokenConfiguration tokenConfiguration,
 			Token token, EntityManager em) {
 		Map<String, Map<String, SensorConfigValue>> sensorConfigValuesPerPosition = new HashMap<String, Map<String, SensorConfigValue>>();
 		Iterator<Long> iterator = tokenConfiguration.getSensorConfigKeys().iterator();

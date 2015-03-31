@@ -85,7 +85,6 @@ public class SensorDataManager {
 
 	/**
 	 * @param em
-	 *            TODO
 	 * @param value
 	 * @param gatewayId
 	 * @param tokenInfo

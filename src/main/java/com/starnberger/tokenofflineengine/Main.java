@@ -425,7 +425,7 @@ public class Main {
 				Token token = tokenInfo.token;
 				if (token != null) {
 					if (logger.isInfoEnabled())
-						logger.info("Token: " + token.toString());
+						logger.debug("Token: " + token.toString());
 					if (needsTokenConfigUpgrade(token, sensorValue.mac)) {
 						if (logger.isInfoEnabled())
 							logger.info("Token added to upgrade list");
@@ -445,7 +445,7 @@ public class Main {
 				}
 			} else {
 				if (logger.isInfoEnabled())
-					logger.info("No token information found for token with mac " + sensorValue.mac);
+					logger.debug("No token information found for token with mac " + sensorValue.mac);
 			}
 		}
 		em.getTransaction().commit();

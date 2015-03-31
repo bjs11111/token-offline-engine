@@ -6,6 +6,7 @@ package com.starnberger.tokenofflineengine;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 
@@ -25,8 +26,11 @@ import com.starnberger.tokenofflineengine.common.Status;
 import com.starnberger.tokenofflineengine.dao.EMF;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
 import com.starnberger.tokenofflineengine.dao.SensorDataManager;
+import com.starnberger.tokenofflineengine.dao.TokenConfigurationManager;
+import com.starnberger.tokenofflineengine.model.SensorConfigValue;
 import com.starnberger.tokenofflineengine.model.Task;
 import com.starnberger.tokenofflineengine.model.Token;
+import com.starnberger.tokenofflineengine.model.TokenConfiguration;
 
 /**
  * @author Roman Kaufmann
@@ -68,25 +72,56 @@ public class DownloadTokenLogTask extends AbstractTask {
 			return false;
 		}
 
+		// Create entity manager
 		em = EMF.get().createEntityManager();
 		em.getTransaction().begin();
+
+		// Load configuration
+		Token token = tokenInfo.token;
+		TokenConfiguration config = TokenConfigurationManager.getInstance().findByRemoteId(token.getConfigId());
+		Map<String, Map<String, SensorConfigValue>> sensorConfigValues = TokenConfigurationManager.getInstance()
+				.loadSensorConfigValues(config, token, em);
+
 		// Loop over all sensor types and read the log for every sensor
 		Iterator<String> positionIterator = tokenInfo.sensorTypesByPosition.keySet().iterator();
 		while (positionIterator.hasNext()) {
 			String position = (String) positionIterator.next();
-			SensorType sensorTypeForPosition = SensorTypeUtility.getSensorTypeForPosition(position);
-			try {
-				// Fetch regular log
-				fetchLogBitByBit(tokenInfo, false, sensorTypeForPosition);
-				// Fetch alarm log
-				fetchLogBitByBit(tokenInfo, true, sensorTypeForPosition);
-			} catch (DecoderException e) {
-				logger.fatal(e);
-				rollback();
-				updateTask(Status.FAILED);
-			}
+			doDownloadTokenLog(tokenInfo, sensorConfigValues, position);
 		}
 		return true;
+	}
+
+	/**
+	 * @param tokenInfo
+	 * @param sensorConfigValues
+	 * @param position
+	 */
+	public void doDownloadTokenLog(TokenInfoStructure tokenInfo,
+			Map<String, Map<String, SensorConfigValue>> sensorConfigValues, String position) {
+		// Get needed data
+		SensorType sensorTypeForPosition = SensorTypeUtility.getSensorTypeForPosition(position);
+		Map<String, SensorConfigValue> sensorConfigValueMap = sensorConfigValues.get(position);
+		
+		// Check if sensor is enabled
+		SensorConfigValue isSensorEnabledValue = sensorConfigValueMap.get("sensorEnabled");
+		boolean isSensorEnabled = false;
+		if (isSensorEnabledValue != null)
+			isSensorEnabled = Boolean.parseBoolean(isSensorEnabledValue.getValue());
+		
+		// Skip sensor if disabled
+		if (!isSensorEnabled)
+			return;
+
+		try {
+			// Fetch regular log
+			fetchLogBitByBit(tokenInfo, false, sensorTypeForPosition);
+			// Fetch alarm log
+			fetchLogBitByBit(tokenInfo, true, sensorTypeForPosition);
+		} catch (DecoderException e) {
+			logger.fatal(e);
+			rollback();
+			updateTask(Status.FAILED);
+		}
 	}
 
 	/**
