@@ -100,7 +100,7 @@ public class DownloadTokenLogTask extends AbstractTask {
 		Token token = tokenInfo.token;
 		connector.writeServiceAndListen(token.getMac(), SERVICE_WRITE, SERVICE_READ, TIMEOUT,
 				new FetchLogParserBitByBit(sensorType, alarmLog, connector, token.getMac(), SERVICE_WRITE,
-						SERVICE_READ, 40000, 10) {
+						SERVICE_READ, TIMEOUT, 10) {
 
 					@Override
 					public void onSuccessfullyParsed(SensorList sensorValues) {
