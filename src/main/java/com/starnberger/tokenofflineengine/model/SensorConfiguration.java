@@ -138,7 +138,7 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 		if (source instanceof SensorConfiguration) {
 			SensorConfiguration token = (SensorConfiguration) source;
 			// setWebKey(token.getWebKey());
-			setId(token.getId());
+			//setId(token.getId());
 			setConfigValueKeys(token.getConfigValueKeys());
 			setOwnerKey(token.getOwnerKey());
 			setSensorTypeKey(token.getSensorTypeKey());

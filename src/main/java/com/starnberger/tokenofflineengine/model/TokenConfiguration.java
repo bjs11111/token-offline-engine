@@ -172,7 +172,7 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 			setModelKey(token.getModelKey());
 			setSensorConfigKeys(token.getSensorConfigKeys());
 			setName(token.getName());
-			setId(token.getId());
+			//setId(token.getId());
 		}
 	}
 

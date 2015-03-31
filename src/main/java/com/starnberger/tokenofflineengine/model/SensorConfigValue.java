@@ -132,7 +132,7 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 			return;
 		if (source instanceof SensorConfigValue) {
 			SensorConfigValue token = (SensorConfigValue) source;
-			setId(token.getId());
+			//setId(token.getId());
 			setConfigKey(token.getConfigKey());
 			setValue(token.getValue());
 		}

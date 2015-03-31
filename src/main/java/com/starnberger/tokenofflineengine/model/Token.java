@@ -245,7 +245,7 @@ public class Token extends SyncEntity implements IToken   {
 		{
 			Token token = (Token) source;
 			//setWebKey(token.getWebKey());
-			setId(token.getId());
+			//setId(token.getId());
 			setName(token.getName());
 			setLastSyncDate(token.getLastSyncDate());
 			setMac(token.getMac());

@@ -160,7 +160,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 		if (source instanceof GatewayConfiguration) {
 			GatewayConfiguration token = (GatewayConfiguration) source;
 			// setWebKey(token.getWebKey());
-			setId(token.getId());
+			//setId(token.getId());
 			setName(token.getName());
 			setDebugLevel(token.getDebugLevel());
 			setLogUpdateInterval(token.getLogUpdateInterval());

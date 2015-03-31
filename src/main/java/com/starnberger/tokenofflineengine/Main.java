@@ -63,7 +63,7 @@ public class Main {
 		public void run() {
 			Task uploadTask = new Task();
 			uploadTask.setType(TaskType.UPLOAD);
-			tasks.add(uploadTask);
+			addTaskToQueue(uploadTask);
 			addDownloadTask();
 		}
 	};
@@ -73,7 +73,7 @@ public class Main {
 		public void run() {
 			Task uploadStatusTask = new Task();
 			uploadStatusTask.setType(TaskType.UPLOAD_STATUS);
-			tasks.add(uploadStatusTask);
+			addTaskToQueue(uploadStatusTask);
 		}
 	};
 	private final Runnable uploadLogTask = new Runnable() {
@@ -82,7 +82,7 @@ public class Main {
 		public void run() {
 			Task uploadLogs = new Task();
 			uploadLogs.setType(TaskType.UPLOAD_LOGS);
-			tasks.add(uploadLogs);
+			addTaskToQueue(uploadLogs);
 		}
 	};
 
@@ -138,7 +138,7 @@ public class Main {
 	private void addDownloadTask() {
 		Task downloadTask = new Task();
 		downloadTask.setType(TaskType.DOWNLOAD);
-		tasks.add(downloadTask);
+		addTaskToQueue(downloadTask);
 	}
 
 	/**
@@ -264,9 +264,19 @@ public class Main {
 		case OS_UPDATE:
 			updateOs(task);
 			break;
+		case DOWNLOAD_TOKENLOGS:
+			dowloadTokenLogs(task);
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void dowloadTokenLogs(Task task) {
+		if (logger.isInfoEnabled())
+			logger.info("Starting sensor upload");
+		DownloadTokenLogTask downloadTokenLogTask = new DownloadTokenLogTask(task, connector, this);
+		downloadTokenLogTask.execute();
 	}
 
 	/**
@@ -310,7 +320,7 @@ public class Main {
 	 * @param result
 	 * @param task
 	 */
-	public void upgradeTokenDone(boolean result, Task task) {
+	public synchronized void upgradeTokenDone(boolean result, Task task) {
 		if (task.getParameters() != null) {
 			String mac = task.getParameters().get(0);
 			String removedValue = upgradeTokens.remove(mac);
@@ -365,7 +375,7 @@ public class Main {
 	private void doDownload(Task task) {
 		if (logger.isInfoEnabled())
 			logger.info("Starting synchronization");
-		DownloadTask downloadTask = new DownloadTask(task);
+		DownloadTask downloadTask = new DownloadTask(task, this);
 		boolean result = downloadTask.execute();
 		if (result == true) {
 			GatewayManager.getInstance().updateSyncDate(new Date());
@@ -409,14 +419,14 @@ public class Main {
 		Iterator<SensorValue> iterator = sensorValues.iterator();
 		while (iterator.hasNext()) {
 			SensorValue sensorValue = (SensorValue) iterator.next();
-			TokenInfoStructure tokenInfo = tokenInfoCache.getTokenInfo(sensorValue.mac);
+			TokenInfoStructure tokenInfo = getTokenInfo(sensorValue);
 
 			if (tokenInfo != null) {
 				Token token = tokenInfo.token;
 				if (token != null) {
 					if (logger.isInfoEnabled())
 						logger.info("Token: " + token.toString());
-					if (token.isNeedsConfigUpdate() && !upgradeTokens.containsKey(sensorValue.mac)) {
+					if (needsTokenConfigUpgrade(token, sensorValue.mac)) {
 						if (logger.isInfoEnabled())
 							logger.info("Token added to upgrade list");
 						addTokenToUpgradeList(sensorValue, token);
@@ -444,9 +454,40 @@ public class Main {
 
 	/**
 	 * @param sensorValue
+	 * @return
+	 */
+	public synchronized TokenInfoStructure getTokenInfo(SensorValue sensorValue) {
+		return tokenInfoCache.getTokenInfo(sensorValue.mac);
+	}
+
+	/**
+	 * @param remoteId
+	 * @return
+	 */
+	public synchronized TokenInfoStructure getTokenInfo(Long remoteId) {
+		return tokenInfoCache.getTokenInfo(remoteId);
+	}
+
+	/**
+	 * @param token
+	 * @param mac
+	 * @return
+	 */
+	private synchronized boolean needsTokenConfigUpgrade(Token token, String mac) {
+		boolean needsConfigUpdate = token.isNeedsConfigUpdate();
+		boolean containsKey = upgradeTokens.containsKey(mac);
+		if (logger.isInfoEnabled()) {
+			logger.info("Token needs upgrade: " + needsConfigUpdate);
+			logger.info("upgradeTokens contains key: " + containsKey);
+		}
+		return (needsConfigUpdate && !containsKey);
+	}
+
+	/**
+	 * @param sensorValue
 	 * @param token
 	 */
-	private void addTokenToUpgradeList(SensorValue sensorValue, Token token) {
+	private synchronized void addTokenToUpgradeList(SensorValue sensorValue, Token token) {
 		upgradeTokens.put(sensorValue.mac, sensorValue.mac);
 		if (logger.isInfoEnabled())
 			logger.info("Added mac " + sensorValue.mac + " to list of tokens that are already upgrading.");
@@ -457,7 +498,21 @@ public class Main {
 		parameters.add(token.getMac());
 		configUpgradeTask.setParameters(parameters);
 		TaskManager.getInstance().persist(configUpgradeTask);
+		addTaskToQueue(configUpgradeTask);
+	}
+
+	/**
+	 * @param configUpgradeTask
+	 */
+	public synchronized void addTaskToQueue(Task configUpgradeTask) {
 		tasks.add(configUpgradeTask);
+	}
+
+	/**
+	 * @param token
+	 */
+	public synchronized void removeTokenFromCache(Token token) {
+		tokenInfoCache.removeTokenFromCache(token);
 	}
 
 }

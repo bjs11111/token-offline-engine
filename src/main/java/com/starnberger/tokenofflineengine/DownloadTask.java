@@ -21,6 +21,7 @@ import com.starnberger.tokenofflineengine.model.Gateway;
 import com.starnberger.tokenofflineengine.model.SyncData;
 import com.starnberger.tokenofflineengine.model.SyncEntity;
 import com.starnberger.tokenofflineengine.model.Task;
+import com.starnberger.tokenofflineengine.model.Token;
 
 /**
  * @author Roman Kaufmann
@@ -29,14 +30,15 @@ import com.starnberger.tokenofflineengine.model.Task;
 public class DownloadTask extends AbstractTask implements ITask {
 	private static final String SYNC_URL = GatewayInfo.getInstance().getServerUrl() + "auth/sync";
 	private final List<Task> followUpTasks = new ArrayList<Task>();
+	private final Main owner;
 
 	/**
-	 * Constructor.
-	 * 
 	 * @param task
+	 * @param owner
 	 */
-	public DownloadTask(Task task) {
+	public DownloadTask(Task task, Main owner) {
 		super(task);
+		this.owner = owner;
 	}
 
 	/*
@@ -101,6 +103,13 @@ public class DownloadTask extends AbstractTask implements ITask {
 		while (iterator.hasNext()) {
 			SyncEntity syncEntity = (SyncEntity) iterator.next();
 			storeEntity(em, syncEntity);
+			if (syncEntity instanceof Task) {
+				Task task = (Task) syncEntity;
+				if (!task.isDeleted())
+					owner.addTaskToQueue(task);
+			} else if (syncEntity instanceof Token) {
+				owner.removeTokenFromCache((Token) syncEntity);
+			}
 		}
 		return true;
 	}

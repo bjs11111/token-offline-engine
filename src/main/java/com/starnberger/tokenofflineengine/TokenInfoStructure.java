@@ -30,6 +30,15 @@ public class TokenInfoStructure {
 	
 	/**
 	 * @param position
+	 */
+	public void removeSensorTypeForPosition(String position) {
+		if (sensorTypesByPosition == null)
+			return;
+		sensorTypesByPosition.remove(position);
+	}
+	
+	/**
+	 * @param position
 	 * @return
 	 */
 	public SensorData getLatestSensorData(String position) {

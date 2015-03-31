@@ -169,7 +169,7 @@ public class SensorConfigParameter extends SyncEntity implements ISensorConfigPa
 		if (source instanceof SensorConfigParameter) {
 			SensorConfigParameter token = (SensorConfigParameter) source;
 			//setWebKey(token.getWebKey());
-			setId(token.getId());
+			//setId(token.getId());
 			setDescription(token.getDescription());
 			setConfigKey(token.getConfigKey());
 			setSequence(token.getSequence());

@@ -250,7 +250,7 @@ public class Gateway extends SyncEntity implements IGateway {
 			setName(sourceGate.getName());
 			setUuid(sourceGate.getUuid());
 			// setWebKey(sourceGate.getWebKey());
-			setId(sourceGate.getId());
+			//setId(sourceGate.getId());
 			setNeedsConfigUpgrade(sourceGate.isNeedsConfigUpgrade());
 			setNeedsFirmwareUpgrade(sourceGate.isNeedsFirmwareUpgrade());
 			setSimCardNumber(sourceGate.getSimCardNumber());

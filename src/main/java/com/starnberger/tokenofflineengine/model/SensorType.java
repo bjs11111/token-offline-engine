@@ -172,7 +172,7 @@ public class SensorType extends SyncEntity implements ISensorType {
 		if (source instanceof SensorType) {
 			SensorType token = (SensorType) source;
 			// setWebKey(token.getWebKey());
-			setId(token.getId());
+			//setId(token.getId());
 			setConfigValues(token.getConfigValues());
 			setDescription(token.getDescription());
 			setNumberOfValues(token.getNumberOfValues());

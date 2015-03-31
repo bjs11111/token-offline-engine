@@ -157,7 +157,7 @@ public class Task extends SyncEntity implements ITask  {
 		{
 			Task token = (Task) source;
 			//setWebKey(token.getWebKey());
-			setId(token.getId());
+			//setId(token.getId());
 			setCompleted(token.getCompleted());
 			setCreated(token.getCreated());
 			setParameters(token.getParameters());
