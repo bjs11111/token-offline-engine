@@ -47,14 +47,19 @@ public class UploadSensorDataTask extends AbstractTask {
 		updateTask(Status.IN_PROGRESS);
 		Date lastSync = me.getLastSync();
 		SensorDataListWrapper wrapper = SensorDataManager.getInstance().findSensorDataValuesSinceLastSync(lastSync);
+		// Skip upload when no new sensor data was stored
+		if (wrapper == null || wrapper.getList() == null || wrapper.getList().isEmpty()) {
+			updateTask(Status.COMPLETED);
+			return true;
+		}
 		boolean result = login(me);
 		if (!result) {
-			updateTask(Status.FAILED);			
+			updateTask(Status.FAILED);
 			return false;
 		}
 		Response response = client.target(UPLOAD_URL).request(MediaType.APPLICATION_JSON).post(Entity.json(wrapper));
 		if (response.getStatus() >= 400) {
-			updateTask(Status.FAILED);			
+			updateTask(Status.FAILED);
 			return false;
 		}
 		logout();
