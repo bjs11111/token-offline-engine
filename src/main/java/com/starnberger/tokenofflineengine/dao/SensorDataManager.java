@@ -170,8 +170,8 @@ public class SensorDataManager {
 			lastSync = new Date(0);
 		EntityManager em = EMF.get().createEntityManager();
 		SensorDataListWrapper wrapper = new SensorDataListWrapper();
-		TypedQuery<SensorData> query = em.createNamedQuery("SensorData.findSinceLastSync", SensorData.class);
-		query.setParameter("lastSync", lastSync, TemporalType.TIMESTAMP);
+		TypedQuery<SensorData> query = em.createNamedQuery("SensorData.lastModified", SensorData.class);
+		query.setParameter("lastSyncDate", lastSync, TemporalType.TIMESTAMP);
 		List<SensorData> resultList = query.getResultList();
 		if (resultList != null && resultList.size() > 0)
 			wrapper.setList(resultList);

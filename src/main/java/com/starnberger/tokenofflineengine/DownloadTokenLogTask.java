@@ -74,13 +74,12 @@ public class DownloadTokenLogTask extends AbstractTask {
 
 		// Create entity manager
 		em = EMF.get().createEntityManager();
-		em.getTransaction().begin();
-
 		// Load configuration
 		Token token = tokenInfo.token;
 		TokenConfiguration config = TokenConfigurationManager.getInstance().findByRemoteId(token.getConfigId());
 		Map<String, Map<String, SensorConfigValue>> sensorConfigValues = TokenConfigurationManager.getInstance()
 				.loadSensorConfigValues(config, token, em);
+		em.close();
 
 		// Loop over all sensor types and read the log for every sensor
 		Iterator<String> positionIterator = tokenInfo.sensorTypesByPosition.keySet().iterator();
@@ -198,6 +197,8 @@ public class DownloadTokenLogTask extends AbstractTask {
 	 * @param sensorValues
 	 */
 	protected void storeSensorList(final TokenInfoStructure tokenInfo, SensorList sensorValues) {
+		EntityManager em = EMF.get().createEntityManager();
+		em.getTransaction().begin();
 		Iterator<SensorValue> iterator = sensorValues.iterator();
 		while (iterator.hasNext()) {
 			SensorValue sensorValue = (SensorValue) iterator.next();
@@ -214,6 +215,8 @@ public class DownloadTokenLogTask extends AbstractTask {
 				updateTask(Status.FAILED);
 			}
 		}
+		em.getTransaction().commit();
+		em.close();
 	}
 
 	@Override

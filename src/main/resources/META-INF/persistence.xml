@@ -30,7 +30,9 @@
             <property name="javax.persistence.jdbc.user" value=""/>
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="datanucleus.autoCreateTables" value="true"/>
-            <property name="datanucleus.generateSchema.database.mode" value="drop-and-create" />
+            <property name="datanucleus.generateSchema.database.mode" value="create" />
+            <property name="datanucleus.schema.autoCreateAll" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
 		</properties>
 	</persistence-unit>
 	<persistence-unit name="test-offline-engine-persistence-unit">
