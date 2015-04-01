@@ -502,10 +502,12 @@ public class Main {
 	}
 
 	/**
-	 * @param configUpgradeTask
+	 * @param task
 	 */
-	public synchronized void addTaskToQueue(Task configUpgradeTask) {
-		tasks.add(configUpgradeTask);
+	public synchronized void addTaskToQueue(Task task) {
+		if (logger.isInfoEnabled())
+			logger.info("Adding " + task.toString() + " to processing queue");
+		tasks.add(task);
 	}
 
 	/**

@@ -23,7 +23,7 @@ import com.starnberger.tokenofflineengine.common.TaskType;
 		@NamedQuery(name = "Task.lastModified", query = "SELECT g from Task g WHERE g.lastModified > :lastSyncDate"),
 		@NamedQuery(name = "Task.deleted", query = "SELECT g from Task g WHERE g.deleted = :isDeleted"),
 		@NamedQuery(name = "Task.findMyWebKey", query = "select s from Task s where s.remoteId = :webKey") })
-public class Task extends SyncEntity implements ITask  {
+public class Task extends SyncEntity implements ITask {
 
 	/**
 	 * 
@@ -41,13 +41,6 @@ public class Task extends SyncEntity implements ITask  {
 	private Date created;
 	@Column
 	private Date completed;
-	@Override
-	public String toString() {
-		String result = getClass().getSimpleName() + " ";
-		if (id != null)
-			result += "id: " + id;
-		return result;
-	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -153,11 +146,10 @@ public class Task extends SyncEntity implements ITask  {
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
 			return;
-		if (source instanceof Task)
-		{
+		if (source instanceof Task) {
 			Task token = (Task) source;
-			//setWebKey(token.getWebKey());
-			//setId(token.getId());
+			// setWebKey(token.getWebKey());
+			// setId(token.getId());
 			setCompleted(token.getCompleted());
 			setCreated(token.getCreated());
 			setParameters(token.getParameters());
@@ -165,6 +157,17 @@ public class Task extends SyncEntity implements ITask  {
 			setStatus(token.getStatus());
 			setType(token.getType());
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Task [type=" + type + ", relatedId=" + relatedId + ", status=" + status + ", parameters=" + parameters
+				+ ", created=" + created + ", completed=" + completed + "]";
 	}
 
 }
