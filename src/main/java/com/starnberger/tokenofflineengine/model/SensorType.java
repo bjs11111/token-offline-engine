@@ -32,7 +32,7 @@ public class SensorType extends SyncEntity implements ISensorType {
 	@Column
 	protected String unit;
 	@Column
-	protected int numberOfValues;
+	protected int numberOfValues = 1;
 	@Column
 	protected String webComponentName;
 	@Column
