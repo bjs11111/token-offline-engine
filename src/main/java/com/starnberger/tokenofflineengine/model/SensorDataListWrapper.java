@@ -19,6 +19,7 @@ public class SensorDataListWrapper implements ISensorDataListWrapper {
 	private List<Token> tokens = new ArrayList<Token>();
 	private List<Gateway> gateways = new ArrayList<Gateway>();
 	private List<SensorType> sensorTypes = new ArrayList<SensorType>();
+	private List<TokenModel> models = new ArrayList<TokenModel>();
 
 	/**
 	 * Default constructor.
@@ -101,6 +102,21 @@ public class SensorDataListWrapper implements ISensorDataListWrapper {
 	 */
 	public void setSensorTypes(List<SensorType> sensorTypes) {
 		this.sensorTypes = sensorTypes;
+	}
+
+	/**
+	 * @return the models
+	 */
+	public List<TokenModel> getModels() {
+		return models;
+	}
+
+	/**
+	 * @param models
+	 *            the models to set
+	 */
+	public void setModels(List<TokenModel> models) {
+		this.models = models;
 	}
 
 }
