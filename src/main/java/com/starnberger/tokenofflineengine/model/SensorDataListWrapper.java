@@ -4,7 +4,9 @@
 package com.starnberger.tokenofflineengine.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Roman Kaufmann
@@ -20,6 +22,7 @@ public class SensorDataListWrapper implements ISensorDataListWrapper {
 	private List<Gateway> gateways = new ArrayList<Gateway>();
 	private List<SensorType> sensorTypes = new ArrayList<SensorType>();
 	private List<TokenModel> models = new ArrayList<TokenModel>();
+	private Map<Long, Map<String, Boolean>> enabledSensors = new HashMap<Long, Map<String, Boolean>>();
 
 	/**
 	 * Default constructor.
@@ -117,6 +120,21 @@ public class SensorDataListWrapper implements ISensorDataListWrapper {
 	 */
 	public void setModels(List<TokenModel> models) {
 		this.models = models;
+	}
+
+	/**
+	 * @return the enabledSensors
+	 */
+	public Map<Long, Map<String, Boolean>> getEnabledSensors() {
+		return enabledSensors;
+	}
+
+	/**
+	 * @param enabledSensors
+	 *            the enabledSensors to set
+	 */
+	public void setEnabledSensors(Map<Long, Map<String, Boolean>> enabledSensors) {
+		this.enabledSensors = enabledSensors;
 	}
 
 }
