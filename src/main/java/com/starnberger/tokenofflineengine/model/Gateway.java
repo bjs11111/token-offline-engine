@@ -56,6 +56,8 @@ public class Gateway extends SyncEntity implements IGateway {
 	private Date lastUpload;
 	@Column
 	private String simCardNumber;
+	@Column
+	private Long assignedCustomerLocation;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -238,6 +240,20 @@ public class Gateway extends SyncEntity implements IGateway {
 		this.lastUpload = lastUpload;
 	}
 
+	/**
+	 * @return the assignedCustomerLocation
+	 */
+	public Long getAssignedCustomerLocation() {
+		return assignedCustomerLocation;
+	}
+
+	/**
+	 * @param assignedCustomerLocation the assignedCustomerLocation to set
+	 */
+	public void setAssignedCustomerLocation(Long assignedCustomerLocation) {
+		this.assignedCustomerLocation = assignedCustomerLocation;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
@@ -249,13 +265,12 @@ public class Gateway extends SyncEntity implements IGateway {
 			setGatewayConfigKey(sourceGate.getGatewayConfigKey());
 			setName(sourceGate.getName());
 			setUuid(sourceGate.getUuid());
-			// setWebKey(sourceGate.getWebKey());
-			//setId(sourceGate.getId());
 			setNeedsConfigUpgrade(sourceGate.isNeedsConfigUpgrade());
 			setNeedsFirmwareUpgrade(sourceGate.isNeedsFirmwareUpgrade());
 			setSimCardNumber(sourceGate.getSimCardNumber());
 			setLastSync(sourceGate.getLastSync());
 			setLastUpload(sourceGate.getLastUpload());
+			setAssignedCustomerLocation(sourceGate.getAssignedCustomerLocation());
 		}
 	}
 }

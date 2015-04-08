@@ -23,14 +23,13 @@ import com.starnberger.tokenofflineengine.common.ITokenEntity;
 		@NamedQuery(name = "Token.findByConfig", query = "SELECT t from Token t WHERE t.deleted = false and t.configId = :configId ORDER BY t.name"),
 		@NamedQuery(name = "Token.findByMac", query = "SELECT t from Token t WHERE t.deleted = false AND t.mac = :mac"),
 		@NamedQuery(name = "Token.findByOwner", query = "SELECT t from Token t WHERE t.deleted = false AND t.owner = :owner"),
+		@NamedQuery(name = "Token.findByOwnerAndLocation", query = "SELECT t from Token t WHERE t.deleted = false AND t.owner = :owner and t.assignedCustomerLocation = :location"),
 		@NamedQuery(name = "Token.findMyWebKey", query = "select s from Token s where s.remoteId = :webKey"),
 		@NamedQuery(name = "Token.findByModel", query = "select s from Token s where s.model = :model")})
 public class Token extends SyncEntity implements IToken   {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7298223670658279856L;
+	
 	@Column
 	protected String mac;
 	@Column
@@ -53,6 +52,10 @@ public class Token extends SyncEntity implements IToken   {
 	private String tag;
 	@Column
 	private Long configId;
+	@Column
+	private String locationDescription;
+	@Column
+	private Long assignedCustomerLocation;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -237,6 +240,48 @@ public class Token extends SyncEntity implements IToken   {
 		this.configId = configId;
 	}
 
+	/**
+	 * @return the location
+	 */
+	public String getLocation() {
+		return locationDescription;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.locationDescription = location;
+	}
+
+	/**
+	 * @return the locationDescription
+	 */
+	public String getLocationDescription() {
+		return locationDescription;
+	}
+
+	/**
+	 * @param locationDescription the locationDescription to set
+	 */
+	public void setLocationDescription(String locationDescription) {
+		this.locationDescription = locationDescription;
+	}
+
+	/**
+	 * @return the assignedCustomerLocation
+	 */
+	public Long getAssignedCustomerLocation() {
+		return assignedCustomerLocation;
+	}
+
+	/**
+	 * @param assignedCustomerLocation the assignedCustomerLocation to set
+	 */
+	public void setAssignedCustomerLocation(Long assignedCustomerLocation) {
+		this.assignedCustomerLocation = assignedCustomerLocation;
+	}
+
 	@Override
 	public void copyValues(ITokenEntity source) {
 		if (source == null)
@@ -244,8 +289,6 @@ public class Token extends SyncEntity implements IToken   {
 		if (source instanceof Token)
 		{
 			Token token = (Token) source;
-			//setWebKey(token.getWebKey());
-			//setId(token.getId());
 			setName(token.getName());
 			setLastSyncDate(token.getLastSyncDate());
 			setMac(token.getMac());
@@ -257,6 +300,8 @@ public class Token extends SyncEntity implements IToken   {
 			setUuid(token.getUuid());
 			setTag(token.getTag());
 			setConfigId(token.getConfigId());
+			setLocation(token.getLocation());
+			setAssignedCustomerLocation(token.getAssignedCustomerLocation());
 		}
 	}
 }
