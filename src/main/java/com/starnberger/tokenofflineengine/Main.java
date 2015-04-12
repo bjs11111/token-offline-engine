@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -46,9 +45,7 @@ public class Main {
 
 	private static final Logger logger = LogManager.getLogger(Main.class.getName());
 
-	private LinkedBlockingQueue<Task> tasks = new LinkedBlockingQueue<Task>();
 	private GatewayConfiguration config = null;
-	private TokenInfoCache tokenInfoCache = new TokenInfoCache();
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 	private final AdvertisingPackageParser listener = new AdvertisingPackageParser() {
 
@@ -63,7 +60,7 @@ public class Main {
 		public void run() {
 			Task uploadTask = new Task();
 			uploadTask.setType(TaskType.UPLOAD);
-			addTaskToQueue(uploadTask);
+			TaskQueue.getInstance().addTaskToQueue(uploadTask);
 			addDownloadTask();
 		}
 	};
@@ -73,7 +70,7 @@ public class Main {
 		public void run() {
 			Task uploadStatusTask = new Task();
 			uploadStatusTask.setType(TaskType.UPLOAD_STATUS);
-			addTaskToQueue(uploadStatusTask);
+			TaskQueue.getInstance().addTaskToQueue(uploadStatusTask);
 		}
 	};
 	private final Runnable uploadLogTask = new Runnable() {
@@ -82,7 +79,7 @@ public class Main {
 		public void run() {
 			Task uploadLogs = new Task();
 			uploadLogs.setType(TaskType.UPLOAD_LOGS);
-			addTaskToQueue(uploadLogs);
+			TaskQueue.getInstance().addTaskToQueue(uploadLogs);
 		}
 	};
 
@@ -138,7 +135,7 @@ public class Main {
 	private void addDownloadTask() {
 		Task downloadTask = new Task();
 		downloadTask.setType(TaskType.DOWNLOAD);
-		addTaskToQueue(downloadTask);
+		TaskQueue.getInstance().addTaskToQueue(downloadTask);
 	}
 
 	/**
@@ -170,7 +167,7 @@ public class Main {
 		prepareScheduledTasks();
 		while (true) {
 			try {
-				processTask(tasks.take());
+				processTask(TaskQueue.getInstance().take());
 			} catch (InterruptedException e) {
 				logger.fatal(e);
 				e.printStackTrace();
@@ -275,7 +272,7 @@ public class Main {
 	private void dowloadTokenLogs(Task task) {
 		if (logger.isInfoEnabled())
 			logger.info("Starting sensor upload");
-		DownloadTokenLogTask downloadTokenLogTask = new DownloadTokenLogTask(task, connector, this);
+		DownloadTokenLogTask downloadTokenLogTask = new DownloadTokenLogTask(task, connector);
 		downloadTokenLogTask.execute();
 	}
 
@@ -375,7 +372,7 @@ public class Main {
 	private void doDownload(Task task) {
 		if (logger.isInfoEnabled())
 			logger.info("Starting synchronization");
-		DownloadTask downloadTask = new DownloadTask(task, this);
+		DownloadTask downloadTask = new DownloadTask(task);
 		boolean result = downloadTask.execute();
 		if (result == true) {
 			GatewayManager.getInstance().updateSyncDate(new Date());
@@ -419,7 +416,7 @@ public class Main {
 		Iterator<SensorValue> iterator = sensorValues.iterator();
 		while (iterator.hasNext()) {
 			SensorValue sensorValue = (SensorValue) iterator.next();
-			TokenInfoStructure tokenInfo = getTokenInfo(sensorValue);
+			TokenInfoStructure tokenInfo = TokenInfoCache.getInstace().getTokenInfo(sensorValue.mac);
 
 			if (tokenInfo != null) {
 				Token token = tokenInfo.token;
@@ -453,22 +450,6 @@ public class Main {
 	}
 
 	/**
-	 * @param sensorValue
-	 * @return
-	 */
-	public synchronized TokenInfoStructure getTokenInfo(SensorValue sensorValue) {
-		return tokenInfoCache.getTokenInfo(sensorValue.mac);
-	}
-
-	/**
-	 * @param remoteId
-	 * @return
-	 */
-	public synchronized TokenInfoStructure getTokenInfo(Long remoteId) {
-		return tokenInfoCache.getTokenInfo(remoteId);
-	}
-
-	/**
 	 * @param token
 	 * @param mac
 	 * @return
@@ -498,23 +479,7 @@ public class Main {
 		parameters.add(token.getMac());
 		configUpgradeTask.setParameters(parameters);
 		TaskManager.getInstance().persist(configUpgradeTask);
-		addTaskToQueue(configUpgradeTask);
-	}
-
-	/**
-	 * @param task
-	 */
-	public synchronized void addTaskToQueue(Task task) {
-		if (logger.isInfoEnabled())
-			logger.info("Adding " + task.toString() + " to processing queue");
-		tasks.add(task);
-	}
-
-	/**
-	 * @param token
-	 */
-	public synchronized void removeTokenFromCache(Token token) {
-		tokenInfoCache.removeTokenFromCache(token);
+		TaskQueue.getInstance().addTaskToQueue(configUpgradeTask);
 	}
 
 }

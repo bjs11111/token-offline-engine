@@ -44,18 +44,15 @@ public class DownloadTokenLogTask extends AbstractTask {
 	private static final Logger logger = LogManager.getLogger(DownloadTokenLogTask.class.getName());
 
 	private final BluezConnector connector;
-	private final Main owner;
 	private EntityManager em;
 
 	/**
 	 * @param task
 	 * @param connector
-	 * @param owner
 	 */
-	public DownloadTokenLogTask(Task task, BluezConnector connector, Main owner) {
+	public DownloadTokenLogTask(Task task, BluezConnector connector) {
 		super(task);
 		this.connector = connector;
-		this.owner = owner;
 	}
 
 	/*
@@ -65,7 +62,7 @@ public class DownloadTokenLogTask extends AbstractTask {
 	 */
 	@Override
 	public boolean execute() {
-		TokenInfoStructure tokenInfo = owner.getTokenInfo(task.getRelatedId());
+		TokenInfoStructure tokenInfo = TokenInfoCache.getInstace().getTokenInfo(task.getRelatedId());
 		if (tokenInfo == null) {
 			logger.error("Token " + task.getRelatedId() + " not found. Download token log aborted.");
 			updateTask(Status.FAILED);

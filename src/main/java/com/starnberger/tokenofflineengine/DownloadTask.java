@@ -30,15 +30,12 @@ import com.starnberger.tokenofflineengine.model.Token;
 public class DownloadTask extends AbstractTask implements ITask {
 	private static final String SYNC_URL = GatewayInfo.getInstance().getServerUrl() + "auth/sync";
 	private final List<Task> followUpTasks = new ArrayList<Task>();
-	private final Main owner;
 
 	/**
 	 * @param task
-	 * @param owner
 	 */
-	public DownloadTask(Task task, Main owner) {
+	public DownloadTask(Task task) {
 		super(task);
-		this.owner = owner;
 	}
 
 	/*
@@ -105,9 +102,9 @@ public class DownloadTask extends AbstractTask implements ITask {
 			if (syncEntity instanceof Task) {
 				Task task = (Task) syncEntity;
 				if (!task.isDeleted())
-					owner.addTaskToQueue(task);
+					TaskQueue.getInstance().addTaskToQueue(task);
 			} else if (syncEntity instanceof Token) {
-				owner.removeTokenFromCache((Token) syncEntity);
+				TokenInfoCache.getInstace().removeTokenFromCache((Token) syncEntity);
 			}
 		}
 		return true;

@@ -18,21 +18,30 @@ import com.starnberger.tokenofflineengine.model.Token;
  *
  */
 public class TokenInfoCache {
+	private static final TokenInfoCache instance = new TokenInfoCache();
+
 	private Map<String, TokenInfoStructure> tokenInfoByMac = new HashMap<String, TokenInfoStructure>();
 	private Map<Long, TokenInfoStructure> tokenInfoByRemoteId = new HashMap<Long, TokenInfoStructure>();
 
 	/**
 	 * Default constructor.
 	 */
-	public TokenInfoCache() {
+	private TokenInfoCache() {
+		super();
+	}
 
+	/**
+	 * @return
+	 */
+	public static final TokenInfoCache getInstace() {
+		return instance;
 	}
 
 	/**
 	 * @param mac
 	 * @return
 	 */
-	public TokenInfoStructure getTokenInfo(String mac) {
+	public synchronized TokenInfoStructure getTokenInfo(String mac) {
 		TokenInfoStructure tokenInfo = tokenInfoByMac.get(mac);
 		if (tokenInfo != null)
 			return tokenInfo;
@@ -45,7 +54,7 @@ public class TokenInfoCache {
 		}
 		return tokenInfo;
 	}
-	
+
 	/**
 	 * @param tokenInfo
 	 */
@@ -53,13 +62,12 @@ public class TokenInfoCache {
 		tokenInfoByMac.put(tokenInfo.token.getMac(), tokenInfo);
 		tokenInfoByRemoteId.put(tokenInfo.token.getRemoteId(), tokenInfo);
 	}
-	
-	
+
 	/**
 	 * @param remoteId
 	 * @return
 	 */
-	public TokenInfoStructure getTokenInfo(Long remoteId) {
+	public synchronized TokenInfoStructure getTokenInfo(Long remoteId) {
 		TokenInfoStructure tokenInfo = tokenInfoByRemoteId.get(remoteId);
 		if (tokenInfo != null)
 			return tokenInfo;
@@ -76,7 +84,7 @@ public class TokenInfoCache {
 	/**
 	 * @param token
 	 */
-	public void removeTokenFromCache(Token token) {
+	public synchronized void removeTokenFromCache(Token token) {
 		if (token == null)
 			return;
 		tokenInfoByMac.remove(token.getMac());
@@ -87,7 +95,7 @@ public class TokenInfoCache {
 	 * @param token
 	 * @return
 	 */
-	public TokenInfoStructure addTokenToCache(Token token) {
+	public synchronized TokenInfoStructure addTokenToCache(Token token) {
 		if (token == null)
 			return null;
 		TokenInfoStructure tokenInfo = new TokenInfoStructure();
