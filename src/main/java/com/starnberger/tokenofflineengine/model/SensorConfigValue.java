@@ -138,4 +138,9 @@ public class SensorConfigValue extends SyncEntity implements ISensorConfigValue 
 		}
 	}
 
+	@Override
+	public String toFilterString() {
+		return String.valueOf(configKey) + " " + String.valueOf(value);
+	}
+
 }

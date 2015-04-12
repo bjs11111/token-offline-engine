@@ -146,4 +146,9 @@ public class SensorConfiguration extends SyncEntity implements ISensorConfigurat
 		}
 	}
 
+	@Override
+	public String toFilterString() {
+		return String.valueOf(position);
+	}
+
 }

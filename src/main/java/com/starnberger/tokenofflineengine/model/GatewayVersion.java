@@ -122,4 +122,9 @@ public class GatewayVersion extends SyncEntity implements IGatewayVersion {
 			setName(token.getName());
 		}
 	}
+
+	@Override
+	public String toFilterString() {
+		return toString();
+	}
 }

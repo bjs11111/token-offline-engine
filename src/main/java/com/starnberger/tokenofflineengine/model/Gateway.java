@@ -233,7 +233,8 @@ public class Gateway extends SyncEntity implements IGateway {
 	}
 
 	/**
-	 * @param lastUpload the lastUpload to set
+	 * @param lastUpload
+	 *            the lastUpload to set
 	 */
 	@Override
 	public void setLastUpload(Date lastUpload) {
@@ -248,7 +249,8 @@ public class Gateway extends SyncEntity implements IGateway {
 	}
 
 	/**
-	 * @param assignedCustomerLocation the assignedCustomerLocation to set
+	 * @param assignedCustomerLocation
+	 *            the assignedCustomerLocation to set
 	 */
 	public void setAssignedCustomerLocation(Long assignedCustomerLocation) {
 		this.assignedCustomerLocation = assignedCustomerLocation;
@@ -272,5 +274,12 @@ public class Gateway extends SyncEntity implements IGateway {
 			setLastUpload(sourceGate.getLastUpload());
 			setAssignedCustomerLocation(sourceGate.getAssignedCustomerLocation());
 		}
+	}
+
+	@Override
+	public String toFilterString() {
+		return String.valueOf(name) + " " + String.valueOf(needsConfigUpgrade) + " "
+				+ String.valueOf(needsFirmwareUpgrade) + " " + String.valueOf(simCardNumber) + " "
+				+ String.valueOf(uuid);
 	}
 }

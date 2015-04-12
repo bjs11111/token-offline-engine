@@ -31,5 +31,10 @@ public interface ISyncEntity extends ITokenEntity {
 	public abstract void setRemoteId(Long remoteId);
 
 	public abstract Long getRemoteId();
+	
+	/**
+	 * @return
+	 */
+	public abstract String toFilterString();
 
 }

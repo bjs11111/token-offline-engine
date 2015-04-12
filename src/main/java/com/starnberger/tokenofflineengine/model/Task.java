@@ -170,4 +170,9 @@ public class Task extends SyncEntity implements ITask {
 				+ ", created=" + created + ", completed=" + completed + "]";
 	}
 
+	@Override
+	public String toFilterString() {
+		return " " + type + " " + status + " " + parameters + " " + created + " " + completed;
+	}
+
 }

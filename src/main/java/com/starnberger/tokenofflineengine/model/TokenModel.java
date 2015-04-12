@@ -126,10 +126,13 @@ public class TokenModel extends SyncEntity implements ITokenModel {
 			return;
 		if (source instanceof TokenModel) {
 			ITokenModel token = (ITokenModel) source;
-			// setWebKey(token.getWebKey());
-			//setId(token.getId());
 			setName(token.getName());
 			setSensorKeys(token.getSensorKeys());
 		}
+	}
+
+	@Override
+	public String toFilterString() {
+		return String.valueOf(name);
 	}
 }

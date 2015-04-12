@@ -160,7 +160,7 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 		if (source instanceof GatewayConfiguration) {
 			GatewayConfiguration token = (GatewayConfiguration) source;
 			// setWebKey(token.getWebKey());
-			//setId(token.getId());
+			// setId(token.getId());
 			setName(token.getName());
 			setDebugLevel(token.getDebugLevel());
 			setLogUpdateInterval(token.getLogUpdateInterval());
@@ -204,6 +204,14 @@ public class GatewayConfiguration extends SyncEntity implements IGatewayConfigur
 	@Override
 	public void setUploadAlarmImmediately(boolean uploadAlarmImmediately) {
 		this.uploadAlarmImmediately = uploadAlarmImmediately;
+	}
+
+	@Override
+	public String toFilterString() {
+		return String.valueOf(connectionTimeout3G) + " " + String.valueOf(debugLevel) + " "
+				+ String.valueOf(logUpdateInterval) + " " + String.valueOf(name) + " "
+				+ String.valueOf(statusUpdateInterval) + " " + String.valueOf(syncInterval) + " "
+				+ String.valueOf(uploadAlarmImmediately);
 	}
 
 }

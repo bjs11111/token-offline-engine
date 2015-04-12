@@ -99,17 +99,6 @@ public class SensorType extends SyncEntity implements ISensorType {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "SensorType [id=" + id + ", version=" + version + ", description=" + description + ", unit=" + unit
-				+ ", numberOfValues=" + numberOfValues + ", configValues=" + configValues + "]";
-	}
-
 	/**
 	 * @return the id
 	 */
@@ -172,7 +161,7 @@ public class SensorType extends SyncEntity implements ISensorType {
 		if (source instanceof SensorType) {
 			SensorType token = (SensorType) source;
 			// setWebKey(token.getWebKey());
-			//setId(token.getId());
+			// setId(token.getId());
 			setConfigValues(token.getConfigValues());
 			setDescription(token.getDescription());
 			setNumberOfValues(token.getNumberOfValues());
@@ -214,6 +203,18 @@ public class SensorType extends SyncEntity implements ISensorType {
 	@Override
 	public void setWebComponentPath(String webComponentPath) {
 		this.webComponentPath = webComponentPath;
+	}
+
+	@Override
+	public String toFilterString() {
+		return description + " " + unit + " " + numberOfValues + " " + webComponentName + " " + webComponentPath;
+	}
+
+	@Override
+	public String toString() {
+		return "SensorType [description=" + description + ", unit=" + unit + ", numberOfValues=" + numberOfValues
+				+ ", webComponentName=" + webComponentName + ", webComponentPath=" + webComponentPath
+				+ ", configValues=" + configValues + "]";
 	}
 
 }

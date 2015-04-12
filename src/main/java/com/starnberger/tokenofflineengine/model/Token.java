@@ -304,4 +304,20 @@ public class Token extends SyncEntity implements IToken   {
 			setAssignedCustomerLocation(token.getAssignedCustomerLocation());
 		}
 	}
+
+	@Override
+	public String toFilterString() {
+		String result = " ";
+		result += " " + mac;
+		if (name != null && !name.trim().isEmpty())
+			result += " " + name;
+		if (uuid != null && !uuid.trim().isEmpty())
+			result += "  " + uuid;
+		result += " " + minor;
+		result += " " + major;
+		result += " " + needsConfigUpdate;
+		if (tag != null)
+			result += " " + tag;
+		return result;
+	}
 }

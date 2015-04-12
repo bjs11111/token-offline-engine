@@ -205,4 +205,10 @@ public class SensorData extends SyncEntity implements ISensorData {
 		this.isAlarm = isAlarm;
 	}
 
+	@Override
+	public String toFilterString() {
+		return timestamp.toString() + " " + String.valueOf(value1) + " " + String.valueOf(value2) + " "
+				+ String.valueOf(value3) + " " + String.valueOf(isAlarm);
+	}
+
 }
