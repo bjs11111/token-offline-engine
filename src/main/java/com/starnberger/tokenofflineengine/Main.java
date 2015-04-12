@@ -269,6 +269,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * @param task
+	 */
 	private void dowloadTokenLogs(Task task) {
 		if (logger.isInfoEnabled())
 			logger.info("Starting sensor upload");
