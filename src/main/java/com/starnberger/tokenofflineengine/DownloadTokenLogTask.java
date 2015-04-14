@@ -12,8 +12,7 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.starnberger.tokenengine.connector.bluez.BluezConnector;
 import com.starnberger.tokenengine.connector.controller.ClearLogController;
@@ -41,7 +40,7 @@ public class DownloadTokenLogTask extends AbstractTask {
 	private static final String SERVICE_READ = "1940";
 	private static final int TIMEOUT = 40000;
 	private static final String SERVICE_WRITE = CLEAR_LOG;
-	private static final Logger logger = LogManager.getLogger(DownloadTokenLogTask.class.getName());
+	private static final Logger logger = Logger.getLogger(DownloadTokenLogTask.class.getName());
 
 	private final BluezConnector connector;
 	private EntityManager em;

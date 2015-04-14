@@ -1,13 +1,12 @@
 package com.starnberger.tokenofflineengine.dao;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 public class SensorDataManagerTest {
 
-	private static final Logger logger = LogManager.getLogger("SensorDataManagerTest");
+	private static final Logger logger = Logger.getLogger("SensorDataManagerTest");
 
 	/**
 	 * @throws java.lang.Exception

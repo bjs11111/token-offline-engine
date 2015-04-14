@@ -9,8 +9,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.starnberger.tokenengine.connector.bluez.BluezConnector;
 import com.starnberger.tokenengine.connector.controller.WriteConfigurationController;
@@ -30,7 +29,7 @@ import com.starnberger.tokenofflineengine.model.TokenConfiguration;
 public class UpgradeTokenConfigTask extends AbstractTask {
 	private static final String CONFIG_UPGRADE_FLAG = "2b40";
 	private static final String UPLOAD_URL = GatewayInfo.getInstance().getServerUrl() + "tokens/configUpgraded";
-	private static final Logger logger = LogManager.getLogger(UpgradeTokenConfigTask.class.getName());
+	private static final Logger logger = Logger.getLogger(UpgradeTokenConfigTask.class.getName());
 
 	private final BluezConnector connector;
 	private final Main owner;

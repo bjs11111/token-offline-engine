@@ -65,8 +65,7 @@ public class AuthenticationManager {
 			em.flush();
 			em.getTransaction().commit();
 			reportForWork(me);
-		} else if (me.getUuid() == null || "".equals(me.getUuid()))
-		{
+		} else if (me.getUuid() == null || "".equals(me.getUuid())) {
 			me.setUuid(GatewayInfo.getInstance().getUuid());
 		}
 		if (me.getGatewayToken() == null || "".equals(me.getGatewayToken()))
@@ -85,7 +84,7 @@ public class AuthenticationManager {
 		Response response = client.target(AUTH_REGISTER_ME).path("/{id}").resolveTemplate("id", me.getUuid()).request()
 				.post(Entity.entity(me.getPassword(), MediaType.APPLICATION_JSON));
 
-		if (response.getStatus() == 200){
+		if (response.getStatus() == 200) {
 			String newServiceToken = response.getHeaderString(AuthHttpHeader.SERVICE_KEY);
 			me.setGatewayToken(newServiceToken);
 			GatewayManager.getInstance().update(me);

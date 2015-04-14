@@ -10,8 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +24,7 @@ import com.starnberger.tokenofflineengine.dao.EMF;
  *
  */
 public class DBTest {
-	private static final Logger logger = LogManager.getLogger("DBTest");
+	private static final Logger logger = Logger.getLogger("DBTest");
 	private static EntityManagerFactory emf;
 
 	/**

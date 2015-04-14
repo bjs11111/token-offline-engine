@@ -17,8 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.starnberger.tokenengine.connector.bluez.BluezConnector;
 import com.starnberger.tokenengine.connector.examples.GatewayExample;
@@ -42,8 +41,7 @@ import com.starnberger.tokenofflineengine.model.Token;
  *
  */
 public class Main {
-
-	private static final Logger logger = LogManager.getLogger(Main.class.getName());
+	private static final Logger logger = Logger.getLogger(Main.class.getName());
 
 	private GatewayConfiguration config = null;
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
@@ -95,11 +93,14 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO: Add CPU ID read logic here
-		Main main = new Main();
-		main.startUpChecks();
-		main.workerLoop();
-		main.shutdownTasks();
+		try {
+			Main main = new Main();
+			main.startUpChecks();
+			main.workerLoop();
+			main.shutdownTasks();
+		} catch (Throwable e) {
+			logger.fatal(e);
+		}
 	}
 
 	/**
@@ -189,26 +190,50 @@ public class Main {
 	 */
 	private void prepareScheduledTasks() {
 		if (config == null) {
-			config = new GatewayConfiguration();
-			// TODO: Find better default values
-			config.setSyncInterval(1);
-			config.setStatusUpdateInterval(2);
-			config.setLogUpdateInterval(3);
+			config = createDefaultGatewayConfig();
 		}
+		stopScheduledTasks();
+		startScheduledTasks(this.config);
+	}
+
+	/**
+	 * @param configuration
+	 */
+	protected void startScheduledTasks(GatewayConfiguration configuration) {
+		if (configuration != null)
+			this.config = configuration;
+		else
+			this.config = createDefaultGatewayConfig();
+		syncFuture = scheduler.scheduleAtFixedRate(addSyncTask, config.getSyncInterval(), config.getSyncInterval(),
+				TimeUnit.MINUTES);
+		statusUpdateFuture = scheduler.scheduleAtFixedRate(uploadStatusTask, config.getStatusUpdateInterval(),
+				config.getStatusUpdateInterval(), TimeUnit.MINUTES);
+		logUploadFuture = scheduler.scheduleAtFixedRate(uploadLogTask, config.getLogUpdateInterval(),
+				config.getLogUpdateInterval(), TimeUnit.MINUTES);
+	}
+
+	/**
+	 * @return
+	 */
+	private GatewayConfiguration createDefaultGatewayConfig() {
+		GatewayConfiguration config = new GatewayConfiguration();
+		// TODO: Find better default values
+		config.setSyncInterval(1);
+		config.setStatusUpdateInterval(2);
+		config.setLogUpdateInterval(3);
+		return config;
+	}
+
+	/**
+	 * 
+	 */
+	protected void stopScheduledTasks() {
 		if (syncFuture != null)
 			syncFuture.cancel(false);
 		if (statusUpdateFuture != null)
 			statusUpdateFuture.cancel(false);
 		if (logUploadFuture != null)
 			logUploadFuture.cancel(false);
-		if (config != null) {
-			syncFuture = scheduler.scheduleAtFixedRate(addSyncTask, config.getSyncInterval(), config.getSyncInterval(),
-					TimeUnit.MINUTES);
-			statusUpdateFuture = scheduler.scheduleAtFixedRate(uploadStatusTask, config.getStatusUpdateInterval(),
-					config.getStatusUpdateInterval(), TimeUnit.MINUTES);
-			logUploadFuture = scheduler.scheduleAtFixedRate(uploadLogTask, config.getLogUpdateInterval(),
-					config.getLogUpdateInterval(), TimeUnit.MINUTES);
-		}
 	}
 
 	/**
@@ -236,6 +261,9 @@ public class Main {
 			break;
 		case UPGRADE_FW:
 			upgradeGateway(task);
+			break;
+		case UPGRADE_GW_CONFIG:
+			upgradeGatewayConfig(task);
 			break;
 		case UPLOAD_STATUS:
 			uploadGatewayStatus(task);
@@ -267,6 +295,16 @@ public class Main {
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * @param task
+	 */
+	private void upgradeGatewayConfig(Task task) {
+		if (logger.isInfoEnabled())
+			logger.info("Starting gateway config upgrade");
+		UpgradeGatewayConfigTask upgradeGatewayConfigTask = new UpgradeGatewayConfigTask(task, this);
+		upgradeGatewayConfigTask.execute();
 	}
 
 	/**

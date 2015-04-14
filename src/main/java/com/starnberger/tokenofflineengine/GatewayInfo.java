@@ -4,19 +4,27 @@
 package com.starnberger.tokenofflineengine;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.UUID;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Roman Kaufmann
  *
  */
 public final class GatewayInfo {
+	private static final Logger logger = Logger.getLogger(GatewayInfo.class.getName());
+	
+	private static final String GATEWAY_ID = "./gateway.id";
 	private static final GatewayInfo INSTANCE = new GatewayInfo();
 	public static String SERVER_URL = null;
 	private static boolean isIdFromFile = false;
-	public static String CPUID = "0003-06C3-0000-0000-0000-0001"; // Test number
+	public static String CPUID = null; 
 	public String SERVICE_TOKEN = "f80ebc87-ad5c-4b29-9366-5359768df5a1"; // Generated
 																			// default
 																			// key.
@@ -42,7 +50,7 @@ public final class GatewayInfo {
 		if (SERVER_URL != null)
 			return SERVER_URL;
 		// Set default value
-		SERVER_URL = "http://tokenengine:8080/rest/v1/";
+		SERVER_URL = "http://token-engine.appspot.com/rest/v1/";
 		// Otherwise read it from the local file
 		BufferedReader br = null;
 		try {
@@ -50,11 +58,9 @@ public final class GatewayInfo {
 			SERVER_URL = br.readLine();
 			br.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.fatal(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.fatal(e);
 		}
 		return SERVER_URL;
 	}
@@ -69,17 +75,37 @@ public final class GatewayInfo {
 		// Otherwise read it from the local file
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new FileReader("./gateway.id"));
+			br = new BufferedReader(new FileReader(GATEWAY_ID));
 			CPUID = br.readLine();
 			isIdFromFile = true;
 			br.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.fatal(e);
+			CPUID = generateCPUID();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.fatal(e);
+			CPUID = generateCPUID();
 		}
 		return CPUID;
+	}
+	
+	/**
+	 * @return
+	 */
+	private String generateCPUID() {
+		String uid = UUID.randomUUID().toString();
+		
+		// Write generated id to file
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(GATEWAY_ID));
+			writer.write(uid);
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			logger.fatal(e);
+		}
+		
+		return uid;
 	}
 }

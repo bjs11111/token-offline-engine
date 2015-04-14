@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 import com.starnberger.tokenofflineengine.common.EntityState;
 import com.starnberger.tokenofflineengine.common.Status;
+import com.starnberger.tokenofflineengine.common.TaskType;
 import com.starnberger.tokenofflineengine.dao.EMF;
 import com.starnberger.tokenofflineengine.dao.GatewayManager;
 import com.starnberger.tokenofflineengine.model.Gateway;
@@ -63,10 +64,7 @@ public class DownloadTask extends AbstractTask implements ITask {
 		if (response.bufferEntity()) {
 			EntityManager em = EMF.get().createEntityManager();
 			SyncData entity = response.readEntity(SyncData.class);
-			if (me.getRemoteId() == null && entity.getGateway().getId() != null) {
-				me.setRemoteId(entity.getGateway().getId());
-				GatewayManager.getInstance().update(me);
-			}
+			checkGateway(me, entity.getGateway());
 			// Store all entities
 			em.getTransaction().begin();
 			updateEntities(em, entity.getUpdatedTasks());
@@ -85,6 +83,23 @@ public class DownloadTask extends AbstractTask implements ITask {
 		}
 		logout();
 		return true;
+	}
+
+	/**
+	 * @param me
+	 * @param gateway
+	 */
+	private void checkGateway(Gateway me, Gateway gateway) {
+		if (gateway != null && gateway.isNeedsConfigUpgrade()) {
+			Task upgradeGatewayConfig = new Task();
+			upgradeGatewayConfig.setType(TaskType.UPGRADE_GW_CONFIG);
+			upgradeGatewayConfig.setRelatedId(gateway.getGatewayConfigKey());
+			TaskQueue.getInstance().addTaskToQueue(upgradeGatewayConfig);
+		}
+		if (me.getRemoteId() == null && gateway.getId() != null) {
+			me.setRemoteId(gateway.getId());
+			GatewayManager.getInstance().update(me);
+		}
 	}
 
 	/**
