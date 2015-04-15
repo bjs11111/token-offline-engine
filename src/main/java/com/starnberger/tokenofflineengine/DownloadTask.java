@@ -94,7 +94,7 @@ public class DownloadTask extends AbstractTask implements ITask {
 			Task upgradeGatewayConfig = new Task();
 			upgradeGatewayConfig.setType(TaskType.UPGRADE_GW_CONFIG);
 			upgradeGatewayConfig.setRelatedId(gateway.getGatewayConfigKey());
-			TaskQueue.getInstance().addTaskToQueue(upgradeGatewayConfig);
+			TaskQueue.addTaskToQueue(upgradeGatewayConfig);
 		}
 		if (me.getRemoteId() == null && gateway.getId() != null) {
 			me.setRemoteId(gateway.getId());
@@ -117,7 +117,7 @@ public class DownloadTask extends AbstractTask implements ITask {
 			if (syncEntity instanceof Task) {
 				Task task = (Task) syncEntity;
 				if (!task.isDeleted())
-					TaskQueue.getInstance().addTaskToQueue(task);
+					TaskQueue.addTaskToQueue(task);
 			} else if (syncEntity instanceof Token) {
 				TokenInfoCache.getInstace().removeTokenFromCache((Token) syncEntity);
 			}

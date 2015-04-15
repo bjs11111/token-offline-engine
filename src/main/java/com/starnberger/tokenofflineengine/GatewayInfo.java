@@ -39,14 +39,14 @@ public final class GatewayInfo {
 	/**
 	 * @return
 	 */
-	public static GatewayInfo getInstance() {
+	public static synchronized GatewayInfo getInstance() {
 		return INSTANCE;
 	}
 
 	/**
 	 * @return
 	 */
-	public String getServerUrl() {
+	public synchronized String getServerUrl() {
 		if (SERVER_URL != null)
 			return SERVER_URL;
 		// Set default value
@@ -68,7 +68,7 @@ public final class GatewayInfo {
 	/**
 	 * @return
 	 */
-	public String getUuid() {
+	public synchronized String getUuid() {
 		if (isIdFromFile)
 			return CPUID;
 
@@ -92,7 +92,7 @@ public final class GatewayInfo {
 	/**
 	 * @return
 	 */
-	private String generateCPUID() {
+	private synchronized String generateCPUID() {
 		String uid = UUID.randomUUID().toString();
 		
 		// Write generated id to file

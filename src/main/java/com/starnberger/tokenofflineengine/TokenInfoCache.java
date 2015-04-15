@@ -33,7 +33,7 @@ public class TokenInfoCache {
 	/**
 	 * @return
 	 */
-	public static final TokenInfoCache getInstace() {
+	public static final synchronized TokenInfoCache getInstace() {
 		return instance;
 	}
 

@@ -58,7 +58,7 @@ public class Main {
 		public void run() {
 			Task uploadTask = new Task();
 			uploadTask.setType(TaskType.UPLOAD);
-			TaskQueue.getInstance().addTaskToQueue(uploadTask);
+			TaskQueue.addTaskToQueue(uploadTask);
 			addDownloadTask();
 		}
 	};
@@ -68,7 +68,7 @@ public class Main {
 		public void run() {
 			Task uploadStatusTask = new Task();
 			uploadStatusTask.setType(TaskType.UPLOAD_STATUS);
-			TaskQueue.getInstance().addTaskToQueue(uploadStatusTask);
+			TaskQueue.addTaskToQueue(uploadStatusTask);
 		}
 	};
 	private final Runnable uploadLogTask = new Runnable() {
@@ -77,7 +77,7 @@ public class Main {
 		public void run() {
 			Task uploadLogs = new Task();
 			uploadLogs.setType(TaskType.UPLOAD_LOGS);
-			TaskQueue.getInstance().addTaskToQueue(uploadLogs);
+			TaskQueue.addTaskToQueue(uploadLogs);
 		}
 	};
 
@@ -136,7 +136,7 @@ public class Main {
 	private void addDownloadTask() {
 		Task downloadTask = new Task();
 		downloadTask.setType(TaskType.DOWNLOAD);
-		TaskQueue.getInstance().addTaskToQueue(downloadTask);
+		TaskQueue.addTaskToQueue(downloadTask);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class Main {
 		prepareScheduledTasks();
 		while (true) {
 			try {
-				processTask(TaskQueue.getInstance().take());
+				processTask(TaskQueue.take());
 			} catch (InterruptedException e) {
 				logger.fatal(e);
 				e.printStackTrace();
@@ -520,7 +520,7 @@ public class Main {
 		parameters.add(token.getMac());
 		configUpgradeTask.setParameters(parameters);
 		TaskManager.getInstance().persist(configUpgradeTask);
-		TaskQueue.getInstance().addTaskToQueue(configUpgradeTask);
+		TaskQueue.addTaskToQueue(configUpgradeTask);
 	}
 
 }
