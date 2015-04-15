@@ -135,8 +135,8 @@ public class DownloadTask extends AbstractTask implements ITask {
 			return false;
 		if (entity.getState() == null)
 			entity.setState(EntityState.CREATED);
-		System.out.println("Entity type: " + entity.getClass().getName() + " id: " + entity.getId() + " state: "
-				+ entity.getState());
+		if (entity.isDeleted())
+			entity.setState(EntityState.DELETED);
 		switch (entity.getState()) {
 		case CREATED:
 			storeNewEntity(em, entity);
