@@ -45,29 +45,76 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 	private Set<Long> sensorConfigKeys = new HashSet<Long>();
 	@Column
 	protected Long partnerKey;
+	// A log download is started automatically, if the related token was not
+	// seen for the defined interval that is specified here
+	@Column
+	protected int logDownloadInterval = -1;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (!(obj instanceof TokenConfiguration)) {
+		if (!super.equals(obj))
 			return false;
-		}
+		if (getClass() != obj.getClass())
+			return false;
 		TokenConfiguration other = (TokenConfiguration) obj;
-		if (id != null) {
-			if (!id.equals(other.id)) {
+		if (bleAdvertisingConditionAlways != other.bleAdvertisingConditionAlways)
+			return false;
+		if (bleAdvertisingInterval != other.bleAdvertisingInterval)
+			return false;
+		if (bleBondableInterval != other.bleBondableInterval)
+			return false;
+		if (bleTxPower != other.bleTxPower)
+			return false;
+		if (logDownloadInterval != other.logDownloadInterval)
+			return false;
+		if (modelKey == null) {
+			if (other.modelKey != null)
 				return false;
-			}
-		}
+		} else if (!modelKey.equals(other.modelKey))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (partnerKey == null) {
+			if (other.partnerKey != null)
+				return false;
+		} else if (!partnerKey.equals(other.partnerKey))
+			return false;
+		if (sensorConfigKeys == null) {
+			if (other.sensorConfigKeys != null)
+				return false;
+		} else if (!sensorConfigKeys.equals(other.sensorConfigKeys))
+			return false;
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		int result = super.hashCode();
+		result = prime * result + (bleAdvertisingConditionAlways ? 1231 : 1237);
+		result = prime * result + bleAdvertisingInterval;
+		result = prime * result + bleBondableInterval;
+		result = prime * result + bleTxPower;
+		result = prime * result + logDownloadInterval;
+		result = prime * result + ((modelKey == null) ? 0 : modelKey.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((partnerKey == null) ? 0 : partnerKey.hashCode());
+		result = prime * result + ((sensorConfigKeys == null) ? 0 : sensorConfigKeys.hashCode());
 		return result;
 	}
 
@@ -81,7 +128,8 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 		return "TokenConfiguration [name=" + name + ", modelKey=" + modelKey + ", bleAdvertisingInterval="
 				+ bleAdvertisingInterval + ", bleBondableInterval=" + bleBondableInterval
 				+ ", bleAdvertisingConditionAlways=" + bleAdvertisingConditionAlways + ", bleTxPower=" + bleTxPower
-				+ ", sensorConfigKeys=" + sensorConfigKeys + "]";
+				+ ", sensorConfigKeys=" + sensorConfigKeys + ", partnerKey=" + partnerKey + ", logDownloadInterval="
+				+ logDownloadInterval + "]";
 	}
 
 	/**
@@ -172,7 +220,6 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 			setModelKey(token.getModelKey());
 			setSensorConfigKeys(token.getSensorConfigKeys());
 			setName(token.getName());
-			// setId(token.getId());
 		}
 	}
 
@@ -210,10 +257,26 @@ public class TokenConfiguration extends SyncEntity implements ITokenConfiguratio
 		this.name = name;
 	}
 
+	/**
+	 * @return the logDownloadInterval
+	 */
+	public int getLogDownloadInterval() {
+		return logDownloadInterval;
+	}
+
+	/**
+	 * @param logDownloadInterval
+	 *            the logDownloadInterval to set
+	 */
+	public void setLogDownloadInterval(int logDownloadInterval) {
+		this.logDownloadInterval = logDownloadInterval;
+	}
+
 	@Override
 	public String toFilterString() {
 		return String.valueOf(bleAdvertisingConditionAlways) + " " + String.valueOf(bleAdvertisingInterval) + " "
-				+ String.valueOf(bleBondableInterval) + " " + String.valueOf(bleTxPower) + " " + String.valueOf(name);
+				+ String.valueOf(bleBondableInterval) + " " + String.valueOf(bleTxPower) + " " + String.valueOf(name)
+				+ " " + String.valueOf(logDownloadInterval);
 	}
 
 }
