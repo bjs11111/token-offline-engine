@@ -17,7 +17,7 @@ import java.util.Map;
  * @param <T>
  */
 public class SensorDataListWrapper implements ISensorDataListWrapper {
-	private List<SensorData> list;
+	private List<SensorData> list; 
 	private List<Token> tokens = new ArrayList<Token>();
 	private List<Gateway> gateways = new ArrayList<Gateway>();
 	private List<SensorType> sensorTypes = new ArrayList<SensorType>();

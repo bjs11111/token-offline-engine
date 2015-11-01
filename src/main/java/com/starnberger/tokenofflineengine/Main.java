@@ -169,7 +169,7 @@ public class Main {
 		while (true) {
 			try {
 				processTask(TaskQueue.take());
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				logger.fatal(e);
 				e.printStackTrace();
 			}

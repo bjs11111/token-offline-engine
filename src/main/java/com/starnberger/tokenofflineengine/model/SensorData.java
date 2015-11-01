@@ -177,6 +177,7 @@ public class SensorData extends SyncEntity implements ISensorData {
 			return;
 		if (source instanceof SensorData) {
 			SensorData sourceSensorData = (SensorData) source;
+			
 			setGateway(sourceSensorData.getGateway());
 			setSensorType(sourceSensorData.getSensorType());
 			setTimestamp(sourceSensorData.getTimestamp());
